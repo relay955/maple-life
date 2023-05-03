@@ -12,7 +12,8 @@
     top:10px;
     left:10px;
     display: flex;
-    position: sticky;
+    position: absolute;
+    z-index: 100;
     align-items: center;
     font-size: 18px;
     font-weight: 700;
@@ -21,6 +22,11 @@
       margin-right: 5px;
       width: 30px;
       height: 30px;
+    }
+  }
+  @media (max-width: 1739px){
+    .logo{
+      display:none
     }
   }
 </style>
