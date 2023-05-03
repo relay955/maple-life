@@ -1,8 +1,8 @@
 <script>
   import Toolbar from "../components/app/main/Toolbar.svelte";
   import Logo from "../components/app/main/Logo.svelte";
-  import DragDropList from "svelte-dragdroplist";
   import Title from "../components/shared/Title.svelte";
+  import DragDropList from "../components/shared/DragDropList.svelte";
 
   let data = ["Adams", "Boston", "Chicago", "Denver"];
 </script>
@@ -17,6 +17,16 @@
 </div>
 
 <style>
+  :global(.dragdroplist > .list){
+    cursor:default !important;
+  }
+  :global(.dragdroplist > .list > div.item){
+    cursor:default;
+  }
+  :global(.dragdroplist > .list > div.item > .buttons){
+    display:none !important;
+    opacity: 0;
+  }
   .main{
     width:100%;
     text-align: center;
