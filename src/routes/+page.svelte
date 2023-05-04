@@ -12,6 +12,8 @@
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
   import Modal from "../components/shared/Modal.svelte";
   import Button from "../components/shared/Button.svelte";
+  import Input from "../components/shared/Input.svelte";
+  import Select from "../components/shared/Select.svelte";
 
   onMount(()=>{
     const loadedTodos = loadTodos();
@@ -166,21 +168,18 @@
   </div>
   <Modal title="할일 생성" isOpen={isAddTodoModalOpen}
          onClose={()=>isAddTodoModalOpen = false}>
-    <div>할일 이름</div>
-    <input/>
-    <div>초기화 간격</div>
-    <select>
+    <Input title="할일 이름" value="d" />
+    <Select title="초기화 간격">
       <option>일일</option>
       <option>주간(월요일 초기화)</option>
       <option>주간(목요일 초기화)</option>
       <option>월간</option>
-    </select>
-    <div>할일 처리 단위</div>
-    <select>
+    </Select>
+    <Select title="할일 처리 단위">
       <option>캐릭터 별</option>
       <option>계정 별</option>
-    </select>
-    <Button onClick={()=>console.log("생성")}>생성</Button>
+    </Select>
+    <Button onClick={()=>console.log("생성")} style="margin-top: 10px">생성</Button>
   </Modal>
 </div>
 

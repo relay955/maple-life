@@ -1,8 +1,9 @@
 <script lang="ts">
   export let onClick:()=>void;
+  export let style:string = "";
 
 </script>
-<button on:click={onClick}><slot></slot></button>
+<button on:click={onClick} style={style}><slot></slot></button>
 
 <style>
   button{

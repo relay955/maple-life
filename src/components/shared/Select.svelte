@@ -5,7 +5,9 @@
 
 <div>
   <div class="title">{title}</div>
-  <input value={value}/>
+  <select>
+    <slot></slot>
+  </select>
 </div>
 
 <style>
@@ -14,13 +16,15 @@
     color: #666;
     margin-bottom: 4px;
   }
-  input{
+
+  select{
     width: 100%;
-    border: none;
-    border-radius: 2px;
-    outline: none;
-    box-sizing: border-box;
-    padding: 4px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-size: 14px;
+    color: #666;
     margin-bottom: 8px;
   }
 </style>
