@@ -96,8 +96,8 @@
       border-radius: 4px;
       user-select: none;
       align-items: center;
-      padding-top:5px;
-      padding-bottom:5px;
+      padding-top:2px;
+      padding-bottom:2px;
       padding-left: 10px;
 
       &:last-child{
@@ -166,8 +166,8 @@
     display: flex;
     border: 1px solid rgb(190, 190, 190);
     border-radius: 4px;
-    padding-top:5px;
-    padding-bottom:5px;
+    padding-top:2px;
+    padding-bottom:2px;
     padding-left: 10px;
     background-color: white;
     align-items: center;
