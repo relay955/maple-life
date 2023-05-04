@@ -6,6 +6,7 @@
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
   import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
+  import Label from "../components/shared/Label.svelte";
 
   let characters:Character[] = [
     {
@@ -90,7 +91,23 @@
       {/each}
     </div>
     <DragDropList bind:data={todos} let:slotProps={item}>
-      <div class="item-title">{item.name}</div>
+      <div class="item-title-container">
+        {#if item.repeatType === "daily"}
+          <Label color="#70a5e0">일일</Label>
+        {/if}
+        {#if item.repeatType === "weeklyMonday"}
+          <Label color="#e3b676">주간(월)</Label>
+        {/if}
+        {#if item.repeatType === "weeklyTuesday"}
+          <Label color="#e3b676">주간(목)</Label>
+        {/if}
+        {#if item.repeatType === "monthly"}
+          <Label color="#e376e1">월간</Label>
+        {/if}
+        <div class="title" style={`color:${item.color}`}>
+          {item.name}
+        </div>
+      </div>
       {#if item.type === "perCharacter"}
         <div class="item-checkbox-lists">
           {#each characters as character}
@@ -147,9 +164,14 @@
       width:calc(100% - 20px)
     }
   }
-  .item-title{
-    font-weight: bold;
+  .item-title-container{
+    display: inline-flex;
     min-width:500px;
+    align-items: center;
+    .title{
+      font-size: 16px;
+      margin-left: 10px;
+    }
   }
   .item-checkbox-lists{
     display: flex;
