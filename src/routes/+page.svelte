@@ -60,6 +60,12 @@
       type:"perAccount",
       repeatType:"daily",
       isChecked:"unchecked"
+    },
+    {
+      name:"몬스터 파크",
+      type:"perAccount",
+      repeatType:"daily",
+      isChecked:"blocked"
     }
   ];
 </script>
