@@ -1,7 +1,6 @@
 export interface Character {
+    imgUrl: string;
     name: string;
     level: number;
-    exp: number;
-    gold: number;
-    cash: number;
+    classType:string;
 }
