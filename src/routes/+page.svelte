@@ -14,6 +14,7 @@
   import Button from "../components/shared/Button.svelte";
   import Input from "../components/shared/Input.svelte";
   import Select from "../components/shared/Select.svelte";
+  import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
 
   onMount(()=>{
     const loadedTodos = loadTodos();
@@ -108,6 +109,13 @@
     saveTodos(todos)
   }
 
+  const onAddTodo = (todo:Todo) => {
+    todos.push(todo);
+    todos = todos
+    saveTodos(todos)
+    isAddTodoModalOpen = false;
+  }
+
 </script>
 
 <Logo/>
@@ -137,7 +145,7 @@
         {#if item.repeatType === "weeklyMonday"}
           <Label color="#e3b676">주간(월)</Label>
         {/if}
-        {#if item.repeatType === "weeklyTuesday"}
+        {#if item.repeatType === "weeklyThursday"}
           <Label color="#e3b676">주간(목)</Label>
         {/if}
         {#if item.repeatType === "monthly"}
@@ -166,21 +174,10 @@
       <MdAddCircleOutline/>
     </div>
   </div>
-  <Modal title="할일 생성" isOpen={isAddTodoModalOpen}
-         onClose={()=>isAddTodoModalOpen = false}>
-    <Input title="할일 이름" value="d" />
-    <Select title="초기화 간격">
-      <option>일일</option>
-      <option>주간(월요일 초기화)</option>
-      <option>주간(목요일 초기화)</option>
-      <option>월간</option>
-    </Select>
-    <Select title="할일 처리 단위">
-      <option>캐릭터 별</option>
-      <option>계정 별</option>
-    </Select>
-    <Button onClick={()=>console.log("생성")} style="margin-top: 10px">생성</Button>
-  </Modal>
+  <TodoEditModal isOpen="{isAddTodoModalOpen}"
+                 onClose={()=>isAddTodoModalOpen = false}
+                 onSubmit={onAddTodo}
+  />
 </div>
 
 <style lang="scss">

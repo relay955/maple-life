@@ -5,7 +5,7 @@
 
 <div>
   <div class="title">{title}</div>
-  <select>
+  <select bind:value={value}>
     <slot></slot>
   </select>
 </div>
