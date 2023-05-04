@@ -14,7 +14,7 @@
 <div class={`Popup ${isOpen?"opened":""}`}
             on:mousedown={onClickOuter}>
   <div class="inner-item">
-    <div style="display:flex; margin-bottom:20px; height:25px">
+    <div style="display:flex; margin-bottom:10px; height:25px">
       <div class="title">{title}</div>
       <Space/>
       <div class="close-button" on:click={onClose}>
