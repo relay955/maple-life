@@ -74,9 +74,20 @@
 <Toolbar/>
 <div class="main">
   <div class="container">
-    <Title text="할일"/>
     <div class="header">
-
+      <div class="title">할일</div>
+      {#each characters as character}
+        <div class="character">
+          <div>
+            <div class="name">
+              {character.name}
+            </div>
+            <div class="subtitle">
+              Lv.{character.level}, {character.classType}
+            </div>
+          </div>
+        </div>
+      {/each}
     </div>
     <DragDropList bind:data={todos} let:slotProps={item}>
       <div class="item-title">{item.name}</div>
@@ -94,7 +105,7 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .main{
     width:100%;
     text-align: center;
@@ -103,6 +114,33 @@
     text-align: left;
     display: inline-block;
     width: 1420px;
+  }
+  .header{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: sticky;
+    .title{
+      width: 510px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .character{
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .name{
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .subtitle{
+        font-size: 12px;
+        color: gray;
+      }
+    }
   }
   @media(max-width: 1420px){
     .container{
