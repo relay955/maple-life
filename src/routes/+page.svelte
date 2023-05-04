@@ -69,6 +69,26 @@
       isChecked:"blocked"
     }
   ];
+
+  function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
+    if(character === undefined){
+      if(item.isChecked === "checked") {
+        item.isChecked = "unchecked";
+      }else if(item.isChecked === "unchecked"){
+        item.isChecked = "checked";
+      }
+    }else{
+      const targetCharacterChecked = item.isChecked[character.name];
+      if(targetCharacterChecked === "checked") {
+        item.isChecked[character.name] = "unchecked";
+      }else if(targetCharacterChecked === "unchecked" || targetCharacterChecked === undefined){
+        item.isChecked[character.name] = "checked";
+      }
+    }
+    todos = todos
+  }
+
+
 </script>
 
 <Logo/>
@@ -111,12 +131,16 @@
       {#if item.type === "perCharacter"}
         <div class="item-checkbox-lists">
           {#each characters as character}
-            <LargeCheckBox checked="checked"/>
+            <LargeCheckBox
+              onClick={()=>onClickCheckbox(item, character)}
+              checked={item.isChecked[character.name] ?? "unchecked"}/>
           {/each}
         </div>
       {/if}
       {#if item.type === "perAccount"}
-        <LargeCheckBox checked="{item.isChecked}"/>
+        <LargeCheckBox
+          onClick={()=>onClickCheckbox(item)}
+          checked="{item.isChecked}"/>
       {/if}
     </DragDropList>
   </div>
