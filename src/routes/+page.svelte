@@ -100,6 +100,11 @@
     saveTodos(todos)
   }
 
+  function onMoveTodo(){
+    todos = todos
+    saveTodos(todos)
+  }
+
 </script>
 
 <Logo/>
@@ -121,7 +126,7 @@
         </div>
       {/each}
     </div>
-    <DragDropList bind:data={todos} let:slotProps={item}>
+    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo}>
       <div class="item-title-container">
         {#if item.repeatType === "daily"}
           <Label color="#70a5e0">일일</Label>
