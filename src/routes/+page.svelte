@@ -10,6 +10,12 @@
   import {loadTodos, saveTodos} from "../storage/storage";
   import {onMount} from "svelte";
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
+  import Modal from "../components/shared/Modal.svelte";
+
+  onMount(()=>{
+    const loadedTodos = loadTodos();
+    if(loadedTodos.length > 0) todos = loadedTodos;
+  })
 
   let characters:Character[] = [
     {
@@ -73,10 +79,7 @@
     }
   ];
 
-  onMount(()=>{
-    const loadedTodos = loadTodos();
-    if(loadedTodos.length > 0) todos = loadedTodos;
-  })
+  let isAddTodoModalOpen = false;
 
   function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
     if(character === undefined){
@@ -96,7 +99,6 @@
     todos = todos
     saveTodos(todos)
   }
-
 
 </script>
 
@@ -152,10 +154,12 @@
           checked="{item.isChecked}"/>
       {/if}
     </DragDropList>
-    <div class="add-todo-button">
+    <div class="add-todo-button" on:click={()=>isAddTodoModalOpen = true}>
       <MdAddCircleOutline/>
     </div>
   </div>
+  <Modal title="할일 생성" isOpen={isAddTodoModalOpen}
+         onClose={()=>isAddTodoModalOpen = false}/>
 </div>
 
 <style lang="scss">
