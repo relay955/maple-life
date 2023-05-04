@@ -7,6 +7,7 @@ specifiers:
   svelte: ^3.54.0
   svelte-check: ^3.0.1
   svelte-icons: ^2.1.0
+  svelte-simple-modal: ^1.5.2
   svelte-tooltip: ^1.2.0
   tslib: ^2.4.1
   typescript: ^5.0.0
@@ -14,6 +15,7 @@ specifiers:
 
 dependencies:
   svelte-icons: 2.1.0
+  svelte-simple-modal: 1.5.2_svelte@3.58.0
   svelte-tooltip: 1.2.0
 
 devDependencies:
@@ -954,6 +956,14 @@ packages:
       typescript: 5.0.4
     dev: true
 
+  /svelte-simple-modal/1.5.2_svelte@3.58.0:
+    resolution: {integrity: sha512-kQ+9/bonxMMJe6dGTCPXBkYQQ4zF8rqqPp+PvTWOJB8QtB+Z0S/h7ZJRDZOAnkXTUClwd+Qmb2HHTIXVkjlSvA==}
+    peerDependencies:
+      svelte: ^3.31.2
+    dependencies:
+      svelte: 3.58.0
+    dev: false
+
   /svelte-tooltip/1.2.0:
     resolution: {integrity: sha512-FmaiNoCGkXBqF5AAscv+NdLtVIhywpqcaKw7mP1IksLJPMW3QaOPB8G23CHPQWde0J3A0NdCDQ3DI2isWGsDbg==}
     dependencies:
@@ -963,7 +973,6 @@ packages:
   /svelte/3.58.0:
     resolution: {integrity: sha512-brIBNNB76mXFmU/Kerm4wFnkskBbluBDCjx/8TcpYRb298Yh2dztS2kQ6bhtjMcvUhd5ynClfwpz5h2gnzdQ1A==}
     engines: {node: '>= 8'}
-    dev: true
 
   /tiny-glob/0.2.9:
     resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
