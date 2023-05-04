@@ -5,7 +5,7 @@
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
-  import type {CheckedData} from "../storage/dto/checkedData";
+  import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
 
   let characters:Character[] = [
     {
@@ -26,37 +26,41 @@
     {
       name:"일일 보스",
       type:"perCharacter",
-      repeatType:"daily"
+      repeatType:"daily",
+      isChecked:{
+        "썬콜":"checked"
+      }
     },
     {
       name:"주간 보스",
       type:"perCharacter",
-      repeatType:"weeklyMonday"
+      repeatType:"weeklyMonday",
+      isChecked:{}
     },
     {
       name:"심볼 일퀘",
       type:"perCharacter",
-      repeatType:"daily"
+      repeatType:"daily",
+      isChecked:{}
     },
     {
       name:"검은 마법사",
       type:"perCharacter",
-      repeatType:"monthly"
+      repeatType:"monthly",
+      isChecked:{}
     },
     {
-      name:"우르스",
+      name:"우르스 3판",
       type:"perAccount",
-      repeatType:"daily"
+      repeatType:"daily",
+      isChecked:"checked"
     },
     {
-      name:"데일리 기프트",
+      name:"데일리 기프트 수령",
       type:"perAccount",
-      repeatType:"daily"
+      repeatType:"daily",
+      isChecked:"unchecked"
     }
-  ];
-
-  let checkedData:CheckedData[] = [
-
   ];
 </script>
 
@@ -70,6 +74,16 @@
     </div>
     <DragDropList bind:data={todos} let:slotProps={item}>
       <div class="item-title">{item.name}</div>
+      {#if item.type === "perCharacter"}
+        <div class="item-checkbox-lists">
+          {#each characters as character}
+            <LargeCheckBox checked="checked"/>
+          {/each}
+        </div>
+      {/if}
+      {#if item.type === "perAccount"}
+        <LargeCheckBox checked="{item.isChecked}"/>
+      {/if}
     </DragDropList>
   </div>
 </div>
@@ -91,7 +105,11 @@
   }
   .item-title{
     font-weight: bold;
-    width:500px;
+    min-width:500px;
+  }
+  .item-checkbox-lists{
+    display: flex;
+    flex-grow: 1;
   }
 </style>
 
