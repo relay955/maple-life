@@ -87,7 +87,7 @@
     .item {
       cursor:default;
       box-sizing: border-box;
-      display: inline-flex;
+      display: flex;
       width: 100%;
       min-height: 3em;
       margin-bottom: 5px;
@@ -157,6 +157,14 @@
   #ghost.haunting {
     z-index: 20;
     opacity: 1.0;
+
+    width: 100%;
+    display: flex;
+    border: 1px solid rgb(190, 190, 190);
+    border-radius: 4px;
+    padding-left: 10px;
+    background-color: white;
+    align-items: center;
   }
 </style>
 
