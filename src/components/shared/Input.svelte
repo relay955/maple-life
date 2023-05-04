@@ -5,7 +5,7 @@
 
 <div>
   <div class="title">{title}</div>
-  <input value={value}/>
+  <input bind:value={value}/>
 </div>
 
 <style>
