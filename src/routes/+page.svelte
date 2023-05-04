@@ -12,7 +12,12 @@
 <div class="main">
   <div class="container">
     <Title text="할일"/>
-    <DragDropList bind:data={data}/>
+    <div class="header">
+
+    </div>
+    <DragDropList bind:data={data} let:slotProps={item}>
+      {item}
+    </DragDropList>
   </div>
 </div>
 

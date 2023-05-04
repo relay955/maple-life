@@ -73,7 +73,7 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   main {
     position: relative;
   }
@@ -83,54 +83,55 @@
     z-index: 5;
     display: flex;
     flex-direction: column;
-  }
 
-  .item {
-    cursor:default;
-    box-sizing: border-box;
-    display: inline-flex;
-    width: 100%;
-    min-height: 3em;
-    margin-bottom: 0.5em;
-    background-color: white;
-    border: 1px solid rgb(190, 190, 190);
-    border-radius: 2px;
-    user-select: none;
-  }
+    .item {
+      cursor:default;
+      box-sizing: border-box;
+      display: inline-flex;
+      width: 100%;
+      min-height: 3em;
+      margin-bottom: 5px;
+      background-color: white;
+      border: 1px solid rgb(190, 190, 190);
+      border-radius: 4px;
+      user-select: none;
+      align-items: center;
+      padding-left: 10px;
 
-  .item:last-child {
-    margin-bottom: 0;
-  }
+      &:last-child{
+        margin-bottom: 0;
+      }
 
-  .item:not(#grabbed):not(#ghost) {
-    z-index: 10;
-  }
+      &item:not(#grabbed):not(#ghost) {
+        z-index: 10;
+      }
+      & > * {
+        margin: auto;
+      }
+    }
 
-  .item > * {
-    margin: auto;
   }
-
   .buttons {
     width: 32px;
     min-width: 32px;
     margin: auto 0;
     display: flex;
     flex-direction: column;
+
+    button{
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      margin: 0 auto;
+      padding: 0;
+      border: 1px solid rgba(0, 0, 0, 0);
+      background-color: inherit;
+    }
+    button:focus{
+      border: 1px solid black;
+    }
   }
 
-  .buttons button {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-    margin: 0 auto;
-    padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0);
-    background-color: inherit;
-  }
-
-  .buttons button:focus {
-    border: 1px solid black;
-  }
 
   .delete {
     width: 32px;
@@ -183,7 +184,7 @@
     on:touchend={function(ev) {ev.stopPropagation(); release(ev.touches[0]);}}>
     {#each data as datum, i (datum.id ? datum.id : JSON.stringify(datum))}
       <div
-        id={(grabbed && (datum.id ? datum.id : JSON.stringify(datum)) == grabbed.dataset.id) ? "grabbed" : ""}
+        id={(grabbed && (datum.id ? datum.id : JSON.stringify(datum)) === grabbed.dataset.id) ? "grabbed" : ""}
         class="item"
         data-index={i}
         data-id={(datum.id ? datum.id : JSON.stringify(datum))}
@@ -194,15 +195,8 @@
         on:touchmove={function(ev) {ev.stopPropagation(); ev.preventDefault(); touchEnter(ev.touches[0]);}}
         animate:flip|local={{duration: 200}}>
 
-        <div class="content">
-          {#if datum.html}
-            {@html datum.html}
-          {:else if datum.text}
-            <p>{datum.text}</p>
-          {:else}
-            <p>{datum}</p>
-          {/if}
-        </div>
+        <slot slotProps={datum}>
+        </slot>
 
       </div>
     {/each}
