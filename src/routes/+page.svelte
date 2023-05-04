@@ -17,16 +17,7 @@
 </div>
 
 <style>
-  :global(.dragdroplist > .list){
-    cursor:default !important;
-  }
-  :global(.dragdroplist > .list > div.item){
-    cursor:default;
-  }
-  :global(.dragdroplist > .list > div.item > .buttons){
-    display:none !important;
-    opacity: 0;
-  }
+
   .main{
     width:100%;
     text-align: center;
