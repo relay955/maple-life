@@ -1,9 +1,10 @@
 <!--created by jwlarocque, modified by relay 955 -->
 <!--https://github.com/jwlarocque/svelte-dragdroplist-->
-<script>
+<script lang="ts">
   import {flip} from "svelte/animate";
 
-  export let data = [];
+  export let data:any[] = [];
+
   export let removesItems = false;
 
   let ghost;
@@ -78,13 +79,14 @@
   }
 
   .list {
-    cursor: grab;
+    cursor: default;
     z-index: 5;
     display: flex;
     flex-direction: column;
   }
 
   .item {
+    cursor:default;
     box-sizing: border-box;
     display: inline-flex;
     width: 100%;

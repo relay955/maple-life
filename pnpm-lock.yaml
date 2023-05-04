@@ -6,7 +6,6 @@ specifiers:
   sass: ^1.62.1
   svelte: ^3.54.0
   svelte-check: ^3.0.1
-  svelte-dragdroplist: ^1.1.1
   svelte-icons: ^2.1.0
   svelte-tooltip: ^1.2.0
   tslib: ^2.4.1
@@ -14,7 +13,6 @@ specifiers:
   vite: ^4.3.0
 
 dependencies:
-  svelte-dragdroplist: 1.1.1_svelte@3.58.0
   svelte-icons: 2.1.0
   svelte-tooltip: 1.2.0
 
@@ -895,14 +893,6 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-dragdroplist/1.1.1_svelte@3.58.0:
-    resolution: {integrity: sha512-63jrgGeBG3J+ZjHhfnzhRdikj/lAdAbGDoryiGw2lrGr5/et3Tp8Y0Vmgf6t4lSkhq/DMmjxbwaVmWNj4nGiUg==}
-    peerDependencies:
-      svelte: ^3.0.0
-    dependencies:
-      svelte: 3.58.0
-    dev: false
-
   /svelte-hmr/0.15.1_svelte@3.58.0:
     resolution: {integrity: sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -973,6 +963,7 @@ packages:
   /svelte/3.58.0:
     resolution: {integrity: sha512-brIBNNB76mXFmU/Kerm4wFnkskBbluBDCjx/8TcpYRb298Yh2dztS2kQ6bhtjMcvUhd5ynClfwpz5h2gnzdQ1A==}
     engines: {node: '>= 8'}
+    dev: true
 
   /tiny-glob/0.2.9:
     resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
