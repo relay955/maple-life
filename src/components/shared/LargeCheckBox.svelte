@@ -3,8 +3,9 @@
   import MdRadioButtonUnchecked from 'svelte-icons/md/MdRadioButtonUnchecked.svelte'
   import MdCheckCircle from 'svelte-icons/md/MdCheckCircle.svelte'
   export let checked:TodoCheckType;
+  export let onClick:()=>void;
 </script>
-<div class={`main ${checked}`}>
+<div class={`main ${checked}`} on:click={onClick}>
   {#if checked==="checked"}
     <MdCheckCircle/>
   {/if}
