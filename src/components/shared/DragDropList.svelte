@@ -89,13 +89,15 @@
       box-sizing: border-box;
       display: flex;
       width: 100%;
-      min-height: 3em;
+      min-height: 40px;
       margin-bottom: 5px;
       background-color: white;
       border: 1px solid rgb(190, 190, 190);
       border-radius: 4px;
       user-select: none;
       align-items: center;
+      padding-top:5px;
+      padding-bottom:5px;
       padding-left: 10px;
 
       &:last-child{
@@ -158,10 +160,14 @@
     z-index: 20;
     opacity: 1.0;
 
+    box-sizing: border-box;
     width: 100%;
+    min-height: 40px;
     display: flex;
     border: 1px solid rgb(190, 190, 190);
     border-radius: 4px;
+    padding-top:5px;
+    padding-bottom:5px;
     padding-left: 10px;
     background-color: white;
     align-items: center;
