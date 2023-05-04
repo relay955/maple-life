@@ -9,6 +9,7 @@
   import Label from "../components/shared/Label.svelte";
   import {loadTodos, saveTodos} from "../storage/storage";
   import {onMount} from "svelte";
+  import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
 
   let characters:Character[] = [
     {
@@ -151,6 +152,9 @@
           checked="{item.isChecked}"/>
       {/if}
     </DragDropList>
+    <div class="add-todo-button">
+      <MdAddCircleOutline/>
+    </div>
   </div>
 </div>
 
@@ -208,6 +212,25 @@
   .item-checkbox-lists{
     display: flex;
     flex-grow: 1;
+  }
+  .add-todo-button{
+    box-sizing: border-box;
+    width: 100%;
+    height:40px;
+    display: flex;
+    border: 1px solid #589de1;
+    border-radius: 4px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-color: white;
+    align-items: center;
+    margin-top: 5px;
+    cursor: pointer;
+    color: #589de1;
+    transition: 0.2s all;
+  }
+  .add-todo-button:hover{
+    background-color: #cce3fa;
   }
 </style>
 
