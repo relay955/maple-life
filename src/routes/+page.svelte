@@ -7,6 +7,8 @@
   import type {Todo} from "../storage/dto/todo";
   import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
   import Label from "../components/shared/Label.svelte";
+  import {loadTodos, saveTodos} from "../storage/storage";
+  import {onMount} from "svelte";
 
   let characters:Character[] = [
     {
@@ -70,6 +72,11 @@
     }
   ];
 
+  onMount(()=>{
+    const loadedTodos = loadTodos();
+    if(loadedTodos.length > 0) todos = loadedTodos;
+  })
+
   function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
     if(character === undefined){
       if(item.isChecked === "checked") {
@@ -86,6 +93,7 @@
       }
     }
     todos = todos
+    saveTodos(todos)
   }
 
 
