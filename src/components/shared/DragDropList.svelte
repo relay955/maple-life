@@ -7,6 +7,8 @@
 
   export let removesItems = false;
 
+  export let onMove:()=>void;
+
   let ghost;
   let grabbed;
 
@@ -62,6 +64,7 @@
     let temp = data[from];
     data = [...data.slice(0, from), ...data.slice(from + 1)];
     data = [...data.slice(0, to), temp, ...data.slice(to)];
+    onMove()
   }
 
   function release(ev) {
