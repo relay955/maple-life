@@ -65,14 +65,15 @@
 </div>
 <Modal isOpen={isOpenInfoPopup} onClose={()=>isOpenInfoPopup = false}>
   <div class="info-modal">
-  <Logo/>
-  <div class="license">
-    distributed under the MIT license
-  </div>
-  <div class="info-body">
-    <div><a href="https://github.com/relay955/maple-life">github</a></div>
-    <div>contact : <a href="mailto:refcell22@naver.com">refcell22@naver.com</a></div>
-  </div>
+    <Logo/>
+    <div class="description">for playing Maplestory as life</div>
+    <div class="license">
+      distributed under the MIT license
+    </div>
+    <div class="info-body">
+      <div><a href="https://github.com/relay955/maple-life">github</a></div>
+      <div>contact : <a href="mailto:refcell22@naver.com">refcell22@naver.com</a></div>
+    </div>
   </div>
 </Modal>
 
@@ -98,9 +99,15 @@
   .info-modal{
     text-align: center;
     margin-bottom: 40px;
+    .description{
+      font-size: 12px;
+      color: gray;
+      margin-bottom: 3px;
+    }
     .license{
-      margin-top: 10px;
-      margin-bottom: 4px;
+      font-size: 12px;
+      color: gray;
+      margin-bottom: 13px;
     }
     .info-body{
       font-size: 13px;
