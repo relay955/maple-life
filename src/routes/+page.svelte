@@ -22,6 +22,7 @@
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
   import {SvelteToast, toast} from "@zerodevx/svelte-toast";
   import type {Settings} from "../storage/dto/settings";
+  import LeftBar from "../components/app/main/LeftBar.svelte";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
@@ -206,6 +207,7 @@
 </script>
 
 <Logo/>
+<LeftBar/>
 <Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
          onClickShortHeightModeButton={onClickShortHeightModeButton}
          onClickShowCharacterPreviewButton={onClickShowCharacterPreviewButton}
@@ -254,9 +256,10 @@
     display: inline-block;
     width: 1420px;
   }
-  @media(max-width: 1420px){
+  @media(max-width: 1530px){
     .container{
-      width:calc(100% - 20px)
+      padding-left: 50px;
+      width:calc(100% - 70px)
     }
   }
 

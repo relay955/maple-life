@@ -84,4 +84,12 @@ export let settings:Settings;
     display: flex;
     flex-grow: 1;
   }
+  @media (max-width: 1200px){
+    .item-title-container{
+      min-width: 300px;
+      .title{
+        font-size: 12px;
+      }
+    }
+  }
 </style>
