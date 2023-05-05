@@ -31,7 +31,7 @@ export let isMouseOver=false;
   {#if todo.repeatType === "monthly"}
     <Label color="#e376e1">월간</Label>
   {/if}
-  <div class="title" style={`color:${todo.color}`}>
+  <div class="title" style={todo.color !== "default" ? `color:${todo.color}`:""}>
     {todo.name}
   </div>
   <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정">
@@ -45,6 +45,7 @@ export let isMouseOver=false;
   <div class="item-checkbox-lists">
     {#each characters as character (character.id)}
       <LargeCheckBox
+        style={todo.color !== "default"?`background-color:${todo.color}22;`:""}
         onClick={()=>onClickCheckbox("left",todo, character)}
         onRightClick={()=>onClickCheckbox("right",todo,character)}
         checked={todo.isChecked[character.id] ?? "unchecked"}/>

@@ -29,7 +29,7 @@ function resetTodo():Todo{
     name:"",
     type:"perCharacter",
     repeatType:"daily",
-    color:"black",
+    color:"default",
   };
 }
 
@@ -92,6 +92,12 @@ const onSelectAutoComplete = (e:any)=>{
   <Select title="할일 처리 단위" bind:value={todo.type}>
     <option value="perCharacter">캐릭터 별</option>
     <option value="perAccount">계정 별</option>
+  </Select>
+
+  <Select title="(옵션) 색상" bind:value={todo.color}>
+    <option value="default">검정색</option>
+    <option value="#5789ea" style="color:#5789ea">파란색</option>
+    <option value="#edac5e" style="color:#edac5e">주황색</option>
   </Select>
   <Button onClick={onClickSubmitButton} style="margin-top: 10px">{isEditMode ? "수정":"생성"}</Button>
 </Modal>

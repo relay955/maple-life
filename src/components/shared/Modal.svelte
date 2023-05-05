@@ -15,7 +15,6 @@
     if(e.key === "Enter"){
       onEnter();
     }
-    console.log(e.key)
     if(e.key === "Escape"){
       onClose();
     }
