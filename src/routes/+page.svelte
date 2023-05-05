@@ -12,6 +12,7 @@
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
   import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
+  import TodoItems from "../components/app/main/TodoItems.svelte";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
@@ -109,37 +110,7 @@
       {/each}
     </div>
     <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="name">
-      <div class="item-title-container">
-        {#if item.repeatType === "daily"}
-          <Label color="#70a5e0">일일</Label>
-        {/if}
-        {#if item.repeatType === "weeklyMonday"}
-          <Label color="#e3b676">주간(월)</Label>
-        {/if}
-        {#if item.repeatType === "weeklyThursday"}
-          <Label color="#e3b676">주간(목)</Label>
-        {/if}
-        {#if item.repeatType === "monthly"}
-          <Label color="#e376e1">월간</Label>
-        {/if}
-        <div class="title" style={`color:${item.color}`}>
-          {item.name}
-        </div>
-      </div>
-      {#if item.type === "perCharacter"}
-        <div class="item-checkbox-lists">
-          {#each characters as character (character.name)}
-            <LargeCheckBox
-              onClick={()=>onClickCheckbox(item, character)}
-              checked={item.isChecked[character.name] ?? "unchecked"}/>
-          {/each}
-        </div>
-      {/if}
-      {#if item.type === "perAccount"}
-        <LargeCheckBox
-          onClick={()=>onClickCheckbox(item)}
-          checked="{item.isChecked}"/>
-      {/if}
+      <TodoItems characters={characters} onClickCheckbox={onClickCheckbox} todo={item}/>
     </DragDropList>
     <div class="add-todo-button" on:click={()=>isAddTodoModalOpen = true}>
       <MdAddCircleOutline/>
@@ -192,19 +163,6 @@
     .container{
       width:calc(100% - 20px)
     }
-  }
-  .item-title-container{
-    display: inline-flex;
-    min-width:500px;
-    align-items: center;
-    .title{
-      font-size: 16px;
-      margin-left: 10px;
-    }
-  }
-  .item-checkbox-lists{
-    display: flex;
-    flex-grow: 1;
   }
   .add-todo-button{
     box-sizing: border-box;
