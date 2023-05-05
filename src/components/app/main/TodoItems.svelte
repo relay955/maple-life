@@ -11,6 +11,8 @@ import Space from "../../shared/Space.svelte";
 export let todo:Todo;
 export let characters:Character;
 export let onClickCheckbox:(todo:Todo, character:Character)=>void;
+export let onClickEdit:(todo:Todo)=>void;
+export let onClickDelete:(todo:Todo)=>void;
 export let isMouseOver=false;
 
 </script>
@@ -32,10 +34,10 @@ export let isMouseOver=false;
   <div class="title" style={`color:${todo.color}`}>
     {todo.name}
   </div>
-  <IconButton onClick={()=>{}} style={`opacity:${isMouseOver?1:0}`}>
+  <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정">
     <MdEdit fill="gray"/>
   </IconButton>
-  <IconButton onClick={()=>{}} style={`opacity:${isMouseOver?1:0}`}>
+  <IconButton onClick={()=>onClickDelete(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="삭제">
     <MdDelete fill="gray"/>
   </IconButton>
 </div>

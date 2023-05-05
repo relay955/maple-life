@@ -12,7 +12,7 @@
     top:10px;
     left:10px;
     display: flex;
-    position: absolute;
+    position: fixed;
     z-index: 100;
     align-items: center;
     font-size: 18px;

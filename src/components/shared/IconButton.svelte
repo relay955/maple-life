@@ -16,6 +16,7 @@
 
 <style lang="scss">
   .icon-button{
+    z-index: 100;
     width:35px;
     height:35px;
     padding:5px;
