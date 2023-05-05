@@ -1,19 +1,16 @@
 <script>
   import logo from '$lib/images/icon/logo.png'
+  export let isFixed = false;
 </script>
 
-<div class="logo">
+<div class={`logo ${isFixed ? "fixed":""}`}>
   <img src={logo}/>
   MapleLife
 </div>
 
 <style lang="scss">
   .logo{
-    top:10px;
-    left:60px;
-    display: flex;
-    position: fixed;
-    z-index: 100;
+    display: inline-flex;
     align-items: center;
     font-size: 18px;
     font-weight: 700;
@@ -24,8 +21,14 @@
       height: 30px;
     }
   }
+  .logo.fixed{
+    top:10px;
+    left:60px;
+    position: fixed;
+    z-index: 100;
+  }
   @media (max-width: 1739px){
-    .logo{
+    .logo.fixed{
       display:none
     }
   }

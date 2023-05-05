@@ -7,9 +7,16 @@
   import MdInsertComment from 'svelte-icons/md/MdInsertComment.svelte'
   import MdBuild from 'svelte-icons/md/MdBuild.svelte'
   import MdMonetizationOn from 'svelte-icons/md/MdMonetizationOn.svelte'
+  import MdInfoOutline from 'svelte-icons/md/MdInfoOutline.svelte'
   import {onMount} from "svelte";
+  import Space from "../../shared/Space.svelte";
+  import Modal from "../../shared/Modal.svelte";
+  import logo from '$lib/images/icon/logo.png'
+  import Logo from "./Logo.svelte";
 
   let location;
+  let isOpenInfoPopup = false;
+
   onMount(()=>{
     location = window.location;
   })
@@ -48,9 +55,28 @@
               onClick={()=>window.open("https://141.kr")}>
     <MdMonetizationOn/>
   </IconButton>
+  <Space/>
+  <IconButton tooltip="웹사이트 정보"
+              style="margin-bottom: 4px"
+              direction="right"
+              onClick={()=>isOpenInfoPopup = true}>
+    <MdInfoOutline/>
+  </IconButton>
 </div>
+<Modal isOpen={isOpenInfoPopup} onClose={()=>isOpenInfoPopup = false}>
+  <div class="info-modal">
+  <Logo/>
+  <div class="license">
+    distributed under the MIT license
+  </div>
+  <div class="info-body">
+    <div><a href="https://github.com/relay955/maple-life">github</a></div>
+    <div>contact : <a href="mailto:refcell22@naver.com">refcell22@naver.com</a></div>
+  </div>
+  </div>
+</Modal>
 
-<style>
+<style lang="scss">
   .main{
     padding-top: 20px;
     position: fixed;
@@ -62,9 +88,25 @@
     width:50px;
     background-color: #f1f1f1;
     z-index: 200;
+    box-sizing: border-box;
   }
   .link-header{
     font-weight: bold;
     margin-bottom: 10px;
+  }
+
+  .info-modal{
+    text-align: center;
+    margin-bottom: 40px;
+    .license{
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .info-body{
+      font-size: 13px;
+      div{
+        margin-bottom: 3px;
+      }
+    }
   }
 </style>

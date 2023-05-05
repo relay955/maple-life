@@ -206,7 +206,7 @@
   };
 </script>
 
-<Logo/>
+<Logo isFixed/>
 <LeftBar/>
 <Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
          onClickShortHeightModeButton={onClickShortHeightModeButton}
