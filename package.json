@@ -2,7 +2,7 @@
 	"name": "maple-life",
 	"version": "0.0.1",
 	"private": true,
-	"homepage": "https://maplelife.github.io",
+	"homepage": "https://maplelife.kr",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
