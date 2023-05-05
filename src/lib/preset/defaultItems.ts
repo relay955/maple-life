@@ -28,56 +28,64 @@ export const getDefaultTodos = ():Todo[] =>
             name:"유니온코인 수령",
             type:"perAccount",
             repeatType:"daily",
-            isChecked:"unchecked"
+            isChecked:"unchecked",
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "일일 보스",
             type: "perCharacter",
             repeatType: "daily",
-            isChecked: {}
+            isChecked: {},
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "심볼 일퀘",
             type: "perCharacter",
             repeatType: "daily",
-            isChecked: {}
+            isChecked: {},
+            color:"default"
         },
         {
             id:uuidv4(),
             name:"이벤트 - 코인수집",
             type:"perCharacter",
             repeatType:"daily",
-            isChecked:{}
+            isChecked:{},
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "데일리 기프트 수령",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked"
+            isChecked: "unchecked",
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "우르스",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked"
+            isChecked: "unchecked",
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "몬스터 파크",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked"
+            isChecked: "unchecked",
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "황금마차 출석",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked"
+            isChecked: "unchecked",
+            color:"default"
         },
         {
             id:uuidv4(),
@@ -86,14 +94,16 @@ export const getDefaultTodos = ():Todo[] =>
             repeatType: "weeklyThursday",
             isChecked: {
                 "2":"blocked"
-            }
+            },
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "심볼 주간퀘",
             type: "perCharacter",
             repeatType: "weeklyMonday",
-            isChecked: {}
+            isChecked: {},
+            color:"default"
         },
         {
             id:uuidv4(),
@@ -102,7 +112,8 @@ export const getDefaultTodos = ():Todo[] =>
             repeatType: "weeklyMonday",
             isChecked: {
                 "2":"blocked"
-            }
+            },
+            color:"default"
         },
         {
             id:uuidv4(),
@@ -111,13 +122,15 @@ export const getDefaultTodos = ():Todo[] =>
             repeatType: "weeklyMonday",
             isChecked: {
                 "2":"blocked"
-            }
+            },
+            color:"default"
         },
         {
             id:uuidv4(),
             name: "헤이븐/야영지",
             type: "perCharacter",
             repeatType: "weeklyMonday",
-            isChecked: {}
+            isChecked: {},
+            color:"default"
         }
     ]
