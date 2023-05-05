@@ -32,6 +32,10 @@ function reset():Character{
 }
 
 const onClickSubmitButton = async () => {
+  if(character.name.trim() === ""){
+    toast.push("캐릭터 이름을 입력해주세요.");
+    return;
+  }
   try {
     if (!isManualMode) {
       isParsing = true;

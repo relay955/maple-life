@@ -5,6 +5,7 @@ import Modal from "../../shared/Modal.svelte";
 import Button from "../../shared/Button.svelte";
 import type {Todo} from "../../../storage/dto/todo";
 import {v4 as uuidv4} from 'uuid'
+import {toast} from "@zerodevx/svelte-toast";
 
 
 
@@ -42,6 +43,10 @@ const onCloseProxy = () => {
 
 const onClickSubmitButton = () => {
   todo.isChecked = todo.type === "perCharacter" ? {} : "unchecked";
+  if(todo.name.trim() === ""){
+    toast.push("할일 이름을 입력해주세요.");
+    return;
+  }
   if(!isEditMode) todo.id = uuidv4();
   onSubmit(todo);
   todo = resetTodo();
