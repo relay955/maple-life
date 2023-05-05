@@ -11,11 +11,11 @@ export let onSubmit = (todo:Todo) => {};
 
 const resetTodo = ():Todo => {
   return {
-    isChecked: "unchecked",
+    isChecked: {},
     name:"",
     type:"perCharacter",
     repeatType:"daily",
-    color:"black"
+    color:"black",
   };
 }
 
@@ -23,7 +23,7 @@ let todo:Todo = resetTodo()
 
 
 const onClickSubmitButton = () => {
-  console.log(todo)
+  todo.isChecked = todo.type === "perCharacter" ? {} : "unchecked";
   onSubmit(todo);
   todo = resetTodo();
   onClose();

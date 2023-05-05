@@ -110,6 +110,9 @@
   }
 
   const onAddTodo = (todo:Todo) => {
+    //이미 이름 같은게 있을경우 key 에러가 발생하므로 예외처리
+    if(todos.some(target=>target.name === todo.name))return;
+
     todos.push(todo);
     todos = todos
     saveTodos(todos)
@@ -124,7 +127,7 @@
   <div class="container">
     <div class="header">
       <div class="title">할일</div>
-      {#each characters as character}
+      {#each characters as character (character.name)}
         <div class="character">
           <div>
             <div class="name">
@@ -137,7 +140,7 @@
         </div>
       {/each}
     </div>
-    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo}>
+    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="name">
       <div class="item-title-container">
         {#if item.repeatType === "daily"}
           <Label color="#70a5e0">일일</Label>
@@ -157,7 +160,7 @@
       </div>
       {#if item.type === "perCharacter"}
         <div class="item-checkbox-lists">
-          {#each characters as character}
+          {#each characters as character (character.name)}
             <LargeCheckBox
               onClick={()=>onClickCheckbox(item, character)}
               checked={item.isChecked[character.name] ?? "unchecked"}/>
