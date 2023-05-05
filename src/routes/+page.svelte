@@ -254,6 +254,7 @@
   .main{
     width:100%;
     text-align: center;
+    padding-bottom: 400px;
   }
   .container{
     text-align: left;
