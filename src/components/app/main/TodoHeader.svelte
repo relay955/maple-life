@@ -1,5 +1,6 @@
 <script lang="ts">
   import type {Character} from "../../../storage/dto/character";
+  import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
 
   export let characters:Character[];
   export let onClickCharacter:(character:Character)=>void;
@@ -8,13 +9,19 @@
   <div class="title">할일</div>
   {#each characters as character (character.name)}
     <div class="character" on:click={()=>onClickCharacter(character)}>
-      <div>
-        <div class="name">
-          {character.name}
+      {#if character.imgUrl !== ""}
+        <div class="img" style={`background:url(${character.imgUrl})`}></div>
+      {/if}
+      {#if character.imgUrl === ""}
+        <div class="default-img">
+          <MdFavoriteBorder/>
         </div>
-        <div class="subtitle">
-          Lv.{character.level}, {character.classType}
-        </div>
+      {/if}
+      <div class="name">
+        {character.name}
+      </div>
+      <div class="subtitle">
+        Lv.{character.level}, {character.classType}
       </div>
     </div>
   {/each}
@@ -45,6 +52,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
       transition: 0.2s all;
       .name{
         font-size: 16px;
@@ -54,6 +62,17 @@
       .subtitle{
         font-size: 12px;
         color: gray;
+      }
+      .img{
+        width: 50px;
+        height: 50px;
+        background-position: 52% 61% !important;
+        background-size: 218% !important;
+      }
+      .default-img{
+        width: 40px;
+        height: 40px;
+        padding: 5px;
       }
     }
     .character:hover{
