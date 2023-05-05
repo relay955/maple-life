@@ -10,7 +10,7 @@
   export let direction:"top"|"bottom"|"left"|"right" = "top"
 </script>
 <div class="main">
-  <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"}>
+  <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"} bottom={direction==="bottom"}>
     <div class={`icon-button ${size}`} on:click={onClick} style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>

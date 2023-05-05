@@ -2,6 +2,9 @@
   import type {Character} from "../../../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
   import type {Settings} from "../../../storage/dto/settings";
+  import IconButton from "../../shared/IconButton.svelte";
+  import MdHelpOutline from 'svelte-icons/md/MdHelpOutline.svelte'
+  import Modal from "../../shared/Modal.svelte";
 
   export let characters:Character[];
   export let onClickCharacter:(character:Character)=>void;
@@ -9,6 +12,7 @@
   export let settings:Settings;
 
   let dragCharacter:Character|undefined = undefined;
+  let isOpenHelpModal = false;
 
   const onDragStartCharacter = (e:Event,character:Character)=>{
     console.log("a")
@@ -26,7 +30,14 @@
   }
 </script>
 <div class="header">
-  <div class="title">할일</div>
+  <div class="title">
+    <div class="text">
+    할일
+    </div>
+    <IconButton direction="bottom" onClick={()=>isOpenHelpModal=true}>
+      <MdHelpOutline/>
+    </IconButton>
+  </div>
   {#each characters as character (character.name)}
     <div class="character" on:click={()=>onClickCharacter(character)}
          draggable="true"
@@ -51,6 +62,11 @@
     </div>
   {/each}
 </div>
+<Modal isOpen={isOpenHelpModal} onClose={()=>isOpenHelpModal = false} title="기본 사용방법">
+  <p>
+
+  </p>
+</Modal>
 
 <style lang="scss">
   .header {
@@ -67,6 +83,12 @@
       width: 500px;
       font-size: 20px;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      .text{
+        margin-bottom: 3px;
+        margin-right: 5px;
+      }
     }
 
     .character {
