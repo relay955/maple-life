@@ -4,11 +4,34 @@
 
   export let characters:Character[];
   export let onClickCharacter:(character:Character)=>void;
+  export let onChangeOrderCharacter:(firstCharacter:Character, secondCharacter:Character)=>void;
+
+  let dragCharacter:Character|undefined = undefined;
+
+  const onDragStartCharacter = (e:Event,character:Character)=>{
+    console.log("a")
+    dragCharacter = character;
+  }
+  const onDragOverCharacter = (e:Event)=>{
+    e.preventDefault()
+  }
+  const onDragEndChracter = (e:Event,character:Character)=>{
+    e.preventDefault()
+    if(dragCharacter === undefined) return;
+    if(dragCharacter.id === character.id) return;
+    onChangeOrderCharacter(dragCharacter, character);
+    dragCharacter = undefined;
+  }
 </script>
 <div class="header">
   <div class="title">할일</div>
   {#each characters as character (character.name)}
-    <div class="character" on:click={()=>onClickCharacter(character)}>
+    <div class="character" on:click={()=>onClickCharacter(character)}
+         draggable="true"
+         on:dragstart={(e)=>onDragStartCharacter(e,character)}
+         on:dragover={onDragOverCharacter}
+         on:drop={(e)=>onDragEndChracter(e,character)}
+    >
       {#if character.imgUrl !== ""}
         <div class="img" style={`background:url(${character.imgUrl})`}></div>
       {/if}

@@ -159,6 +159,20 @@
     editCharacterModalTarget = character;
   }
 
+  const onChangeOrderCharacter = (firstCharacter:Character,secondCharacter:Character) => {
+    const firstCharacterIndex = characters.findIndex(target => target.id === firstCharacter.id)
+    const secondCharacterIndex = characters.findIndex(target => target.id === secondCharacter.id)
+    if(firstCharacterIndex === -1 || secondCharacterIndex === -1){
+      return;
+    }
+    const temp = characters[firstCharacterIndex]
+    characters[firstCharacterIndex] = characters[secondCharacterIndex]
+    characters[secondCharacterIndex] = temp
+
+    characters = characters
+    saveCharacters(characters)
+  }
+
   const onSubmitDeleteCharacter = (character:Character) => {
     if(characters.length <= 1){
       toast.push("최소 1개 이상의 캐릭터가 존재해야합니다.");
@@ -176,7 +190,9 @@
 
 <div class="main">
   <div class="container">
-    <TodoHeader characters={characters} onClickCharacter={onClickEditCharacter}/>
+    <TodoHeader characters={characters}
+                onClickCharacter={onClickEditCharacter}
+                onChangeOrderCharacter={onChangeOrderCharacter}/>
     <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="id">
       <TodoItems characters={characters} todo={item}
                  onClickCheckbox={onClickCheckbox}
