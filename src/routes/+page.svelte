@@ -4,7 +4,14 @@
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
-  import {loadCharacters, loadSystemInfo, loadTodos, saveSystemInfo, saveTodos} from "../storage/storage";
+  import {
+    loadCharacters,
+    loadSystemInfo,
+    loadTodos,
+    saveCharacters,
+    saveSystemInfo,
+    saveTodos
+  } from "../storage/storage";
   import {onMount} from "svelte";
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
@@ -14,8 +21,6 @@
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
-  import {requestMapleCharacterInfo} from "../util/mapleParser";
-  import {PROXY_URL} from "../config";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
@@ -23,8 +28,6 @@
   let isAddCharacterModalOpen = false;
 
   onMount(async () => {
-    let data = await requestMapleCharacterInfo("썬콜",PROXY_URL)
-    console.log(data)
     const loadedCharacters = loadCharacters();
     characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
     const loadedTodos = loadTodos();
@@ -91,10 +94,14 @@
     todos.push(todo);
     todos = todos
     saveTodos(todos)
-    isAddTodoModalOpen = false;
   }
   const onAddCharacter = (character:Character) =>{
+    //이미 이름 같은게 있을경우 key 에러가 발생하므로 예외처리
+    if(characters.some(target=>target.name === character.name))return;
 
+    characters.push(character);
+    characters = characters
+    saveCharacters(characters)
   };
 
 </script>
