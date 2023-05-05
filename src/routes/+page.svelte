@@ -13,7 +13,6 @@
     saveTodos
   } from "../storage/storage";
   import {onMount} from "svelte";
-  import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
   import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
@@ -21,14 +20,17 @@
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
-  import {SvelteToast} from "@zerodevx/svelte-toast";
+  import {SvelteToast, toast} from "@zerodevx/svelte-toast";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
   let isEditTodoModalOpen = false;
   let editTodoModalEditMode = false;
   let editTodoModalTarget:Todo|undefined = undefined;
-  let isAddCharacterModalOpen = false;
+
+  let isEditCharacterModalOpen = false;
+  let isEditCharacterModalEditMode = false;
+  let editCharacterModalTarget:Character|undefined = undefined;
 
   onMount(async () => {
     const loadedCharacters = loadCharacters();
@@ -90,7 +92,7 @@
     saveTodos(todos)
   }
 
-  const onEditTodo = (todo:Todo) => {
+  const onSubmitEditTodo = (todo:Todo) => {
     const editTargetIndex = todos.findIndex(target => target.id === todo.id)
     if(editTargetIndex !== -1) {
       todos[editTargetIndex] = todo
@@ -100,11 +102,6 @@
     todos = todos
     saveTodos(todos)
   }
-  const onAddCharacter = (character:Character) =>{
-    characters.push(character);
-    characters = characters
-    saveCharacters(characters)
-  };
 
   const onClickDeleteTodo = (todo:Todo) => {
     todos = todos.filter(target => target.name !== todo.name)
@@ -115,6 +112,7 @@
   const onClickAddTodoButton = () => {
     isEditTodoModalOpen = true;
     editTodoModalEditMode = false;
+    editTodoModalTarget = undefined;
   }
 
   const onClickEditTodoButton = (todo:Todo) => {
@@ -123,14 +121,47 @@
     editTodoModalTarget = todo;
   }
 
+  const onSubmitEditCharacter = (character:Character) =>{
+    const editTargetIndex = characters.findIndex(target => target.id === character.id)
+    if(editTargetIndex !== -1) {
+      characters[editTargetIndex] = character
+    } else {
+      characters.push(character)
+    }
+    characters = characters
+    saveCharacters(characters)
+  };
+
+  const onClickAddCharacterButton = () => {
+    isEditCharacterModalOpen = true;
+    isEditCharacterModalEditMode = false;
+    editCharacterModalTarget = undefined;
+  }
+
+  const onClickEditCharacter = (character:Character) => {
+    isEditCharacterModalOpen = true;
+    isEditCharacterModalEditMode = true;
+    editCharacterModalTarget = character;
+  }
+
+  const onSubmitDeleteCharacter = (character:Character) => {
+    if(characters.length <= 1){
+      toast.push("최소 1개 이상의 캐릭터가 존재해야합니다.");
+      return;
+    }
+    characters = characters.filter(target => target.id !== character.id)
+    characters = characters
+    saveCharacters(characters)
+  }
+
 </script>
 
 <Logo/>
-<Toolbar onClickCharacterAddButton={()=>isAddCharacterModalOpen = true}/>
+<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}/>
 
 <div class="main">
   <div class="container">
-    <TodoHeader characters={characters}/>
+    <TodoHeader characters={characters} onClickCharacter={onClickEditCharacter}/>
     <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="id">
       <TodoItems characters={characters} todo={item}
                  onClickCheckbox={onClickCheckbox}
@@ -144,10 +175,13 @@
                  isEditMode={editTodoModalEditMode}
                  editTodo={editTodoModalTarget}
                  onClose={()=>isEditTodoModalOpen = false}
-                 onSubmit={onEditTodo}/>
-  <CharacterEditModal isOpen={isAddCharacterModalOpen}
-                      onClose={()=>isAddCharacterModalOpen = false}
-                      onSubmit={onAddCharacter}/>
+                 onSubmit={onSubmitEditTodo}/>
+  <CharacterEditModal isOpen={isEditCharacterModalOpen}
+                      isEditMode={isEditCharacterModalEditMode}
+                      editCharacter={editCharacterModalTarget}
+                      onClose={()=>isEditCharacterModalOpen = false}
+                      onDelete={onSubmitDeleteCharacter}
+                      onSubmit={onSubmitEditCharacter}/>
 </div>
 <SvelteToast/>
 

@@ -2,11 +2,12 @@
   import type {Character} from "../../../storage/dto/character";
 
   export let characters:Character[];
+  export let onClickCharacter:(character:Character)=>void;
 </script>
 <div class="header">
   <div class="title">할일</div>
   {#each characters as character (character.name)}
-    <div class="character">
+    <div class="character" on:click={()=>onClickCharacter(character)}>
       <div>
         <div class="name">
           {character.name}
@@ -21,11 +22,10 @@
 
 <style lang="scss">
   .header{
-    padding-top: 5px;
-    padding-bottom: 5px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-top: 2px;
+    margin-bottom: 5px;
     position: sticky;
     top:0;
     z-index: 1;
@@ -37,11 +37,15 @@
       font-weight: bold;
     }
     .character{
+      padding-top: 5px;
+      padding-bottom: 5px;
+      cursor: pointer;
       flex-grow: 1;
       width: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: 0.2s all;
       .name{
         font-size: 16px;
         font-weight: bold;
@@ -51,6 +55,9 @@
         font-size: 12px;
         color: gray;
       }
+    }
+    .character:hover{
+      background-color: #f5f5f5;
     }
   }
 </style>

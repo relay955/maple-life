@@ -34,17 +34,22 @@ $: {
 
 let todo:Todo = resetTodo()
 
+const onCloseProxy = () => {
+  todo = resetTodo();
+  onClose()
+}
+
 
 const onClickSubmitButton = () => {
   todo.isChecked = todo.type === "perCharacter" ? {} : "unchecked";
   if(!isEditMode) todo.id = uuidv4();
   onSubmit(todo);
   todo = resetTodo();
-  onClose();
+  onCloseProxy()
 }
 </script>
 
-<Modal title={isEditMode ? "할일 수정" : "할일 생성"} isOpen={isOpen} onClose={onClose}>
+<Modal title={isEditMode ? "할일 수정" : "할일 생성"} isOpen={isOpen} onClose={onCloseProxy}>
   <Input title="할일 이름" bind:value={todo.name} />
   <Select title="초기화 간격" bind:value={todo.repeatType}>
     <option value="daily">일일</option>
