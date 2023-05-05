@@ -67,6 +67,9 @@
   <div class="info-modal">
     <Logo/>
     <div class="description">for playing Maplestory as life</div>
+    <div class="description">
+      모든 데이터는 사용자 PC에 저장되며, 사이트는 데이터를 수집하지 않습니다.
+    </div>
     <div class="license">
       distributed under the MIT license
     </div>
@@ -105,6 +108,7 @@
       margin-bottom: 3px;
     }
     .license{
+      margin-top: 10px;
       font-size: 12px;
       color: gray;
       margin-bottom: 13px;
