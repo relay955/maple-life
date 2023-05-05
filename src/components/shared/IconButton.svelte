@@ -5,17 +5,21 @@
   export let tooltip;
   export let onClick = () => {};
   export let style:string = "";
+  export let activated=false;
 </script>
-<div class="icon-button" on:click={onClick} style={style}>
+<span style="color:white;">
   <SvelteTooltip tip={tooltip} top>
-    <span class="icon">
-      <slot></slot>
-    </span>
+    <div class="icon-button" on:click={onClick} style={style}>
+      <span class={`${activated ? "activated":""} icon`}>
+        <slot></slot>
+      </span>
+    </div>
   </SvelteTooltip>
-</div>
+</span>
 
 <style lang="scss">
   .icon-button{
+    display: inline-block;
     z-index: 100;
     width:35px;
     height:35px;
@@ -30,6 +34,12 @@
     background-color: lightgray;
   }
   .icon{
-    color:gray;
+    color: #aeaeae;
+  }
+  .icon.activated{
+    filter:
+      drop-shadow(1px 1px 10px gray)
+      drop-shadow(1px 1px 10px gray);
+    color:black;
   }
 </style>

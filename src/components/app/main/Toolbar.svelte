@@ -1,15 +1,32 @@
 <script lang="ts">
   import MdPersonAdd from 'svelte-icons/md/MdPersonAdd.svelte'
+  import MdUnfoldLess from 'svelte-icons/md/MdUnfoldLess.svelte'
+  import MdPhotoSizeSelectLarge from 'svelte-icons/md/MdPhotoSizeSelectLarge.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/IconButton.svelte";
+  import type {Settings} from "../../../storage/dto/settings";
 
   export let onClickCharacterAddButton:()=>void;
+  export let onClickShortHeightModeButton:()=>void;
+  export let onClickShowCharacterPreviewButton:()=>void;
+  export let settings:Settings;
 </script>
 
 <div class="toolbar">
-  <IconButton onClick={onClickCharacterAddButton}>
-    <MdPersonAdd fill="gray"/>
+  <IconButton onClick={onClickCharacterAddButton} tooltip="캐릭터 추가"
+              activated="">
+    <MdPersonAdd/>
+  </IconButton>
+  <IconButton onClick={onClickShortHeightModeButton}
+              tooltip="좁은높이 모드 - 한 화면에 더 많은 할일을 보고싶을때 사용해보세요."
+              activated={settings.shortHeightMode}>
+    <MdUnfoldLess/>
+  </IconButton>
+  <IconButton onClick={onClickShowCharacterPreviewButton}
+              tooltip="캐릭터 사진 보기 - 한 화면에 더 많은 할일을 보고싶을때 사용해보세요."
+              activated={settings.showCharacterPreview}>
+    <MdPhotoSizeSelectLarge/>
   </IconButton>
 </div>
 
@@ -28,21 +45,5 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-  }
-  .icon-button{
-    width:35px;
-    height:35px;
-    padding:5px;
-    box-sizing: border-box;
-    border-radius: 30px;
-    color:white;
-    cursor: pointer;
-    transition: 0.2s all;
-  }
-  .icon-button:hover{
-    background-color: lightgray;
-  }
-  .icon{
-    color:gray;
   }
 </style>
