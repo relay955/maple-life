@@ -68,19 +68,34 @@
     }, 1000)
   })
 
-  function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
-    if(character === undefined){
-      if(item.isChecked === "checked") {
-        item.isChecked = "unchecked";
-      }else if(item.isChecked === "unchecked"){
-        item.isChecked = "checked";
+  function onClickCheckbox(type:"right"|"left",item:Todo, character:Character|undefined = undefined) {
+    if(type==="right"){
+      if (character === undefined) {
+        item.isChecked = item.isChecked === "blocked" ? "unchecked" : "blocked";
+      } else {
+        const targetCharacterChecked = item.isChecked[character.name];
+        if (targetCharacterChecked === "blocked") {
+          item.isChecked[character.name] = "unchecked";
+        } else {
+          item.isChecked[character.name] = "blocked";
+        }
       }
-    }else{
-      const targetCharacterChecked = item.isChecked[character.name];
-      if(targetCharacterChecked === "checked") {
-        item.isChecked[character.name] = "unchecked";
-      }else if(targetCharacterChecked === "unchecked" || targetCharacterChecked === undefined){
-        item.isChecked[character.name] = "checked";
+    }
+
+    if(type==="left" && item.isChecked !== "blocked") {
+      if (character === undefined) {
+        if (item.isChecked === "checked") {
+          item.isChecked = "unchecked";
+        } else if (item.isChecked === "unchecked") {
+          item.isChecked = "checked";
+        }
+      } else {
+        const targetCharacterChecked = item.isChecked[character.name];
+        if (targetCharacterChecked === "checked") {
+          item.isChecked[character.name] = "unchecked";
+        } else if (targetCharacterChecked === "unchecked" || targetCharacterChecked === undefined) {
+          item.isChecked[character.name] = "checked";
+        }
       }
     }
     todos = todos

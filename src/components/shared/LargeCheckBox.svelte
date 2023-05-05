@@ -4,8 +4,11 @@
   import MdCheckCircle from 'svelte-icons/md/MdCheckCircle.svelte'
   export let checked:TodoCheckType;
   export let onClick:()=>void;
+  export let onRightClick:()=>void;
+
 </script>
-<div class={`main ${checked}`} on:click={onClick}>
+<div class={`main ${checked}`} on:click={onClick}
+     on:contextmenu|preventDefault={onRightClick}>
   {#if checked==="checked"}
     <MdCheckCircle/>
   {/if}
