@@ -73,11 +73,11 @@
       if (character === undefined) {
         item.isChecked = item.isChecked === "blocked" ? "unchecked" : "blocked";
       } else {
-        const targetCharacterChecked = item.isChecked[character.name];
+        const targetCharacterChecked = item.isChecked[character.id];
         if (targetCharacterChecked === "blocked") {
-          item.isChecked[character.name] = "unchecked";
+          item.isChecked[character.id] = "unchecked";
         } else {
-          item.isChecked[character.name] = "blocked";
+          item.isChecked[character.id] = "blocked";
         }
       }
     }
@@ -90,11 +90,11 @@
           item.isChecked = "checked";
         }
       } else {
-        const targetCharacterChecked = item.isChecked[character.name];
+        const targetCharacterChecked = item.isChecked[character.id];
         if (targetCharacterChecked === "checked") {
-          item.isChecked[character.name] = "unchecked";
+          item.isChecked[character.id] = "unchecked";
         } else if (targetCharacterChecked === "unchecked" || targetCharacterChecked === undefined) {
-          item.isChecked[character.name] = "checked";
+          item.isChecked[character.id] = "checked";
         }
       }
     }
@@ -119,7 +119,7 @@
   }
 
   const onClickDeleteTodo = (todo:Todo) => {
-    todos = todos.filter(target => target.name !== todo.name)
+    todos = todos.filter(target => target.id !== todo.id)
     todos = todos
     saveTodos(todos)
   }

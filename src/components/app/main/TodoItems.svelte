@@ -43,11 +43,11 @@ export let isMouseOver=false;
 </div>
 {#if todo.type === "perCharacter"}
   <div class="item-checkbox-lists">
-    {#each characters as character (character.name)}
+    {#each characters as character (character.id)}
       <LargeCheckBox
         onClick={()=>onClickCheckbox("left",todo, character)}
         onRightClick={()=>onClickCheckbox("right",todo,character)}
-        checked={todo.isChecked[character.name] ?? "unchecked"}/>
+        checked={todo.isChecked[character.id] ?? "unchecked"}/>
     {/each}
   </div>
 {/if}

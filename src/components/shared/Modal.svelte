@@ -4,15 +4,22 @@
   export let title = "";
   export let isOpen = false;
   export let onClose: () => void = ()=>{};
+  export let onEnter: () => void = ()=>{};
 
-  function onClickOuter(e: MouseEvent){
+
+  const onClickOuter = (e: MouseEvent) => {
     if(e.target !== e.currentTarget) return;
     onClose();
+  }
+  const onKeyPress = (e: KeyboardEvent) => {
+    if(e.key === "Enter"){
+      onEnter();
+    }
   }
 </script>
 
 <div class={`Popup ${isOpen?"opened":""}`}
-            on:mousedown={onClickOuter}>
+            on:mousedown={onClickOuter} on:keypress={onKeyPress}>
   <div class="inner-item">
     <div style="display:flex; margin-bottom:10px; height:25px">
       <div class="title">{title}</div>

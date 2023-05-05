@@ -87,7 +87,8 @@ const onCloseProxy = () => {
 
 </script>
 
-<Modal title={isEditMode ? "캐릭터 수정":"캐릭터 등록"} isOpen={isOpen} onClose={onCloseProxy}>
+<Modal title={isEditMode ? "캐릭터 수정":"캐릭터 등록"}
+       isOpen={isOpen} onClose={onCloseProxy} onEnter={onClickSubmitButton}>
   <Input title="닉네임" bind:value={character.name} />
   {#if isManualMode}
     <div class="error-message">서버에서 데이터를 불러오는데 문제가 발생하여<br/>직업 정보를 수동으로 입력해야합니다.</div>
