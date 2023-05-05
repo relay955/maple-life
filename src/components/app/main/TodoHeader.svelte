@@ -21,11 +21,16 @@
 
 <style lang="scss">
   .header{
-    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     display: flex;
     align-items: center;
     margin-bottom: 10px;
     position: sticky;
+    top:0;
+    z-index: 1;
+    background-color: white;
+
     .title{
       width: 500px;
       font-size: 20px;

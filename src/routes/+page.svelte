@@ -105,6 +105,17 @@
     saveCharacters(characters)
   };
 
+  const onClickDeleteTodo = (todo:Todo) => {
+    todos = todos.filter(target => target.name !== todo.name)
+    todos = todos
+    saveTodos(todos)
+  }
+
+  const onClickEditTodo = (todo:Todo) => {
+    todos = todos
+    saveTodos(todos)
+  }
+
 </script>
 
 <Logo/>
@@ -114,7 +125,11 @@
   <div class="container">
     <TodoHeader characters={characters}/>
     <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="name">
-      <TodoItems characters={characters} onClickCheckbox={onClickCheckbox} todo={item}/>
+      <TodoItems characters={characters} todo={item}
+                 onClickCheckbox={onClickCheckbox}
+                 onClickDelete={onClickDeleteTodo}
+                 onClickEdit={onClickEditTodo}
+      />
     </DragDropList>
     <AddTodoButton onClick={()=>isAddTodoModalOpen = true}/>
   </div>
