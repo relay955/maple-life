@@ -10,7 +10,7 @@ import Space from "../../shared/Space.svelte";
 
 export let todo:Todo;
 export let characters:Character;
-export let onClickCheckbox:(todo:Todo, character:Character)=>void;
+export let onClickCheckbox:(type:"right"|"left",todo:Todo, character:Character)=>void;
 export let onClickEdit:(todo:Todo)=>void;
 export let onClickDelete:(todo:Todo)=>void;
 export let isMouseOver=false;
@@ -45,14 +45,16 @@ export let isMouseOver=false;
   <div class="item-checkbox-lists">
     {#each characters as character (character.name)}
       <LargeCheckBox
-        onClick={()=>onClickCheckbox(todo, character)}
+        onClick={()=>onClickCheckbox("left",todo, character)}
+        onRightClick={()=>onClickCheckbox("right",todo,character)}
         checked={todo.isChecked[character.name] ?? "unchecked"}/>
     {/each}
   </div>
 {/if}
 {#if todo.type === "perAccount"}
   <LargeCheckBox
-    onClick={()=>onClickCheckbox(todo)}
+    onClick={()=>onClickCheckbox("left",todo)}
+    onRightClick={()=>onClickCheckbox("right",todo)}
     checked="{todo.isChecked}"/>
 {/if}
 
