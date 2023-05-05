@@ -2,19 +2,14 @@
   export let title:string = "";
   export let value:string = "";
   export let type:string = "text";
-  export let useAutoComplete:boolean = false;
+  export let listId:string = "";
   export let onSelect:(e:Event)=>void = ()=>{};
   export let ref;
 </script>
 
 <div>
   <div class="title">{title}</div>
-  <input bind:value={value} list="myinput" on:change={onSelect} bind:this={ref}/>
-  {#if useAutoComplete}
-    <datalist id="myinput">
-      <slot></slot>
-    </datalist>
-  {/if}
+  <input bind:value={value} list={listId} on:change={onSelect} bind:this={ref}/>
 </div>
 
 <style>
