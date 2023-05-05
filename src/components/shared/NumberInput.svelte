@@ -1,12 +1,11 @@
 <script lang="ts">
   export let title:string = "";
-  export let value:string = "";
-  export let type:string = "text";
+  export let value:number = 1;
 </script>
 
 <div>
   <div class="title">{title}</div>
-  <input bind:value={value}/>
+  <input bind:value={value} type="number"/>
 </div>
 
 <style>

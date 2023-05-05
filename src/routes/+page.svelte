@@ -21,6 +21,7 @@
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
+  import {SvelteToast} from "@zerodevx/svelte-toast";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
@@ -124,6 +125,7 @@
                       onClose={()=>isAddCharacterModalOpen = false}
                       onSubmit={onAddCharacter}/>
 </div>
+<SvelteToast/>
 
 <style lang="scss">
   .main{
