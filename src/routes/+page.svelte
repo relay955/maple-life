@@ -7,7 +7,7 @@
   import type {Todo} from "../storage/dto/todo";
   import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
   import Label from "../components/shared/Label.svelte";
-  import {loadTodos, saveTodos} from "../storage/storage";
+  import {loadCharacters, loadSystemInfo, loadTodos, saveTodos} from "../storage/storage";
   import {onMount} from "svelte";
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
   import Modal from "../components/shared/Modal.svelte";
@@ -15,73 +15,27 @@
   import Input from "../components/shared/Input.svelte";
   import Select from "../components/shared/Select.svelte";
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
+  import moment from "moment";
+  import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
+
+  let characters:Character[] = [];
+
+  let todos:Todo[] = []
 
   onMount(()=>{
+    const loadedCharacters = loadCharacters();
+    characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
     const loadedTodos = loadTodos();
-    if(loadedTodos.length > 0) todos = loadedTodos;
+    todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
+
+    setInterval(()=>{
+      let systemInfo = loadSystemInfo();
+      const lastUpdated = moment(systemInfo.lastUpdated);
+      if(moment().isAfter(lastUpdated)) return;
+    },1000)
   })
 
-  let characters:Character[] = [
-    {
-      name:"보마1",
-      imgUrl:"",
-      level:235,
-      classType:"보우마스터"
-    },
-    {
-      name:"썬콜",
-      imgUrl:"",
-      level:241,
-      classType:"아크메이지 (썬,콜)"
-    }
-  ];
 
-  let todos:Todo[] = [
-    {
-      name:"일일 보스",
-      type:"perCharacter",
-      repeatType:"daily",
-      isChecked:{
-        "썬콜":"checked"
-      }
-    },
-    {
-      name:"주간 보스",
-      type:"perCharacter",
-      repeatType:"weeklyMonday",
-      isChecked:{}
-    },
-    {
-      name:"심볼 일퀘",
-      type:"perCharacter",
-      repeatType:"daily",
-      isChecked:{}
-    },
-    {
-      name:"검은 마법사",
-      type:"perCharacter",
-      repeatType:"monthly",
-      isChecked:{}
-    },
-    {
-      name:"우르스 3판",
-      type:"perAccount",
-      repeatType:"daily",
-      isChecked:"checked"
-    },
-    {
-      name:"데일리 기프트 수령",
-      type:"perAccount",
-      repeatType:"daily",
-      isChecked:"unchecked"
-    },
-    {
-      name:"몬스터 파크",
-      type:"perAccount",
-      repeatType:"daily",
-      isChecked:"blocked"
-    }
-  ];
 
   let isAddTodoModalOpen = false;
 
