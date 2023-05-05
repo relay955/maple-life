@@ -50,7 +50,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
     transition: 0.3s all;
-    z-index: 10;
+    z-index: 1000;
     left: 0;
     top: 0;
 

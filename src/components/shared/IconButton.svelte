@@ -23,7 +23,7 @@
   .main{
     display: inline-block;
     color: white;
-    z-index: 9999;
+    z-index: 1;
   }
   .icon-button{
     display: inline-block;
