@@ -6,6 +6,8 @@ import Button from "../../shared/Button.svelte";
 import type {Todo} from "../../../storage/dto/todo";
 import {v4 as uuidv4} from 'uuid'
 import {toast} from "@zerodevx/svelte-toast";
+import {getTodoPresets} from "$lib/preset/todoPresets";
+import {onMount} from "svelte";
 
 
 
@@ -15,7 +17,12 @@ export let editTodo:Todo|undefined = undefined;
 export let onClose = () => {};
 export let onSubmit = (todo:Todo) => {};
 
-const resetTodo = ():Todo => {
+let nameRef;
+
+let todo:Todo = resetTodo()
+let todoPresets = getTodoPresets()
+
+function resetTodo():Todo{
   return {
     id:"",
     isChecked: {},
@@ -27,13 +34,14 @@ const resetTodo = ():Todo => {
 }
 
 $: {
-  if(editTodo !== undefined && isEditMode){
+  if (editTodo !== undefined && isEditMode) {
     todo = editTodo
   }
 }
 
-
-let todo:Todo = resetTodo()
+$: if(isOpen){
+  nameRef.focus()
+}
 
 const onCloseProxy = () => {
   todo = resetTodo();
@@ -52,16 +60,32 @@ const onClickSubmitButton = () => {
   todo = resetTodo();
   onCloseProxy()
 }
+
+const onSelectAutoComplete = (e:any)=>{
+  const todoPreset = todoPresets[e.target.value]
+  todo = {
+    ...todo,
+    ...todoPreset,
+  }
+}
 </script>
 
-<Modal title={isEditMode ? "할일 수정" : "할일 생성"} isOpen={isOpen} onClose={onCloseProxy}>
-  <Input title="할일 이름" bind:value={todo.name} />
+<Modal title={isEditMode ? "할일 수정" : "할일 생성"} isOpen={isOpen}
+       onClose={onCloseProxy} onEnter={onClickSubmitButton}>
+  <Input title="할일 이름" bind:value={todo.name}
+         bind:ref={nameRef}
+         useAutoComplete={true} onSelect={(e)=>onSelectAutoComplete(e)}>
+    {#each Object.keys(todoPresets) as todoPresetName (todoPresetName)}
+      <option value={todoPresetName}></option>
+    {/each}
+  </Input>
   <Select title="초기화 간격" bind:value={todo.repeatType}>
     <option value="daily">일일</option>
     <option value="weeklyMonday">주간(월요일 초기화)</option>
     <option value="weeklyThursday">주간(목요일 초기화)</option>
     <option value="monthly">월간</option>
   </Select>
+
   <Select title="할일 처리 단위" bind:value={todo.type}>
     <option value="perCharacter">캐릭터 별</option>
     <option value="perAccount">계정 별</option>
