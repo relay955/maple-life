@@ -7,6 +7,7 @@ import IconButton from "../../shared/IconButton.svelte";
 import MdEdit from 'svelte-icons/md/MdEdit.svelte'
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import Space from "../../shared/Space.svelte";
+import type {Settings} from "../../../storage/dto/settings";
 
 export let todo:Todo;
 export let characters:Character;
@@ -14,7 +15,7 @@ export let onClickCheckbox:(type:"right"|"left",todo:Todo, character:Character)=
 export let onClickEdit:(todo:Todo)=>void;
 export let onClickDelete:(todo:Todo)=>void;
 export let isMouseOver=false;
-
+export let settings:Settings;
 </script>
 
 <div class="item-title-container" on:mouseenter={()=>isMouseOver = true}
@@ -34,10 +35,12 @@ export let isMouseOver=false;
   <div class="title" style={todo.color !== "default" ? `color:${todo.color}`:""}>
     {todo.name}
   </div>
-  <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정">
+  <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정"
+              size={settings.shortHeightMode ? "small" : "medium"}>
     <MdEdit/>
   </IconButton>
-  <IconButton onClick={()=>onClickDelete(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="삭제">
+  <IconButton onClick={()=>onClickDelete(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="삭제"
+              size={settings.shortHeightMode ? "small" : "medium"}>
     <MdDelete/>
   </IconButton>
 </div>
@@ -45,7 +48,7 @@ export let isMouseOver=false;
   <div class="item-checkbox-lists">
     {#each characters as character (character.id)}
       <LargeCheckBox
-        style={todo.color !== "default"?`background-color:${todo.color}22;`:""}
+        style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}${settings.shortHeightMode?"height:28px;":""}}`}
         onClick={()=>onClickCheckbox("left",todo, character)}
         onRightClick={()=>onClickCheckbox("right",todo,character)}
         checked={todo.isChecked[character.id] ?? "unchecked"}/>
@@ -54,6 +57,7 @@ export let isMouseOver=false;
 {/if}
 {#if todo.type === "perAccount"}
   <LargeCheckBox
+    style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}${settings.shortHeightMode?"height:28px;":""}}`}
     onClick={()=>onClickCheckbox("left",todo)}
     onRightClick={()=>onClickCheckbox("right",todo)}
     checked="{todo.isChecked}"/>

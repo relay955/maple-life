@@ -93,7 +93,6 @@
       box-sizing: border-box;
       display: flex;
       width: 100%;
-      min-height: 40px;
       margin-bottom: 5px;
       background-color: white;
       border: 1px solid rgb(190, 190, 190);
@@ -165,7 +164,6 @@
 
     box-sizing: border-box;
     width: 100%;
-    min-height: 40px;
     display: flex;
     border: 1px solid rgb(190, 190, 190);
     border-radius: 4px;
