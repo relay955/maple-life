@@ -41,7 +41,7 @@
                 todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
               )
             } else {
-              todo.isChecked = "unchecked";
+              todo.isChecked = todo.isChecked === "blocked" ? "blocked" : "unchecked";
             }
           }
         })
