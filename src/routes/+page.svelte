@@ -69,6 +69,7 @@
               todo.isChecked = todo.isChecked === "blocked" ? "blocked" : "unchecked";
             }
           }
+          saveTodos(todos)
         })
 
         saveSystemInfo(today.format("YYYY-MM-DD"))
