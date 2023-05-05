@@ -2,18 +2,15 @@
   import MdPersonAdd from 'svelte-icons/md/MdPersonAdd.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
+  import IconButton from "../../shared/IconButton.svelte";
 
   export let onClickCharacterAddButton:()=>void;
 </script>
 
 <div class="toolbar">
-  <div class="icon-button" on:click={onClickCharacterAddButton}>
-    <SvelteTooltip tip="캐릭터 추가" top>
-      <span class="icon">
-        <MdPersonAdd fill="gray"/>
-      </span>
-    </SvelteTooltip>
-  </div>
+  <IconButton onClick={onClickCharacterAddButton}>
+    <MdPersonAdd fill="gray"/>
+  </IconButton>
 </div>
 
 <style>

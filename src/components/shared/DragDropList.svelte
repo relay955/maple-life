@@ -102,7 +102,6 @@
       align-items: center;
       padding-top:2px;
       padding-bottom:2px;
-      padding-left: 10px;
 
       &:last-child{
         margin-bottom: 0;
@@ -172,7 +171,6 @@
     border-radius: 4px;
     padding-top:2px;
     padding-bottom:2px;
-    padding-left: 10px;
     background-color: white;
     align-items: center;
   }
