@@ -1,26 +1,21 @@
 <script lang="ts">
   import Toolbar from "../components/app/main/Toolbar.svelte";
   import Logo from "../components/app/main/Logo.svelte";
-  import Title from "../components/shared/Title.svelte";
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
   import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
   import Label from "../components/shared/Label.svelte";
-  import {loadCharacters, loadSystemInfo, loadTodos, saveTodos} from "../storage/storage";
+  import {loadCharacters, loadSystemInfo, loadTodos, saveSystemInfo, saveTodos} from "../storage/storage";
   import {onMount} from "svelte";
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
-  import Modal from "../components/shared/Modal.svelte";
-  import Button from "../components/shared/Button.svelte";
-  import Input from "../components/shared/Input.svelte";
-  import Select from "../components/shared/Select.svelte";
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
   import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
 
   let characters:Character[] = [];
-
   let todos:Todo[] = []
+  let isAddTodoModalOpen = false;
 
   onMount(()=>{
     const loadedCharacters = loadCharacters();
@@ -31,13 +26,32 @@
     setInterval(()=>{
       let systemInfo = loadSystemInfo();
       const lastUpdated = moment(systemInfo.lastUpdated);
-      if(moment().isAfter(lastUpdated)) return;
+      const today = moment().startOf('day')
+
+      if(today.isAfter(lastUpdated)) {
+        //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
+        todos.forEach(todo=>{
+          if (todo.repeatType === "daily" ||
+            (todo.repeatType === "weeklyMonday" && today.day() === 1) ||
+            (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
+            (todo.repeatType === "monthly" && today.date() === 1)) {
+
+            if (todo.type === "perCharacter") {
+              Object.keys(todo.isChecked as object).forEach(key =>
+                todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
+              )
+            } else {
+              todo.isChecked = "unchecked";
+            }
+          }
+        })
+
+        systemInfo.lastUpdated = moment().format("YYYY-MM-DD")
+        saveSystemInfo(systemInfo)
+        todos = todos
+      }
     },1000)
   })
-
-
-
-  let isAddTodoModalOpen = false;
 
   function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
     if(character === undefined){
