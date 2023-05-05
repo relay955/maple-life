@@ -4,13 +4,19 @@ import Select from "../../shared/Select.svelte";
 import Modal from "../../shared/Modal.svelte";
 import Button from "../../shared/Button.svelte";
 import type {Todo} from "../../../storage/dto/todo";
+import {v4 as uuidv4} from 'uuid'
+
+
 
 export let isOpen = false;
+export let isEditMode = false;
+export let editTodo:Todo|undefined = undefined;
 export let onClose = () => {};
 export let onSubmit = (todo:Todo) => {};
 
 const resetTodo = ():Todo => {
   return {
+    id:"",
     isChecked: {},
     name:"",
     type:"perCharacter",
@@ -19,11 +25,19 @@ const resetTodo = ():Todo => {
   };
 }
 
+$: {
+  if(editTodo !== undefined && isEditMode){
+    todo = editTodo
+  }
+}
+
+
 let todo:Todo = resetTodo()
 
 
 const onClickSubmitButton = () => {
   todo.isChecked = todo.type === "perCharacter" ? {} : "unchecked";
+  todo.id = uuidv4();
   onSubmit(todo);
   todo = resetTodo();
   onClose();

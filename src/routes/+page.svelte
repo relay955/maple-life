@@ -89,17 +89,11 @@
   }
 
   const onAddTodo = (todo:Todo) => {
-    //이미 이름 같은게 있을경우 key 에러가 발생하므로 예외처리
-    if(todos.some(target=>target.name === todo.name))return;
-
     todos.push(todo);
     todos = todos
     saveTodos(todos)
   }
   const onAddCharacter = (character:Character) =>{
-    //이미 이름 같은게 있을경우 key 에러가 발생하므로 예외처리
-    if(characters.some(target=>target.name === character.name))return;
-
     characters.push(character);
     characters = characters
     saveCharacters(characters)
@@ -124,7 +118,7 @@
 <div class="main">
   <div class="container">
     <TodoHeader characters={characters}/>
-    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="name">
+    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="id">
       <TodoItems characters={characters} todo={item}
                  onClickCheckbox={onClickCheckbox}
                  onClickDelete={onClickDeleteTodo}

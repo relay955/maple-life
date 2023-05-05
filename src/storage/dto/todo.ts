@@ -1,5 +1,6 @@
 export type TodoCheckType = "checked" | "unchecked" | "blocked";
 export interface Todo {
+    id:string;
     name: string;
     repeatType:"daily"|"weeklyMonday"|"weeklyThursday"|"monthly";
     type:"perCharacter"|"perAccount";

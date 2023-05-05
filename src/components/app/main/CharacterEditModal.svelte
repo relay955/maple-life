@@ -7,6 +7,7 @@ import {requestMapleCharacterInfo} from "../../../util/mapleParser";
 import {PROXY_URL} from "../../../config";
 import { toast } from '@zerodevx/svelte-toast'
 import NumberInput from "../../shared/NumberInput.svelte";
+import {v4 as uuidv4} from "uuid";
 
 export let isOpen = false;
 let character:Character = reset()
@@ -18,6 +19,7 @@ export let onSubmit = (character:Character) => {};
 
 function reset():Character{
   return {
+    id:"",
     name:"",
     classType:"",
     imgUrl:"",
@@ -31,6 +33,7 @@ const onClickSubmitButton = async () => {
       isParsing = true;
       const result = await requestMapleCharacterInfo(character.name, PROXY_URL)
       character = {
+        id: uuidv4(),
         name: result.nickname,
         classType: result.classType,
         imgUrl: result.imgUrl,
@@ -42,6 +45,7 @@ const onClickSubmitButton = async () => {
         return;
       }
     }
+    character.id = uuidv4()
     onSubmit(character);
     onClose();
   }catch (e){
