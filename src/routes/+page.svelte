@@ -5,10 +5,10 @@
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
   import {
-    loadCharacters,
+    loadCharacters, loadSettings,
     loadSystemInfo,
     loadTodos,
-    saveCharacters,
+    saveCharacters, saveSettings,
     saveSystemInfo,
     saveTodos
   } from "../storage/storage";
@@ -21,6 +21,7 @@
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
   import {SvelteToast, toast} from "@zerodevx/svelte-toast";
+  import type {Settings} from "../storage/dto/settings";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
@@ -31,12 +32,17 @@
   let isEditCharacterModalOpen = false;
   let isEditCharacterModalEditMode = false;
   let editCharacterModalTarget:Character|undefined = undefined;
+  let settings:Settings = {
+    shortHeightMode:false,
+    showCharacterPreview:true
+  }
 
   onMount(async () => {
     const loadedCharacters = loadCharacters();
     characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
     const loadedTodos = loadTodos();
     todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
+    settings = loadSettings();
 
     setInterval(() => {
       let systemInfo = loadSystemInfo();
@@ -182,11 +188,25 @@
     characters = characters
     saveCharacters(characters)
   }
+  const onClickShortHeightModeButton = () => {
+    settings.shortHeightMode = !settings.shortHeightMode
+    settings = settings
+    saveSettings(settings)
+  };
 
+  const onClickShowCharacterPreviewButton = () => {
+    settings.showCharacterPreview = !settings.showCharacterPreview
+    settings = settings
+    saveSettings(settings)
+  };
 </script>
 
 <Logo/>
-<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}/>
+<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
+         onClickShortHeightModeButton={onClickShortHeightModeButton}
+         onClickShowCharacterPreviewButton={onClickShowCharacterPreviewButton}
+         settings={settings}
+/>
 
 <div class="main">
   <div class="container">

@@ -32,7 +32,10 @@ export const loadSettings = ():Settings =>{
     const settings = window.localStorage.getItem("systemInfo");
 
     if(settings !== null) return JSON.parse(settings);
-    else return {}
+    else return {
+        shortHeightMode: false,
+        showCharacterPreview: true
+    }
 }
 
 export const saveSettings = (settings:Settings) =>

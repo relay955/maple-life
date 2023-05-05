@@ -35,10 +35,10 @@ export let isMouseOver=false;
     {todo.name}
   </div>
   <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정">
-    <MdEdit fill="gray"/>
+    <MdEdit/>
   </IconButton>
   <IconButton onClick={()=>onClickDelete(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="삭제">
-    <MdDelete fill="gray"/>
+    <MdDelete/>
   </IconButton>
 </div>
 {#if todo.type === "perCharacter"}
