@@ -40,7 +40,7 @@ $: {
 }
 
 $: if(isOpen){
-  nameRef.focus()
+  setTimeout(()=> nameRef.focus(),100)
 }
 
 const onCloseProxy = () => {
@@ -73,12 +73,15 @@ const onSelectAutoComplete = (e:any)=>{
 <Modal title={isEditMode ? "할일 수정" : "할일 생성"} isOpen={isOpen}
        onClose={onCloseProxy} onEnter={onClickSubmitButton}>
   <Input title="할일 이름" bind:value={todo.name}
+         listId="todo-name"
          bind:ref={nameRef}
          useAutoComplete={true} onSelect={(e)=>onSelectAutoComplete(e)}>
+  </Input>
+  <datalist id="todo-name">
     {#each Object.keys(todoPresets) as todoPresetName (todoPresetName)}
       <option value={todoPresetName}></option>
     {/each}
-  </Input>
+  </datalist>
   <Select title="초기화 간격" bind:value={todo.repeatType}>
     <option value="daily">일일</option>
     <option value="weeklyMonday">주간(월요일 초기화)</option>

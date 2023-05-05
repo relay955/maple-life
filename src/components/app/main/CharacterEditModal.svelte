@@ -20,6 +20,17 @@ export let onSubmit = (character:Character) => {};
 export let isEditMode = false;
 export let editCharacter:Character|undefined = undefined;
 export let onDelete = (character:Character) => {};
+export let nameRef;
+
+$: {
+  if(editCharacter !== undefined && isEditMode){
+    character = editCharacter
+  }
+}
+
+$: if(isOpen){
+  setTimeout(()=> nameRef.focus(),100)
+}
 
 function reset():Character{
   return {
@@ -69,11 +80,7 @@ const onClickDeleteButton = () => {
   onCloseProxy()
 }
 
-$: {
-  if(editCharacter !== undefined && isEditMode){
-    character = editCharacter
-  }
-}
+
 
 const onCloseProxy = () => {
   if(isParsing) {
@@ -89,7 +96,7 @@ const onCloseProxy = () => {
 
 <Modal title={isEditMode ? "캐릭터 수정":"캐릭터 등록"}
        isOpen={isOpen} onClose={onCloseProxy} onEnter={onClickSubmitButton}>
-  <Input title="닉네임" bind:value={character.name} />
+  <Input title="닉네임" bind:value={character.name} bind:ref={nameRef} />
   {#if isManualMode}
     <div class="error-message">서버에서 데이터를 불러오는데 문제가 발생하여<br/>직업 정보를 수동으로 입력해야합니다.</div>
     <NumberInput title="레벨" bind:value={character.level}/>

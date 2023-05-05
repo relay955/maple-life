@@ -11,15 +11,19 @@
     if(e.target !== e.currentTarget) return;
     onClose();
   }
-  const onKeyPress = (e: KeyboardEvent) => {
+  const onKeyDown = (e: KeyboardEvent) => {
     if(e.key === "Enter"){
       onEnter();
+    }
+    console.log(e.key)
+    if(e.key === "Escape"){
+      onClose();
     }
   }
 </script>
 
 <div class={`Popup ${isOpen?"opened":""}`}
-            on:mousedown={onClickOuter} on:keypress={onKeyPress}>
+            on:mousedown={onClickOuter} on:keydown={onKeyDown}>
   <div class="inner-item">
     <div style="display:flex; margin-bottom:10px; height:25px">
       <div class="title">{title}</div>
