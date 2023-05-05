@@ -6,10 +6,11 @@
   export let onClick = () => {};
   export let style:string = "";
   export let activated=false;
+  export let size:"small"|"medium" = "medium"
 </script>
 <span style="color:white;">
   <SvelteTooltip tip={tooltip} top>
-    <div class="icon-button" on:click={onClick} style={style}>
+    <div class={`icon-button ${size}`} on:click={onClick} style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>
       </span>
@@ -29,6 +30,11 @@
     color:white;
     cursor: pointer;
     transition: 0.2s all;
+  }
+  .icon-button.small{
+    width:24px;
+    height:24px;
+    padding:0;
   }
   .icon-button:hover{
     background-color: lightgray;

@@ -6,7 +6,7 @@
   import type {Todo} from "../storage/dto/todo";
   import {
     loadCharacters, loadSettings,
-    loadSystemInfo,
+    loadLastUpdated,
     loadTodos,
     saveCharacters, saveSettings,
     saveSystemInfo,
@@ -43,11 +43,15 @@
     const loadedTodos = loadTodos();
     todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
     settings = loadSettings();
+    settings = settings;
 
     setInterval(() => {
-      let systemInfo = loadSystemInfo();
-      const lastUpdated = moment(systemInfo.lastUpdated);
       const today = moment().startOf('day')
+      let lastUpdated = loadLastUpdated();
+      if(lastUpdated === undefined) {
+        lastUpdated = today.format("YYYY-MM-DD")
+        saveSystemInfo(lastUpdated);
+      }
 
       if (today.isAfter(lastUpdated)) {
         //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
@@ -67,8 +71,7 @@
           }
         })
 
-        systemInfo.lastUpdated = moment().format("YYYY-MM-DD")
-        saveSystemInfo(systemInfo)
+        saveSystemInfo(today.format("YYYY-MM-DD"))
         todos = todos
       }
     }, 1000)
@@ -212,12 +215,16 @@
   <div class="container">
     <TodoHeader characters={characters}
                 onClickCharacter={onClickEditCharacter}
-                onChangeOrderCharacter={onChangeOrderCharacter}/>
-    <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="id">
+                onChangeOrderCharacter={onChangeOrderCharacter}
+                settings={settings}
+    />
+    <DragDropList bind:data={todos} let:slotProps={item}
+                  onMove={onMoveTodo} dataIdField="id">
       <TodoItems characters={characters} todo={item}
                  onClickCheckbox={onClickCheckbox}
                  onClickDelete={onClickDeleteTodo}
                  onClickEdit={onClickEditTodoButton}
+                 settings={settings}
       />
     </DragDropList>
     <AddTodoButton onClick={onClickAddTodoButton}/>

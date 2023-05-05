@@ -1,10 +1,12 @@
 <script lang="ts">
   import type {Character} from "../../../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
+  import type {Settings} from "../../../storage/dto/settings";
 
   export let characters:Character[];
   export let onClickCharacter:(character:Character)=>void;
   export let onChangeOrderCharacter:(firstCharacter:Character, secondCharacter:Character)=>void;
+  export let settings:Settings;
 
   let dragCharacter:Character|undefined = undefined;
 
@@ -32,10 +34,10 @@
          on:dragover={onDragOverCharacter}
          on:drop={(e)=>onDragEndChracter(e,character)}
     >
-      {#if character.imgUrl !== ""}
+      {#if character.imgUrl !== "" && settings.showCharacterPreview}
         <div class="img" style={`background:url(${character.imgUrl})`}></div>
       {/if}
-      {#if character.imgUrl === ""}
+      {#if character.imgUrl === "" && settings.showCharacterPreview}
         <div class="default-img">
           <MdFavoriteBorder/>
         </div>
