@@ -4,8 +4,6 @@
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
-  import LargeCheckBox from "../components/shared/LargeCheckBox.svelte";
-  import Label from "../components/shared/Label.svelte";
   import {loadCharacters, loadSystemInfo, loadTodos, saveSystemInfo, saveTodos} from "../storage/storage";
   import {onMount} from "svelte";
   import MdAddCircleOutline from 'svelte-icons/md/MdAddCircleOutline.svelte'
@@ -13,10 +11,14 @@
   import moment from "moment";
   import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
   import TodoItems from "../components/app/main/TodoItems.svelte";
+  import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
+  import TodoHeader from "../components/app/main/TodoHeader.svelte";
+  import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
   let isAddTodoModalOpen = false;
+  let isAddCharacterModalOpen = false;
 
   onMount(()=>{
     const loadedCharacters = loadCharacters();
@@ -87,39 +89,29 @@
     saveTodos(todos)
     isAddTodoModalOpen = false;
   }
+  const onAddCharacter = (character:Character) =>{
+
+  };
 
 </script>
 
 <Logo/>
-<Toolbar/>
+<Toolbar onClickCharacterAddButton={()=>isAddCharacterModalOpen = true}/>
+
 <div class="main">
   <div class="container">
-    <div class="header">
-      <div class="title">할일</div>
-      {#each characters as character (character.name)}
-        <div class="character">
-          <div>
-            <div class="name">
-              {character.name}
-            </div>
-            <div class="subtitle">
-              Lv.{character.level}, {character.classType}
-            </div>
-          </div>
-        </div>
-      {/each}
-    </div>
+    <TodoHeader characters={characters}/>
     <DragDropList bind:data={todos} let:slotProps={item} onMove={onMoveTodo} dataIdField="name">
       <TodoItems characters={characters} onClickCheckbox={onClickCheckbox} todo={item}/>
     </DragDropList>
-    <div class="add-todo-button" on:click={()=>isAddTodoModalOpen = true}>
-      <MdAddCircleOutline/>
-    </div>
+    <AddTodoButton onClick={()=>isAddTodoModalOpen = true}/>
   </div>
-  <TodoEditModal isOpen="{isAddTodoModalOpen}"
+  <TodoEditModal isOpen={isAddTodoModalOpen}
                  onClose={()=>isAddTodoModalOpen = false}
-                 onSubmit={onAddTodo}
-  />
+                 onSubmit={onAddTodo}/>
+  <CharacterEditModal isOpen={isAddCharacterModalOpen}
+                      onClose={()=>isAddCharacterModalOpen = false}
+                      onSubmit={onAddCharacter}/>
 </div>
 
 <style lang="scss">
@@ -132,56 +124,11 @@
     display: inline-block;
     width: 1420px;
   }
-  .header{
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    position: sticky;
-    .title{
-      width: 510px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .character{
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .name{
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-      }
-      .subtitle{
-        font-size: 12px;
-        color: gray;
-      }
-    }
-  }
   @media(max-width: 1420px){
     .container{
       width:calc(100% - 20px)
     }
   }
-  .add-todo-button{
-    box-sizing: border-box;
-    width: 100%;
-    height:40px;
-    display: flex;
-    border: 1px solid #589de1;
-    border-radius: 4px;
-    padding-top:2px;
-    padding-bottom:2px;
-    background-color: white;
-    align-items: center;
-    margin-top: 5px;
-    cursor: pointer;
-    color: #589de1;
-    transition: 0.2s all;
-  }
-  .add-todo-button:hover{
-    background-color: #cce3fa;
-  }
+
 </style>
 

@@ -1,10 +1,13 @@
-<script>
+<script lang="ts">
   import MdPersonAdd from 'svelte-icons/md/MdPersonAdd.svelte'
+  //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
+
+  export let onClickCharacterAddButton:()=>void;
 </script>
 
 <div class="toolbar">
-  <div class="icon-button">
+  <div class="icon-button" on:click={onClickCharacterAddButton}>
     <SvelteTooltip tip="캐릭터 추가" top>
       <span class="icon">
         <MdPersonAdd fill="gray"/>
