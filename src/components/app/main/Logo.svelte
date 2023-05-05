@@ -10,7 +10,7 @@
 <style lang="scss">
   .logo{
     top:10px;
-    left:10px;
+    left:60px;
     display: flex;
     position: fixed;
     z-index: 100;

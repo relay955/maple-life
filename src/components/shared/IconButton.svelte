@@ -7,21 +7,26 @@
   export let style:string = "";
   export let activated=false;
   export let size:"small"|"medium" = "medium"
+  export let direction:"top"|"bottom"|"left"|"right" = "top"
 </script>
-<span style="color:white;">
-  <SvelteTooltip tip={tooltip} top>
+<div class="main">
+  <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"}>
     <div class={`icon-button ${size}`} on:click={onClick} style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>
       </span>
     </div>
   </SvelteTooltip>
-</span>
+</div>
 
 <style lang="scss">
+  .main{
+    display: inline-block;
+    color: white;
+    z-index: 9999;
+  }
   .icon-button{
     display: inline-block;
-    z-index: 100;
     width:35px;
     height:35px;
     padding:5px;

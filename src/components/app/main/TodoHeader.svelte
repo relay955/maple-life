@@ -53,22 +53,23 @@
 </div>
 
 <style lang="scss">
-  .header{
+  .header {
     display: flex;
     align-items: center;
-    margin-top: 2px;
+    padding-top: 2px;
     margin-bottom: 5px;
     position: sticky;
-    top:0;
+    top: 0;
     z-index: 1;
     background-color: white;
 
-    .title{
+    .title {
       width: 500px;
       font-size: 20px;
       font-weight: bold;
     }
-    .character{
+
+    .character {
       padding-top: 5px;
       padding-bottom: 5px;
       cursor: pointer;
@@ -79,29 +80,41 @@
       justify-content: center;
       flex-direction: column;
       transition: 0.2s all;
-      .name{
+
+      .name {
         font-size: 16px;
         font-weight: bold;
         text-align: center;
       }
-      .subtitle{
+
+      .subtitle {
         font-size: 12px;
         color: gray;
       }
-      .img{
+
+      .img {
         width: 50px;
         height: 50px;
         background-position: 52% 61% !important;
         background-size: 218% !important;
       }
-      .default-img{
+
+      .default-img {
         width: 40px;
         height: 40px;
         padding: 5px;
       }
     }
-    .character:hover{
+
+    .character:hover {
       background-color: #f5f5f5;
+    }
+
+    @media (max-width: 1200px) {
+      .title {
+        width: 300px;
+        font-size: 16px;
+      }
     }
   }
 </style>
