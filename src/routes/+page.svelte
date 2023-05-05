@@ -1,4 +1,5 @@
 <script lang="ts">
+
   import Toolbar from "../components/app/main/Toolbar.svelte";
   import Logo from "../components/app/main/Logo.svelte";
   import DragDropList from "../components/shared/DragDropList.svelte";
@@ -23,6 +24,9 @@
   import {SvelteToast, toast} from "@zerodevx/svelte-toast";
   import type {Settings} from "../storage/dto/settings";
   import LeftBar from "../components/app/main/LeftBar.svelte";
+
+  export const prerender = true;
+  export const ssr = true;
 
   let characters:Character[] = [];
   let todos:Todo[] = []
