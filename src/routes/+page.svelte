@@ -25,7 +25,9 @@
 
   let characters:Character[] = [];
   let todos:Todo[] = []
-  let isAddTodoModalOpen = false;
+  let isEditTodoModalOpen = false;
+  let editTodoModalEditMode = false;
+  let editTodoModalTarget:Todo|undefined = undefined;
   let isAddCharacterModalOpen = false;
 
   onMount(async () => {
@@ -88,8 +90,13 @@
     saveTodos(todos)
   }
 
-  const onAddTodo = (todo:Todo) => {
-    todos.push(todo);
+  const onEditTodo = (todo:Todo) => {
+    const editTargetIndex = todos.findIndex(target => target.id === todo.id)
+    if(editTargetIndex !== -1) {
+      todos[editTargetIndex] = todo
+    } else {
+      todos.push(todo)
+    }
     todos = todos
     saveTodos(todos)
   }
@@ -105,9 +112,15 @@
     saveTodos(todos)
   }
 
-  const onClickEditTodo = (todo:Todo) => {
-    todos = todos
-    saveTodos(todos)
+  const onClickAddTodoButton = () => {
+    isEditTodoModalOpen = true;
+    editTodoModalEditMode = false;
+  }
+
+  const onClickEditTodoButton = (todo:Todo) => {
+    isEditTodoModalOpen = true;
+    editTodoModalEditMode = true;
+    editTodoModalTarget = todo;
   }
 
 </script>
@@ -122,14 +135,16 @@
       <TodoItems characters={characters} todo={item}
                  onClickCheckbox={onClickCheckbox}
                  onClickDelete={onClickDeleteTodo}
-                 onClickEdit={onClickEditTodo}
+                 onClickEdit={onClickEditTodoButton}
       />
     </DragDropList>
-    <AddTodoButton onClick={()=>isAddTodoModalOpen = true}/>
+    <AddTodoButton onClick={onClickAddTodoButton}/>
   </div>
-  <TodoEditModal isOpen={isAddTodoModalOpen}
-                 onClose={()=>isAddTodoModalOpen = false}
-                 onSubmit={onAddTodo}/>
+  <TodoEditModal isOpen={isEditTodoModalOpen}
+                 isEditMode={editTodoModalEditMode}
+                 editTodo={editTodoModalTarget}
+                 onClose={()=>isEditTodoModalOpen = false}
+                 onSubmit={onEditTodo}/>
   <CharacterEditModal isOpen={isAddCharacterModalOpen}
                       onClose={()=>isAddCharacterModalOpen = false}
                       onSubmit={onAddCharacter}/>
