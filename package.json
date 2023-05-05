@@ -12,7 +12,8 @@
 	"dependencies": {
 		"svelte-icons": "^2.1.0",
 		"svelte-tooltip": "^1.2.0",
-		"moment": "^2.29.4"
+		"moment": "^2.29.4",
+		"axios": "^1.4.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
