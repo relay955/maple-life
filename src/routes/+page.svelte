@@ -14,26 +14,30 @@
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
+  import {requestMapleCharacterInfo} from "../util/mapleParser";
+  import {PROXY_URL} from "../config";
 
   let characters:Character[] = [];
   let todos:Todo[] = []
   let isAddTodoModalOpen = false;
   let isAddCharacterModalOpen = false;
 
-  onMount(()=>{
+  onMount(async () => {
+    let data = await requestMapleCharacterInfo("썬콜",PROXY_URL)
+    console.log(data)
     const loadedCharacters = loadCharacters();
     characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
     const loadedTodos = loadTodos();
     todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
 
-    setInterval(()=>{
+    setInterval(() => {
       let systemInfo = loadSystemInfo();
       const lastUpdated = moment(systemInfo.lastUpdated);
       const today = moment().startOf('day')
 
-      if(today.isAfter(lastUpdated)) {
+      if (today.isAfter(lastUpdated)) {
         //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
-        todos.forEach(todo=>{
+        todos.forEach(todo => {
           if (todo.repeatType === "daily" ||
             (todo.repeatType === "weeklyMonday" && today.day() === 1) ||
             (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
@@ -53,7 +57,7 @@
         saveSystemInfo(systemInfo)
         todos = todos
       }
-    },1000)
+    }, 1000)
   })
 
   function onClickCheckbox(item:Todo, character:Character|undefined = undefined) {
