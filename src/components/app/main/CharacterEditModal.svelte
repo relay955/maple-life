@@ -76,6 +76,10 @@ const onClickSubmitButton = async () => {
 }
 
 const onClickDeleteButton = () => {
+  if(isParsing) {
+    toast.push("캐릭터 정보를 불러오는 중입니다. 잠시만 기다려 주세요.")
+    return;
+  }
   onDelete(character);
   onCloseProxy()
 }
