@@ -5,11 +5,24 @@
   import IconButton from "../../shared/IconButton.svelte";
   import MdHelpOutline from 'svelte-icons/md/MdHelpOutline.svelte'
   import Modal from "../../shared/Modal.svelte";
+  import type {Todo} from "../../../storage/dto/todo";
+  import ProgressBar from "@okrad/svelte-progressbar";
+  import Label from "../../shared/Label.svelte";
 
   export let characters:Character[];
+  export let todos:Todo[];
   export let onClickCharacter:(character:Character)=>void;
   export let onChangeOrderCharacter:(firstCharacter:Character, secondCharacter:Character)=>void;
   export let settings:Settings;
+  let characterIds:string[] = [];
+  let uncheckedDailyTodoCount = 0;
+  let checkedDailyTodoCount = 0;
+  let totalDailyTodoCount = 0;
+  let dailyCheckProgress = 0;
+  let uncheckedWeeklyTodoCount = 0;
+  let checkedWeeklyTodoCount = 0;
+  let totalWeeklyTodoCount = 0;
+  let weeklyCheckProgress = 0;
 
   let dragCharacter:Character|undefined = undefined;
   let isOpenHelpModal = false;
@@ -28,15 +41,69 @@
     onChangeOrderCharacter(dragCharacter, character);
     dragCharacter = undefined;
   }
+
+  $: characterIds = characters.map(character=>character.id)
+  $: {
+    checkedDailyTodoCount = 0;
+    uncheckedDailyTodoCount =0;
+    checkedWeeklyTodoCount = 0;
+    uncheckedWeeklyTodoCount = 0;
+    todos?.forEach(todo => {
+      if (todo.type === "perCharacter" && typeof todo.isChecked === "object") {
+        characterIds.forEach(key => {
+          if (todo.isChecked[key] === "checked") addCheckedTodoCount(todo)
+          else if (todo.isChecked[key] === "unchecked") addUncheckedTodoCount(todo)
+          else if (todo.isChecked[key] === undefined) addUncheckedTodoCount(todo)
+        })
+      } else if (todo.type === "perAccount") {
+        if (todo.isChecked === "checked") addCheckedTodoCount(todo)
+        else if (todo.isChecked === "unchecked") addUncheckedTodoCount(todo)
+      }
+    })
+
+    function addCheckedTodoCount(todo:Todo){
+      if(todo.repeatType === "daily"){
+        checkedDailyTodoCount++;
+      }else{
+        checkedWeeklyTodoCount++
+      }
+    }
+    function addUncheckedTodoCount(todo:Todo){
+      if(todo.repeatType === "daily"){
+        uncheckedDailyTodoCount++;
+      }else{
+        uncheckedWeeklyTodoCount++;
+      }
+    }
+
+    totalDailyTodoCount = checkedDailyTodoCount + uncheckedDailyTodoCount;
+    totalWeeklyTodoCount = checkedWeeklyTodoCount + uncheckedWeeklyTodoCount;
+    dailyCheckProgress = totalDailyTodoCount === 0 ? 0 : Math.round(checkedDailyTodoCount / totalDailyTodoCount * 100);
+    weeklyCheckProgress = totalWeeklyTodoCount === 0 ? 0 : Math.round(checkedWeeklyTodoCount / totalWeeklyTodoCount * 100);
+  }
+
 </script>
 <div class="header">
   <div class="title">
     <div class="text">
     할일
     </div>
-    <IconButton direction="bottom" onClick={()=>isOpenHelpModal=true}>
+    <IconButton direction="bottom" onClick={()=>isOpenHelpModal=true} style="margin-right: 5px">
       <MdHelpOutline/>
     </IconButton>
+    <div class="progress-bar-list">
+<!--      #ace594-->
+      <div class="progress-bar">
+      <ProgressBar series={[{perc:dailyCheckProgress,color:'#70a5e0'}]}
+                   height="12" textSize="65"
+                   valueLabel={`일일 : ${dailyCheckProgress}% (${checkedDailyTodoCount}/${totalDailyTodoCount})`} />
+      </div>
+      <div class="progress-bar">
+      <ProgressBar series={[{perc:weeklyCheckProgress,color:'#e3b676'}]}
+                   height="12" textSize="65"
+                   valueLabel={`주간 : ${weeklyCheckProgress}% (${checkedWeeklyTodoCount}/${totalWeeklyTodoCount})`} />
+      </div>
+    </div>
   </div>
   {#each characters as character (character.name)}
     <div class="character" on:click={()=>onClickCharacter(character)}
@@ -91,13 +158,24 @@
 
     .title {
       width: 500px;
-      font-size: 20px;
-      font-weight: bold;
       display: flex;
       align-items: center;
       .text{
+        font-size: 20px;
+        font-weight: bold;
         margin-bottom: 3px;
         margin-right: 5px;
+      }
+    }
+
+    .progress-bar-list{
+      margin-left: 10px;
+      margin-bottom: 8px;
+      width:200px;
+      .progress-bar{
+        display: flex;
+        flex-direction: row;
+        margin-bottom: -6px;
       }
     }
 

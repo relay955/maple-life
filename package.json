@@ -26,6 +26,7 @@
 		"@sveltejs/kit": "^1.5.0",
 		"@types/uuid": "^9.0.1",
 		"@zerodevx/svelte-toast": "^0.9.3",
+		"@okrad/svelte-progressbar": "^2.1.0",
 		"gh-pages": "^5.0.0",
 		"sass": "^1.62.1",
 		"svelte": "^3.54.0",

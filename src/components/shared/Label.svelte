@@ -13,6 +13,7 @@
     color: white;
     border-radius: 20px;
     width: 60px;
+    min-width: 60px;
     height: 20px;
     padding-bottom: 2px;
     justify-content: center;
