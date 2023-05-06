@@ -223,6 +223,7 @@
     <TodoHeader characters={characters}
                 onClickCharacter={onClickEditCharacter}
                 onChangeOrderCharacter={onChangeOrderCharacter}
+                todos={todos}
                 settings={settings}
     />
     <DragDropList bind:data={todos} let:slotProps={item}
