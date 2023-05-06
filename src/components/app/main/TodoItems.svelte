@@ -35,14 +35,16 @@ export let settings:Settings;
   <div class="title" style={todo.color !== "default" ? `color:${todo.color}`:""}>
     {todo.name}
   </div>
-  <IconButton onClick={()=>onClickEdit(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="수정"
-              size={settings.shortHeightMode ? "small" : "medium"}>
-    <MdEdit/>
-  </IconButton>
-  <IconButton onClick={()=>onClickDelete(todo)} style={`opacity:${isMouseOver?1:0}`} tooltip="삭제"
-              size={settings.shortHeightMode ? "small" : "medium"}>
-    <MdDelete/>
-  </IconButton>
+  <div class={`icons ${isMouseOver ? "visible":""}`}>
+    <IconButton onClick={()=>onClickEdit(todo)} tooltip="수정"
+                size={settings.shortHeightMode ? "small" : "medium"}>
+      <MdEdit/>
+    </IconButton>
+    <IconButton onClick={()=>onClickDelete(todo)} tooltip="삭제"
+                size={settings.shortHeightMode ? "small" : "medium"}>
+      <MdDelete/>
+    </IconButton>
+  </div>
 </div>
 {#if todo.type === "perCharacter"}
   <div class="item-checkbox-lists">
@@ -84,12 +86,33 @@ export let settings:Settings;
     display: flex;
     flex-grow: 1;
   }
-  @media (max-width: 1200px){
+  @media (max-width: 1250px){
     .item-title-container{
       min-width: 300px;
       .title{
         font-size: 12px;
       }
     }
+  }
+  @media (max-width: 750px){
+    .item-title-container{
+      min-width: 200px;
+      width: 100%;
+      margin-bottom: 3px;
+      .title{
+        font-size: 12px;
+      }
+      .icons{
+        opacity: 1;
+      }
+    }
+  }
+  .icons{
+    transition: 0.2s all;
+    z-index: 3;
+    opacity: 0;
+  }
+  .icons.visible{
+    opacity: 1;
   }
 </style>
