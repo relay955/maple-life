@@ -53,4 +53,17 @@
       drop-shadow(1px 1px 10px gray);
     color:black;
   }
+
+  @media(max-width: 750px){
+    .icon-button{
+      width:24px;
+      height:24px;
+      padding:0;
+    }
+    .icon-button.small{
+      width:20px;
+      height:20px;
+      padding:0;
+    }
+  }
 </style>

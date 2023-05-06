@@ -153,7 +153,7 @@
     margin-bottom: 5px;
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 5;
     background-color: white;
 
     .title {
@@ -184,7 +184,7 @@
       padding-bottom: 5px;
       cursor: pointer;
       flex-grow: 1;
-      width: 0;
+      width: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -219,15 +219,55 @@
     .character:hover {
       background-color: #f5f5f5;
     }
+  }
 
-    @media (max-width: 1200px) {
+  @media (max-width: 1250px) {
+    .header {
       .title {
         width: 300px;
         font-size: 16px;
       }
     }
   }
+  @media (max-width: 750px){
+    .header {
+      flex-wrap: wrap;
+      .title {
+        width: 100%;
+        font-size: 14px;
+      }
+      .progress-bar-list {
+        flex-grow: 1;
+      }
+      .character {
+        width: 50px;
+        .name {
+          font-size: 14px;
+          font-weight: bold;
+          text-align: center;
+        }
 
+        .subtitle {
+          font-size: 10px;
+          color: gray;
+        }
+
+        .img {
+          width: 36px;
+          height: 36px;
+          background-position: 52% 61% !important;
+          background-size: 218% !important;
+        }
+
+        .default-img {
+          width: 30px;
+          height: 30px;
+          padding: 3px;
+        }
+      }
+
+    }
+  }
 
   .usage-modal{
     font-size: 15px;

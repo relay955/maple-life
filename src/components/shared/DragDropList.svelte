@@ -172,6 +172,12 @@
     background-color: white;
     align-items: center;
   }
+
+  @media (max-width: 750px){
+    .item{
+      flex-wrap: wrap;
+    }
+  }
 </style>
 
 <!-- All the documentation has to go up here, sorry.
