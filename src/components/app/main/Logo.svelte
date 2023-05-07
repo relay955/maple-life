@@ -15,6 +15,9 @@
     font-size: 18px;
     font-weight: 700;
     color: #4d4d4d;
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 100px;
+    padding: 5px 10px;
     img{
       margin-right: 5px;
       width: 30px;
