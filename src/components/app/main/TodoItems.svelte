@@ -18,7 +18,7 @@ export let isMouseOver=false;
 export let settings:Settings;
 </script>
 
-<div class="item-title-container" on:mouseenter={()=>isMouseOver = true}
+<div class={`item-title-container ${settings.shortHeightMode ? "short-height":""}`} on:mouseenter={()=>isMouseOver = true}
      on:mouseleave={()=>isMouseOver = false}>
   {#if todo.repeatType === "daily"}
     <Label color="#70a5e0">일일</Label>
@@ -70,7 +70,11 @@ export let settings:Settings;
 <style lang="scss">
   .item-title-container{
     position: sticky;
+    height:40px;
     left:60px;
+    &.short-height{
+      height: 28px;
+    }
 
     min-width:500px;
     padding-left: 10px;
@@ -80,6 +84,7 @@ export let settings:Settings;
     display: inline-flex;
     background: white;
     align-items: center;
+    transition: 0.2s all;
 
     .title{
       font-size: 16px;
@@ -94,6 +99,7 @@ export let settings:Settings;
     display: flex;
     flex-grow: 1;
   }
+
   @media (max-width: 1250px){
     .item-title-container{
       min-width: 300px;

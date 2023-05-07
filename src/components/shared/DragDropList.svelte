@@ -90,17 +90,19 @@
 
     .item {
       cursor:default;
+
       box-sizing: border-box;
-      display: flex;
       width: 100%;
-      margin-bottom: 5px;
-      background-color: white;
+      display: flex;
       border: 1px solid rgb(190, 190, 190);
       border-radius: 4px;
-      user-select: none;
-      align-items: center;
       padding-top:2px;
       padding-bottom:2px;
+      background-color: white;
+      align-items: center;
+
+      user-select: none;
+      margin-bottom: 5px;
 
       &:last-child{
         margin-bottom: 0;
