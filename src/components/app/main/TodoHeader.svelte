@@ -83,7 +83,7 @@
   }
 
 </script>
-<div class="header">
+<div class={`${settings.showCharacterPreview ? "":"hidden-image"} header`}>
   <div class="title">
     <div class="text">
     할일
@@ -112,10 +112,10 @@
          on:dragover={onDragOverCharacter}
          on:drop={(e)=>onDragEndChracter(e,character)}
     >
-      {#if character.imgUrl !== "" && settings.showCharacterPreview}
+      {#if character.imgUrl !== ""}
         <div class="img" style={`background:url(${character.imgUrl})`}></div>
       {/if}
-      {#if character.imgUrl === "" && settings.showCharacterPreview}
+      {#if character.imgUrl === ""}
         <div class="default-img">
           <MdFavoriteBorder/>
         </div>
@@ -147,17 +147,33 @@
 
 <style lang="scss">
   .header {
-    display: flex;
-    align-items: center;
-    padding-top: 2px;
-    margin-bottom: 5px;
     position: sticky;
     top: 0;
     z-index: 5;
+    height: 100px;
+    padding-top: 2px;
+    margin-bottom: 5px;
+
+    display: flex;
+    align-items: center;
     background-color: white;
+
+    &.hidden-image{
+      height: 50px;
+      .img{
+        display: none;
+      }
+      .default-img{
+        display: none;
+      }
+    }
 
     .title {
       min-width: 500px;
+      height: 100%;
+      position: sticky;
+      background-color: white;
+      left: 60px;
       display: flex;
       align-items: center;
       .text{
@@ -180,26 +196,38 @@
     }
 
     .character {
-      padding-top: 5px;
-      padding-bottom: 5px;
       cursor: pointer;
       flex-grow: 1;
-      width: 100px;
+      min-width: 80px;
+      width:0;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      margin-right: 2px;
+
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
       transition: 0.2s all;
 
       .name {
         font-size: 16px;
+        width: 100%;
         font-weight: bold;
         text-align: center;
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .subtitle {
         font-size: 12px;
+        width: 100%;
         color: gray;
+        text-align: center;
+        overflow-x: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .img {
@@ -232,8 +260,15 @@
   @media (max-width: 750px){
     .header {
       flex-wrap: wrap;
+      height: 130px;
+
+      &.hidden-image{
+        height: 80px;
+      }
+
       .title {
         width: 100%;
+        height: 40px;
         font-size: 14px;
       }
       .progress-bar-list {

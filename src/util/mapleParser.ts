@@ -10,6 +10,7 @@ interface MapleCharacterInfo{
 }
 export const requestMapleCharacterInfo = async (characterName: string,proxy:string) => {
     let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=0`
+    throw new Error("MapleStory is not working")
     const res = await axios.get(url)
     try {
         return parseMapleCharacterInfo(res.data)
