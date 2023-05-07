@@ -71,7 +71,7 @@ export let settings:Settings;
   .item-title-container{
     position: sticky;
     height:40px;
-    left:60px;
+    left:62px;
     &.short-height{
       height: 28px;
     }
