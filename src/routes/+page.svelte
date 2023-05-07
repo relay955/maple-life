@@ -261,6 +261,7 @@
     text-align: left;
     display: inline-block;
     width: 1420px;
+    overflow-x: auto;
   }
   @media(max-width: 1530px){
     .container{

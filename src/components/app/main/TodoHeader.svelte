@@ -105,7 +105,7 @@
       </div>
     </div>
   </div>
-  {#each characters as character (character.name)}
+  {#each characters as character (character.id)}
     <div class="character" on:click={()=>onClickCharacter(character)}
          draggable="true"
          on:dragstart={(e)=>onDragStartCharacter(e,character)}
@@ -157,7 +157,7 @@
     background-color: white;
 
     .title {
-      width: 500px;
+      min-width: 500px;
       display: flex;
       align-items: center;
       .text{
@@ -224,7 +224,7 @@
   @media (max-width: 1250px) {
     .header {
       .title {
-        width: 300px;
+        min-width: 300px;
         font-size: 16px;
       }
     }
