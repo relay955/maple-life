@@ -50,7 +50,8 @@ export let settings:Settings;
   <div class="item-checkbox-lists">
     {#each characters as character (character.id)}
       <LargeCheckBox
-        style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}${settings.shortHeightMode?"height:28px;":""}}`}
+        style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}
+        ${settings.shortHeightMode?"height:28px;":""} min-width:80px;`}
         onClick={()=>onClickCheckbox("left",todo, character)}
         onRightClick={()=>onClickCheckbox("right",todo,character)}
         checked={todo.isChecked[character.id] ?? "unchecked"}/>
@@ -59,7 +60,8 @@ export let settings:Settings;
 {/if}
 {#if todo.type === "perAccount"}
   <LargeCheckBox
-    style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}${settings.shortHeightMode?"height:28px;":""}}`}
+    style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}
+    ${settings.shortHeightMode?"height:28px;":""} min-width:80px;`}
     onClick={()=>onClickCheckbox("left",todo)}
     onRightClick={()=>onClickCheckbox("right",todo)}
     checked="{todo.isChecked}"/>
@@ -67,12 +69,18 @@ export let settings:Settings;
 
 <style lang="scss">
   .item-title-container{
-    display: inline-flex;
+    position: sticky;
+    left:60px;
+
     min-width:500px;
-    align-items: center;
     padding-left: 10px;
     padding-right: 10px;
     box-sizing: border-box;
+
+    display: inline-flex;
+    background: white;
+    align-items: center;
+
     .title{
       font-size: 16px;
       margin-left: 10px;

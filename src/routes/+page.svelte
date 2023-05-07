@@ -260,13 +260,13 @@
   .container{
     text-align: left;
     display: inline-block;
-    width: 1420px;
-    overflow-x: auto;
+    min-width: 1420px;
+    margin-left: 60px;
+    margin-right: 20px;
   }
-  @media(max-width: 1530px){
+  @media(max-width: 1550px){
     .container{
-      padding-left: 50px;
-      width:calc(100% - 70px)
+      min-width: calc(100% - 70px);
     }
   }
 
