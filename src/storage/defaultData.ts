@@ -1,136 +1,157 @@
-import type {Character} from "../../storage/dto/character";
-import type {Todo} from "../../storage/dto/todo";
-import {v4 as uuidv4} from 'uuid'
+import {isInitialized} from "./storage";
+import type {Idb} from "./idb";
+import {v4 as uuidv4} from "uuid";
 
-export const getDefaultCharacters = ():Character[] =>
-    [
+export const initDefaultData = async (idb: Idb) => {
+    if (isInitialized()) return;
+
+    console.log("first visit detected. start initialize")
+
+    //기본계정 등록
+    const defaultAccountId = await idb.account.add({
+        name: "기본계정",
+        order: 0
+    })
+
+    //기본월드 등록
+    const defaultWorldId = await idb.accountWorld.add({
+        accountId: defaultAccountId,
+        world: "리부트",
+        order: 0
+    })
+
+    //기본캐릭터 등록
+    await idb.character.bulkAdd([
         {
-            id:"1",
-            name: "기본캐릭터",
-            imgUrl: "",
-            level: 200,
-            classType: "히어로"
+            name:"기본캐릭터",
+            accountId:defaultAccountId,
+            worldId:defaultWorldId,
+            level:200,
+            classType:"히어로",
+            imgUrl:"",
+            order:0
         },
         {
-            id:"2",
-            name: "부캐릭터",
-            imgUrl: "",
-            level: 200,
-            classType: "비숍"
-        },
+            name:"부캐릭터",
+            accountId:defaultAccountId,
+            worldId:defaultWorldId,
+            level:200,
+            classType:"비숍",
+            imgUrl:"",
+            order:0
+        }
+    ])
 
-    ]
-
-export const getDefaultTodos = ():Todo[] =>
-    [
+    await idb.todo.bulkAdd([
         {
-            id:uuidv4(),
             name:"유니온코인 수령",
             type:"perAccount",
             repeatType:"daily",
             isChecked:"unchecked",
-            color:"default"
+            color:"default",
+            order:0
         },
         {
-            id:uuidv4(),
             name: "일일 보스",
             type: "perCharacter",
             repeatType: "daily",
             isChecked: {},
-            color:"default"
+            color:"default",
+            order:1
         },
         {
-            id:uuidv4(),
             name: "심볼 일퀘",
             type: "perCharacter",
             repeatType: "daily",
             isChecked: {},
-            color:"default"
+            color:"default",
+            order:2
         },
         {
-            id:uuidv4(),
             name:"이벤트 - 코인수집",
             type:"perCharacter",
             repeatType:"daily",
             isChecked:{},
-            color:"default"
+            color:"default",
+            order:3
         },
         {
-            id:uuidv4(),
             name: "데일리 기프트 수령",
             type: "perAccount",
             repeatType: "daily",
             isChecked: "unchecked",
-            color:"default"
+            color:"default",
+            order:4
         },
         {
-            id:uuidv4(),
             name: "우르스",
             type: "perAccount",
             repeatType: "daily",
             isChecked: "unchecked",
-            color:"default"
+            color:"default",
+            order:5
         },
         {
-            id:uuidv4(),
             name: "몬스터 파크",
             type: "perAccount",
             repeatType: "daily",
             isChecked: "unchecked",
-            color:"default"
+            color:"default",
+            order:6
         },
         {
-            id:uuidv4(),
             name: "황금마차 출석",
             type: "perAccount",
             repeatType: "daily",
             isChecked: "unchecked",
-            color:"default"
+            color:"default",
+            order:7
         },
         {
-            id:uuidv4(),
             name: "주간 보스",
             type: "perCharacter",
             repeatType: "weeklyThursday",
             isChecked: {
                 "2":"blocked"
             },
-            color:"default"
+            color:"default",
+            order:8
         },
         {
-            id:uuidv4(),
             name: "심볼 주간퀘",
             type: "perCharacter",
             repeatType: "weeklyMonday",
             isChecked: {},
-            color:"default"
+            color:"default",
+            order:9
         },
         {
-            id:uuidv4(),
             name: "길드컨텐츠 - 지하수로",
             type: "perCharacter",
             repeatType: "weeklyMonday",
             isChecked: {
                 "2":"blocked"
             },
-            color:"default"
+            color:"default",
+            order:10
         },
         {
-            id:uuidv4(),
             name: "길드컨텐츠 - 플래그레이스",
             type: "perCharacter",
             repeatType: "weeklyMonday",
             isChecked: {
                 "2":"blocked"
             },
-            color:"default"
+            color:"default",
+            order:11
         },
         {
-            id:uuidv4(),
             name: "헤이븐/야영지",
             type: "perCharacter",
             repeatType: "weeklyMonday",
             isChecked: {},
-            color:"default"
+            color:"default",
+            order:12
         }
-    ]
+    ])
+}

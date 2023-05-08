@@ -4,80 +4,71 @@ import type {Account} from "../dto/account";
 import type {Idb} from "../idb";
 import type {Todo} from "../dto/todo";
 import moment from "moment";
+import {isInitialized, loadLastUpdated, setInitialized} from "../storage";
 
 /** localstorage에서 바로 현재 버전으로 마이그레이션합니다. */
 export const migrateFromLocalstorage = async (idb: Idb) => {
     //만약 로컬스토리지에 값이 뭔가 하나라도 있으면 마이그레이션 대상임
-    const isMigrationNeeded = loadLastUpdated() !== undefined && !isMigrated()
-    if (isMigrationNeeded) {
-        console.log("localstorage detected. start migration")
-        //기본계정 등록.
-        const defaultAccountId = await idb.account.add({
-            name:"기본계정",
-            order:0
-        })
+    const isMigrationNeeded = loadLastUpdated() !== undefined && !isInitialized()
+    if (!isMigrationNeeded) return;
 
-        //기본월드 등록.(기본월드는 일단 무조건 리부트임)
-        const defaultWorldId = await idb.accountWorld.add({
-            accountId:defaultAccountId,
-            world:"리부트",
-            order:0
-        })
-
-        //migration character
-        const oldCharacters = loadCharacters()
-        for (const oldCharacter of oldCharacters) {
-            const newCharacter: Character = {
-                worldId: defaultWorldId,
-                accountId: defaultAccountId,
-                imgUrl: oldCharacter.imgUrl,
-                name: oldCharacter.name,
-                level: oldCharacter.level,
-                classType: oldCharacter.classType,
-                order: 0,
-            }
-            await idb.character.add(newCharacter)
+    console.log("localstorage detected. start migration")
+    const defaultAccountId = await idb.account.add({
+        name: "기본계정",
+        order: 0
+    })
+    const defaultWorldId = await idb.accountWorld.add({
+        accountId: defaultAccountId,
+        world: "리부트",
+        order: 0
+    })
+    const oldCharacters = loadCharacters()
+    for (const oldCharacter of oldCharacters) {
+        const newCharacter: Character = {
+            worldId: defaultWorldId,
+            accountId: defaultAccountId,
+            imgUrl: oldCharacter.imgUrl,
+            name: oldCharacter.name,
+            level: oldCharacter.level,
+            classType: oldCharacter.classType,
+            order: 0,
         }
-        //migration todo
-        const oldTodos = loadTodos()
-        for (const oldTodo of oldTodos) {
-            const newTodo: Todo = {
-                name: oldTodo.name,
-                repeatType: oldTodo.repeatType,
-                type: oldTodo.type,
-                color: oldTodo.color,
-                isChecked: oldTodo.isChecked,
-                order: 0,
-            }
-            await idb.todo.add(newTodo)
-        }
-
-        //migration systemInfo
-        const lastUpdated = loadLastUpdated()
-        if(lastUpdated !== undefined){
-            await idb.systemInfo.add({
-                name:"lastUpdated",
-                value:lastUpdated
-            })
-        }else{
-            await idb.systemInfo.add({
-                name:"lastUpdated",
-                value:moment().format("YYYY-MM-DD")
-            })
-        }
-
-        //migration settings
-        const oldSettings = loadSettings()
-        await idb.settings.add({
-            name:"shortHeightMode",
-            value:oldSettings.shortHeightMode
-        })
-        await idb.settings.add({
-            name:"showCharacterPreview",
-            value:oldSettings.showCharacterPreview
-        })
-        setMigrated()
+        await idb.character.add(newCharacter)
     }
+    const oldTodos = loadTodos()
+    for (const oldTodo of oldTodos) {
+        const newTodo: Todo = {
+            name: oldTodo.name,
+            repeatType: oldTodo.repeatType,
+            type: oldTodo.type,
+            color: oldTodo.color,
+            isChecked: oldTodo.isChecked,
+            order: 0,
+        }
+        await idb.todo.add(newTodo)
+    }
+    const lastUpdated = loadLastUpdated()
+    if (lastUpdated !== undefined) {
+        await idb.systemInfo.add({
+            name: "lastUpdated",
+            value: lastUpdated
+        })
+    } else {
+        await idb.systemInfo.add({
+            name: "lastUpdated",
+            value: moment().format("YYYY-MM-DD")
+        })
+    }
+    const oldSettings = loadSettings()
+    await idb.settings.add({
+        name: "shortHeightMode",
+        value: oldSettings.shortHeightMode
+    })
+    await idb.settings.add({
+        name: "showCharacterPreview",
+        value: oldSettings.showCharacterPreview
+    })
+    setInitialized()
 
 }
 
@@ -109,35 +100,13 @@ interface OldSystemInfo{
     lastUpdated:string;
 }
 
-const isMigrated = ():boolean => {
-    return window.localStorage.getItem("isMigrated") === "true"
-}
-
-const setMigrated = () => {
-    window.localStorage.setItem("isMigrated", "true")
-}
-
 const loadCharacters = ():OldCharacter[] => {
     return JSON.parse(window.localStorage.getItem("characters") ?? "[]")
 }
 
-const saveCharacters = (characters:OldCharacter[]) =>
-    window.localStorage.setItem("characters", JSON.stringify(characters))
-
 const loadTodos = ():OldTodo[] =>
     JSON.parse(window.localStorage.getItem("todos") ?? "[]")
 
-const saveTodos = (todos:OldTodo[]) =>
-    window.localStorage.setItem("todos", JSON.stringify(todos))
-
-const loadLastUpdated = ():string|undefined => {
-    const systemInfo = window.localStorage.getItem("lastUpdated");
-    if(systemInfo !== null) return systemInfo;
-    else return undefined;
-}
-
-const saveSystemInfo = (lastUpdated:string) =>
-    window.localStorage.setItem("lastUpdated", lastUpdated)
 
 const loadSettings = ():OldSettings =>{
     const settings = window.localStorage.getItem("settings");
@@ -148,6 +117,3 @@ const loadSettings = ():OldSettings =>{
         showCharacterPreview: true
     }
 }
-
-const saveSettings = (settings:OldSettings) =>
-    window.localStorage.setItem("settings", JSON.stringify(settings))

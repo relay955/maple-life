@@ -8,7 +8,6 @@
   import {onMount} from "svelte";
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
-  import {getDefaultCharacters, getDefaultTodos} from "$lib/preset/defaultItems";
   import TodoItems from "../components/app/main/TodoItems.svelte";
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
@@ -18,6 +17,7 @@
   import LeftBar from "../components/app/main/LeftBar.svelte";
   import {idb} from "../storage/idb";
   import {migrateFromLocalstorage} from "../storage/migration/migrateFromLocalstorage";
+  import {initDefaultData} from "../storage/defaultData";
 
   export const prerender = true;
   export const ssr = true;
@@ -37,10 +37,10 @@
   // }
 
   onMount(async () => {
-    // await idb.delete()
     await idb.open()
     await migrateFromLocalstorage(idb)
-    await initDefaultData()
+    await initDefaultData(idb)
+
     // const loadedCharacters = loadCharacters();
     // characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
     // const loadedTodos = loadTodos();
