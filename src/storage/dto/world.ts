@@ -17,3 +17,10 @@ export const WorldList = [
     "리부트2",
     "이벤트"
 ]
+
+export interface AccountWorld{
+    id?:string;
+    accountId:number;
+    world:World;
+    order:number;
+}

@@ -8,6 +8,7 @@ specifiers:
   '@types/uuid': ^9.0.1
   '@zerodevx/svelte-toast': ^0.9.3
   axios: ^1.4.0
+  dexie: 4.0.1-alpha.10
   moment: ^2.29.4
   node-html-parser: ^6.1.5
   sass: ^1.62.1
@@ -23,6 +24,7 @@ specifiers:
 
 dependencies:
   axios: 1.4.0
+  dexie: 4.0.1-alpha.10
   moment: 2.29.4
   node-html-parser: 6.1.5
   svelte-icons: 2.1.0
@@ -531,6 +533,10 @@ packages:
   /devalue/4.3.0:
     resolution: {integrity: sha512-n94yQo4LI3w7erwf84mhRUkUJfhLoCZiLyoOZ/QFsDbcWNZePrLwbQpvZBUG2TNxwV3VjCKPxkiiQA6pe3TrTA==}
     dev: true
+
+  /dexie/4.0.1-alpha.10:
+    resolution: {integrity: sha512-j1aqeWaUMiFRF+67JVPS+G50yVX69Moe/kIdrDQ65sIyo9fj2v6xhkzXlsQcDWl9m3NC+MEmFu6D9ng0gU3ymQ==}
+    dev: false
 
   /dom-serializer/2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}

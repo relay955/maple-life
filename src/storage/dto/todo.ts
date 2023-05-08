@@ -1,9 +1,11 @@
 export type TodoCheckType = "checked" | "unchecked" | "blocked";
 export interface Todo {
-    id:string;
+    id?:number;
     name: string;
     repeatType:"daily"|"weeklyMonday"|"weeklyThursday"|"monthly";
     type:"perCharacter"|"perAccount"|"perWorld";
     color:string;
-    isChecked:{[index:string]:TodoCheckType} | TodoCheckType//per character일경우 캐릭터별로, perAccount일경우 단일, per world일경우 월드별
+    //per character일경우 캐릭터ID별로, perAccount일경우 계정ID별로, per world일경우 계정-월드별(1:1 형태)
+    isChecked:{[index:string]:TodoCheckType} | TodoCheckType
+    order:number;
 }
