@@ -5,14 +5,6 @@
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
-  import {
-    loadCharacters, loadSettings,
-    loadLastUpdated,
-    loadTodos,
-    saveCharacters, saveSettings,
-    saveSystemInfo,
-    saveTodos
-  } from "../storage/storage";
   import {onMount} from "svelte";
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
@@ -24,6 +16,8 @@
   import {SvelteToast, toast} from "@zerodevx/svelte-toast";
   import type {Settings} from "../storage/dto/settings";
   import LeftBar from "../components/app/main/LeftBar.svelte";
+  import {idb} from "../storage/idb";
+  import {migrateFromLocalstorage} from "../storage/migration/migrateFromLocalstorage";
 
   export const prerender = true;
   export const ssr = true;
@@ -37,49 +31,53 @@
   let isEditCharacterModalOpen = false;
   let isEditCharacterModalEditMode = false;
   let editCharacterModalTarget:Character|undefined = undefined;
-  let settings:Settings = {
-    shortHeightMode:false,
-    showCharacterPreview:true
-  }
+  // let settings:Settings = {
+  //   shortHeightMode:false,
+  //   showCharacterPreview:true
+  // }
 
   onMount(async () => {
-    const loadedCharacters = loadCharacters();
-    characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
-    const loadedTodos = loadTodos();
-    todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
-    settings = loadSettings();
-    settings = settings;
+    // await idb.delete()
+    await idb.open()
+    await migrateFromLocalstorage(idb)
+    await initDefaultData()
+    // const loadedCharacters = loadCharacters();
+    // characters = loadedCharacters.length > 0 ? loadedCharacters : getDefaultCharacters();
+    // const loadedTodos = loadTodos();
+    // todos = loadedTodos.length > 0 ? loadedTodos : getDefaultTodos();
+    // settings = loadSettings();
+    // settings = settings;
 
     setInterval(() => {
-      const today = moment().startOf('day')
-      let lastUpdated = loadLastUpdated();
-      if(lastUpdated === undefined) {
-        lastUpdated = today.format("YYYY-MM-DD")
-        saveSystemInfo(lastUpdated);
-      }
-
-      if (today.isAfter(lastUpdated)) {
-        //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
-        todos.forEach(todo => {
-          if (todo.repeatType === "daily" ||
-            (todo.repeatType === "weeklyMonday" && today.day() === 1) ||
-            (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
-            (todo.repeatType === "monthly" && today.date() === 1)) {
-
-            if (todo.type === "perCharacter") {
-              Object.keys(todo.isChecked as object).forEach(key =>
-                todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
-              )
-            } else {
-              todo.isChecked = todo.isChecked === "blocked" ? "blocked" : "unchecked";
-            }
-          }
-          saveTodos(todos)
-        })
-
-        saveSystemInfo(today.format("YYYY-MM-DD"))
-        todos = todos
-      }
+      // const today = moment().startOf('day')
+      // let lastUpdated = loadLastUpdated();
+      // if(lastUpdated === undefined) {
+      //   lastUpdated = today.format("YYYY-MM-DD")
+      //   saveSystemInfo(lastUpdated);
+      // }
+      //
+      // if (today.isAfter(lastUpdated)) {
+      //   //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
+      //   todos.forEach(todo => {
+      //     if (todo.repeatType === "daily" ||
+      //       (todo.repeatType === "weeklyMonday" && today.day() === 1) ||
+      //       (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
+      //       (todo.repeatType === "monthly" && today.date() === 1)) {
+      //
+      //       if (todo.type === "perCharacter") {
+      //         Object.keys(todo.isChecked as object).forEach(key =>
+      //           todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
+      //         )
+      //       } else {
+      //         todo.isChecked = todo.isChecked === "blocked" ? "blocked" : "unchecked";
+      //       }
+      //     }
+      //     // saveTodos(todos)
+      //   })
+      //
+      //   // saveSystemInfo(today.format("YYYY-MM-DD"))
+      //   todos = todos
+      // }
     }, 1000)
   })
 
@@ -114,12 +112,12 @@
       }
     }
     todos = todos
-    saveTodos(todos)
+    // saveTodos(todos)
   }
 
   function onMoveTodo(){
     todos = todos
-    saveTodos(todos)
+    // saveTodos(todos)
   }
 
   const onSubmitEditTodo = (todo:Todo) => {
@@ -130,13 +128,13 @@
       todos.push(todo)
     }
     todos = todos
-    saveTodos(todos)
+    // saveTodos(todos)
   }
 
   const onClickDeleteTodo = (todo:Todo) => {
     todos = todos.filter(target => target.id !== todo.id)
     todos = todos
-    saveTodos(todos)
+    // saveTodos(todos)
   }
 
   const onClickAddTodoButton = () => {
@@ -159,7 +157,7 @@
       characters.push(character)
     }
     characters = characters
-    saveCharacters(characters)
+    // saveCharacters(characters)
   };
 
   const onClickAddCharacterButton = () => {
@@ -185,7 +183,7 @@
     characters[secondCharacterIndex] = temp
 
     characters = characters
-    saveCharacters(characters)
+    // saveCharacters(characters)
   }
 
   const onSubmitDeleteCharacter = (character:Character) => {
@@ -195,60 +193,61 @@
     }
     characters = characters.filter(target => target.id !== character.id)
     characters = characters
-    saveCharacters(characters)
+    // saveCharacters(characters)
   }
-  const onClickShortHeightModeButton = () => {
-    settings.shortHeightMode = !settings.shortHeightMode
-    settings = settings
-    saveSettings(settings)
-  };
+  // const onClickShortHeightModeButton = () => {
+  //   settings.shortHeightMode = !settings.shortHeightMode
+  //   settings = settings
+  //   saveSettings(settings)
+  // };
+  //
+  // const onClickShowCharacterPreviewButton = () => {
+  //   settings.showCharacterPreview = !settings.showCharacterPreview
+  //   settings = settings
+  //   saveSettings(settings)
+  // };
 
-  const onClickShowCharacterPreviewButton = () => {
-    settings.showCharacterPreview = !settings.showCharacterPreview
-    settings = settings
-    saveSettings(settings)
-  };
 </script>
 
 <Logo isFixed/>
 <LeftBar/>
-<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
-         onClickShortHeightModeButton={onClickShortHeightModeButton}
-         onClickShowCharacterPreviewButton={onClickShowCharacterPreviewButton}
-         settings={settings}
-/>
+<!--<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}-->
+<!--         onClickShortHeightModeButton={onClickShortHeightModeButton}-->
+<!--         onClickShowCharacterPreviewButton={onClickShowCharacterPreviewButton}-->
+<!--         settings={settings}-->
+<!--/>-->
 
-<div class="main">
-  <div class="container">
-    <TodoHeader characters={characters}
-                onClickCharacter={onClickEditCharacter}
-                onChangeOrderCharacter={onChangeOrderCharacter}
-                todos={todos}
-                settings={settings}
-    />
-    <DragDropList bind:data={todos} let:slotProps={item}
-                  onMove={onMoveTodo} dataIdField="id">
-      <TodoItems characters={characters} todo={item}
-                 onClickCheckbox={onClickCheckbox}
-                 onClickDelete={onClickDeleteTodo}
-                 onClickEdit={onClickEditTodoButton}
-                 settings={settings}
-      />
-    </DragDropList>
-    <AddTodoButton onClick={onClickAddTodoButton}/>
-  </div>
-  <TodoEditModal isOpen={isEditTodoModalOpen}
-                 isEditMode={editTodoModalEditMode}
-                 editTodo={editTodoModalTarget}
-                 onClose={()=>isEditTodoModalOpen = false}
-                 onSubmit={onSubmitEditTodo}/>
-  <CharacterEditModal isOpen={isEditCharacterModalOpen}
-                      isEditMode={isEditCharacterModalEditMode}
-                      editCharacter={editCharacterModalTarget}
-                      onClose={()=>isEditCharacterModalOpen = false}
-                      onDelete={onSubmitDeleteCharacter}
-                      onSubmit={onSubmitEditCharacter}/>
-</div>
+<!--<div class="main">-->
+<!--  <div class="container">-->
+<!--    <TodoHeader characters={characters}-->
+<!--                onClickCharacter={onClickEditCharacter}-->
+<!--                onChangeOrderCharacter={onChangeOrderCharacter}-->
+<!--                todos={todos}-->
+<!--                settings={settings}-->
+<!--    />-->
+<!--    <DragDropList bind:data={todos} let:slotProps={item}-->
+<!--                  onMove={onMoveTodo} dataIdField="id">-->
+<!--      <TodoItems characters={characters} todo={item}-->
+<!--                 onClickCheckbox={onClickCheckbox}-->
+<!--                 onClickDelete={onClickDeleteTodo}-->
+<!--                 onClickEdit={onClickEditTodoButton}-->
+<!--                 settings={settings}-->
+<!--      />-->
+<!--    </DragDropList>-->
+<!--    <AddTodoButton onClick={onClickAddTodoButton}/>-->
+<!--  </div>-->
+<!--  <TodoEditModal isOpen={isEditTodoModalOpen}-->
+<!--                 isEditMode={editTodoModalEditMode}-->
+<!--                 editTodo={editTodoModalTarget}-->
+<!--                 onClose={()=>isEditTodoModalOpen = false}-->
+<!--                 onSubmit={onSubmitEditTodo}/>-->
+<!--  <CharacterEditModal isOpen={isEditCharacterModalOpen}-->
+<!--                      isEditMode={isEditCharacterModalEditMode}-->
+<!--                      editCharacter={editCharacterModalTarget}-->
+<!--                      onClose={()=>isEditCharacterModalOpen = false}-->
+<!--                      onDelete={onSubmitDeleteCharacter}-->
+<!--                      onSubmit={onSubmitEditCharacter}/>-->
+<!--</div>-->
 <SvelteToast/>
 
 <style lang="scss">

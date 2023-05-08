@@ -1,4 +1,4 @@
 export interface Settings {
-    shortHeightMode: boolean;
-    showCharacterPreview: boolean;
+    name:string;
+    value:any;
 }

@@ -1,3 +1,4 @@
 export interface SystemInfo{
-    lastUpdated:string;
+    name:string;
+    value:string;
 }

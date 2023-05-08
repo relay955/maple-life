@@ -1,11 +1,11 @@
-import type {World} from "./world";
 
 export interface Character {
-    id:string;
-    imgUrl: string;
+    id?:number;
+    accountId:number;
+    worldId:number;
     name: string;
     level: number;
+    imgUrl: string;
     classType:string;
-    world?:World;
-    account?:string;
+    order:number;
 }
