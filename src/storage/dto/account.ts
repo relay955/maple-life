@@ -6,3 +6,11 @@ export interface Account {
     order:number;
     worlds?:AccountWorld[];
 }
+
+export const calcAccountCharacterCount = (account:Account) => {
+    let count = 0;
+    account.worlds?.forEach(world => {
+        count += world.characters?.length ?? 0;
+    });
+    return count;
+}

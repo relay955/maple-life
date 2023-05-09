@@ -12,7 +12,7 @@
   import Space from "../../shared/Space.svelte";
   import Modal from "../../shared/Modal.svelte";
   import logo from '$lib/images/icon/logo.png'
-  import Logo from "./Logo.svelte";
+  import Logo from "../../shared/Logo.svelte";
 
   let location;
   let isOpenInfoPopup = false;
