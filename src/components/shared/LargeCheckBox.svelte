@@ -24,7 +24,6 @@
     border:2px solid #e6e6e6;
     border-radius: 5px;
     height: 40px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

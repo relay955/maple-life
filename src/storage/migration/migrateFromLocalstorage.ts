@@ -42,7 +42,7 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
             repeatType: oldTodo.repeatType,
             type: oldTodo.type,
             color: oldTodo.color,
-            isChecked: oldTodo.isChecked,
+            isChecked: typeof oldTodo.isChecked === "string" ? {} : oldTodo.isChecked,
             order: i,
         }
         await idb.todo.add(newTodo)

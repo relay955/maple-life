@@ -5,10 +5,9 @@
 
   export let data:any[] = [];
 
-  export let removesItems = false;
   export let dataIdField = "id";
 
-  export let onMove:()=>void;
+  export let onMove:(data:any)=>void;
 
   let ghost;
   let grabbed;
@@ -62,19 +61,17 @@
 
   // does the actual moving of items in data
   function moveDatum(from, to) {
-    let temp = data[from];
-    data = [...data.slice(0, from), ...data.slice(from + 1)];
-    data = [...data.slice(0, to), temp, ...data.slice(to)];
-    onMove()
+    let copiedData = JSON.parse(JSON.stringify(data))
+    let temp = copiedData[from];
+    copiedData = [...copiedData.slice(0, from), ...copiedData.slice(from + 1)];
+    copiedData = [...copiedData.slice(0, to), temp, ...copiedData.slice(to)];
+    onMove(copiedData)
   }
 
   function release(ev) {
     grabbed = null;
   }
 
-  function removeDatum(index) {
-    data = [...data.slice(0, index), ...data.slice(index + 1)];
-  }
 </script>
 
 <style lang="scss">
@@ -144,7 +141,7 @@
   }
 
   #grabbed {
-    opacity: 0.0;
+    opacity: 0.0 !important;
   }
 
   #ghost {
@@ -206,7 +203,7 @@
     on:touchend={function(ev) {ev.stopPropagation(); release(ev.touches[0]);}}>
     {#each data as datum,i (datum[dataIdField])}
       <div
-        id={(grabbed && (datum[dataIdField]) === grabbed.dataset.id) ? "grabbed" : ""}
+        id={(grabbed && (datum[dataIdField].toString() === grabbed.dataset.id)) ? "grabbed" : ""}
         class="item"
         data-index={i}
         data-id={datum[dataIdField]}

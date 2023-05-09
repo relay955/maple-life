@@ -1,14 +1,14 @@
 <script lang="ts">
 
   import Toolbar from "../components/app/main/Toolbar.svelte";
-  import Logo from "../components/app/main/Logo.svelte";
+  import Logo from "../components/shared/Logo.svelte";
   import DragDropList from "../components/shared/DragDropList.svelte";
   import type {Character} from "../storage/dto/character";
   import type {Todo} from "../storage/dto/todo";
   import {onMount} from "svelte";
   import TodoEditModal from "../components/app/main/TodoEditModal.svelte";
   import moment from "moment";
-  import TodoItems from "../components/app/main/TodoItems.svelte";
+  import TodoItems from "../components/app/main/TodoList/TodoItems.svelte";
   import CharacterEditModal from "../components/app/main/CharacterEditModal.svelte";
   import TodoHeader from "../components/app/main/TodoHeader.svelte";
   import AddTodoButton from "../components/app/main/AddTodoButton.svelte";
@@ -20,19 +20,10 @@
   import {initDefaultData} from "../storage/defaultData";
   import {systemQuery} from "../storage/queries/systemQuery";
   import {liveQuery} from "dexie";
+  import TodoList from "../components/app/main/TodoList.svelte";
 
   export const prerender = true;
   export const ssr = true;
-
-  // let characters = liveQuery(
-  //   () => idb.character.
-  // )
-  // let characters:Character[] = [];
-  // let todos:Todo[] = []
-  // let settings:Settings = {
-  //   shortHeightMode:false,
-  //   showCharacterPreview:true
-  // }
 
   let isEditTodoModalOpen = false;
   let editTodoModalEditMode = false;
@@ -65,59 +56,15 @@
             (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
             (todo.repeatType === "monthly" && today.date() === 1)) {
 
-            if (todo.type === "perCharacter") {
-              Object.keys(todo.isChecked as object).forEach(key =>
-                todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
-              )
-            } else {
-              todo.isChecked = todo.isChecked === "blocked" ? "blocked" : "unchecked";
-            }
+            Object.keys(todo.isChecked as object).forEach(key =>
+              todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
+            )
           }
         })
-
         systemQuery.updateLastUpdatedTime()
       }
     }, 1000)
   })
-
-  function onClickCheckbox(type:"right"|"left",item:Todo, character:Character|undefined = undefined) {
-    // if(type==="right"){
-    //   if (character === undefined) {
-    //     item.isChecked = item.isChecked === "blocked" ? "unchecked" : "blocked";
-    //   } else {
-    //     const targetCharacterChecked = item.isChecked[character.id];
-    //     if (targetCharacterChecked === "blocked") {
-    //       item.isChecked[character.id] = "unchecked";
-    //     } else {
-    //       item.isChecked[character.id] = "blocked";
-    //     }
-    //   }
-    // }
-    //
-    // if(type==="left" && item.isChecked !== "blocked") {
-    //   if (character === undefined) {
-    //     if (item.isChecked === "checked") {
-    //       item.isChecked = "unchecked";
-    //     } else if (item.isChecked === "unchecked") {
-    //       item.isChecked = "checked";
-    //     }
-    //   } else {
-    //     const targetCharacterChecked = item.isChecked[character.id];
-    //     if (targetCharacterChecked === "checked") {
-    //       item.isChecked[character.id] = "unchecked";
-    //     } else if (targetCharacterChecked === "unchecked" || targetCharacterChecked === undefined) {
-    //       item.isChecked[character.id] = "checked";
-    //     }
-    //   }
-    // }
-    // todos = todos
-    // // saveTodos(todos)
-  }
-
-  function onMoveTodo(){
-    // todos = todos
-    // // saveTodos(todos)
-  }
 
   const onSubmitEditTodo = (todo:Todo) => {
     // const editTargetIndex = todos.findIndex(target => target.id === todo.id)
@@ -126,12 +73,6 @@
     // } else {
     //   todos.push(todo)
     // }
-    // todos = todos
-    // // saveTodos(todos)
-  }
-
-  const onClickDeleteTodo = (todo:Todo) => {
-    // todos = todos.filter(target => target.id !== todo.id)
     // todos = todos
     // // saveTodos(todos)
   }
@@ -180,17 +121,6 @@
     // characters = characters
     // // saveCharacters(characters)
   }
-  const onClickShortHeightModeButton = () => {
-    // settings.shortHeightMode = !settings.shortHeightMode
-    // settings = settings
-    // saveSettings(settings)
-  };
-
-  const onClickShowCharacterPreviewButton = () => {
-    // settings.showCharacterPreview = !settings.showCharacterPreview
-    // settings = settings
-    // saveSettings(settings)
-  };
 
 </script>
 
@@ -201,17 +131,7 @@
 <!--<div class="main">-->
   <div class="container">
     <TodoHeader onClickCharacter={onClickEditCharacter}/>
-
-<!--    <DragDropList bind:data={todos} let:slotProps={item}-->
-<!--                  onMove={onMoveTodo} dataIdField="id">-->
-<!--      <TodoItems characters={characters} todo={item}-->
-<!--                 onClickCheckbox={onClickCheckbox}-->
-<!--                 onClickDelete={onClickDeleteTodo}-->
-<!--                 onClickEdit={onClickEditTodoButton}-->
-<!--                 settings={settings}-->
-<!--      />-->
-<!--    </DragDropList>-->
-<!--    <AddTodoButton onClick={onClickAddTodoButton}/>-->
+    <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
   </div>
 <!--  <TodoEditModal isOpen={isEditTodoModalOpen}-->
 <!--                 isEditMode={editTodoModalEditMode}-->
