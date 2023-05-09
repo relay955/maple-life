@@ -23,7 +23,7 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
         order: 0
     })
     const oldCharacters = loadCharacters()
-    for (const oldCharacter of oldCharacters) {
+    for (const [i,oldCharacter]  of oldCharacters.entries()) {
         const newCharacter: Character = {
             worldId: defaultWorldId,
             accountId: defaultAccountId,
@@ -31,19 +31,19 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
             name: oldCharacter.name,
             level: oldCharacter.level,
             classType: oldCharacter.classType,
-            order: 0,
+            order: i,
         }
         await idb.character.add(newCharacter)
     }
     const oldTodos = loadTodos()
-    for (const oldTodo of oldTodos) {
+    for (const [i,oldTodo] of oldTodos.entries()) {
         const newTodo: Todo = {
             name: oldTodo.name,
             repeatType: oldTodo.repeatType,
             type: oldTodo.type,
             color: oldTodo.color,
             isChecked: oldTodo.isChecked,
-            order: 0,
+            order: i,
         }
         await idb.todo.add(newTodo)
     }
