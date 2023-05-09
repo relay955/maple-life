@@ -196,11 +196,7 @@
 
 <Logo isFixed/>
 <LeftBar/>
-<!--<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}-->
-<!--         onClickShortHeightModeButton={onClickShortHeightModeButton}-->
-<!--         onClickShowCharacterPreviewButton={onClickShowCharacterPreviewButton}-->
-<!--         settings={settings}-->
-<!--/>-->
+<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}/>
 
 <!--<div class="main">-->
   <div class="container">
