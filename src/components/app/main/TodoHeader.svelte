@@ -1,20 +1,28 @@
 <script lang="ts">
   import type {Character} from "../../../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
-  import type {Settings} from "../../../storage/dto/settings";
   import IconButton from "../../shared/IconButton.svelte";
   import MdHelpOutline from 'svelte-icons/md/MdHelpOutline.svelte'
   import Modal from "../../shared/Modal.svelte";
   import type {Todo} from "../../../storage/dto/todo";
   import ProgressBar from "@okrad/svelte-progressbar";
-  import Label from "../../shared/Label.svelte";
+  import {liveQuery} from "dexie";
+  import {idb} from "../../../storage/idb";
+  import type {Account} from "../../../storage/dto/account";
+  import {characterQuery} from "../../../storage/queries/characterQuery";
+  import {toast} from "@zerodevx/svelte-toast";
 
-  export let characters:Character[];
-  export let todos:Todo[];
   export let onClickCharacter:(character:Character)=>void;
-  export let onChangeOrderCharacter:(firstCharacter:Character, secondCharacter:Character)=>void;
-  export let settings:Settings;
-  let characterIds:string[] = [];
+
+  let characterTree = liveQuery(characterQuery.generateCharacterTree)
+  let characterIds = liveQuery(async () => (await idb.character.toArray()).map(character => character.id))
+  let todos = liveQuery(async () => await idb.todo.toArray());
+  let showCharacterPreview =
+    liveQuery(async () => (await idb.settings.get("showCharacterPreview"))?.value);
+
+  let isMultiAccount = false;
+  let isMultiWorld = false;
+
   let uncheckedDailyTodoCount = 0;
   let checkedDailyTodoCount = 0;
   let totalDailyTodoCount = 0;
@@ -27,30 +35,21 @@
   let dragCharacter:Character|undefined = undefined;
   let isOpenHelpModal = false;
 
-  const onDragStartCharacter = (e:Event,character:Character)=>{
-    console.log("a")
-    dragCharacter = character;
-  }
-  const onDragOverCharacter = (e:Event)=>{
-    e.preventDefault()
-  }
-  const onDragEndChracter = (e:Event,character:Character)=>{
-    e.preventDefault()
-    if(dragCharacter === undefined) return;
-    if(dragCharacter.id === character.id) return;
-    onChangeOrderCharacter(dragCharacter, character);
-    dragCharacter = undefined;
-  }
+  characterTree.subscribe((value)=>{
+    isMultiAccount = value.length > 1;
+    console.log(value[0].worlds)
+    isMultiWorld = value.some(account => (account.worlds?.length ?? 0) > 1)
+  })
 
-  $: characterIds = characters.map(character=>character.id)
-  $: {
+  todos.subscribe((value)=>{
     checkedDailyTodoCount = 0;
     uncheckedDailyTodoCount =0;
     checkedWeeklyTodoCount = 0;
     uncheckedWeeklyTodoCount = 0;
-    todos?.forEach(todo => {
+    value.forEach(todo => {
       if (todo.type === "perCharacter" && typeof todo.isChecked === "object") {
-        characterIds.forEach(key => {
+        //@ts-ignore
+        $characterIds.forEach(key => {
           if (todo.isChecked[key] === "checked") addCheckedTodoCount(todo)
           else if (todo.isChecked[key] === "unchecked") addUncheckedTodoCount(todo)
           else if (todo.isChecked[key] === undefined) addUncheckedTodoCount(todo)
@@ -61,29 +60,52 @@
       }
     })
 
-    function addCheckedTodoCount(todo:Todo){
-      if(todo.repeatType === "daily"){
-        checkedDailyTodoCount++;
-      }else{
-        checkedWeeklyTodoCount++
-      }
-    }
-    function addUncheckedTodoCount(todo:Todo){
-      if(todo.repeatType === "daily"){
-        uncheckedDailyTodoCount++;
-      }else{
-        uncheckedWeeklyTodoCount++;
-      }
-    }
-
     totalDailyTodoCount = checkedDailyTodoCount + uncheckedDailyTodoCount;
     totalWeeklyTodoCount = checkedWeeklyTodoCount + uncheckedWeeklyTodoCount;
     dailyCheckProgress = totalDailyTodoCount === 0 ? 0 : Math.round(checkedDailyTodoCount / totalDailyTodoCount * 100);
     weeklyCheckProgress = totalWeeklyTodoCount === 0 ? 0 : Math.round(checkedWeeklyTodoCount / totalWeeklyTodoCount * 100);
+  })
+  function addCheckedTodoCount(todo:Todo){
+    if(todo.repeatType === "daily"){
+      checkedDailyTodoCount++;
+    }else{
+      checkedWeeklyTodoCount++
+    }
+  }
+  function addUncheckedTodoCount(todo:Todo){
+    if(todo.repeatType === "daily"){
+      uncheckedDailyTodoCount++;
+    }else{
+      uncheckedWeeklyTodoCount++;
+    }
+  }
+
+  const onDragStartCharacter = (e:Event,character:Character)=>{
+    dragCharacter = character;
+  }
+  const onDragOverCharacter = (e:Event)=>{
+    e.preventDefault()
+  }
+  const onDragEndCharacter = (e:Event, character:Character)=>{
+    e.preventDefault()
+    if(character.accountId !== dragCharacter?.accountId || character.worldId !== dragCharacter?.worldId){
+      toast.push("캐릭터 이동은 동일한 계정, 월드에서만 가능합니다. 계정/월드의 순서는 윗부분을 드래그하여 옮겨주세요. ")
+      dragCharacter = undefined;
+      return;
+    }
+    if(dragCharacter === undefined) return;
+    if(dragCharacter.id === character.id) return;
+
+    const temp = dragCharacter.order
+    dragCharacter.order = character.order
+    character.order = temp;
+
+    idb.character.bulkPut([dragCharacter, character])
+    dragCharacter = undefined;
   }
 
 </script>
-<div class={`${settings.showCharacterPreview ? "":"hidden-image"} header`}>
+<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}>
   <div class="title">
     <div class="text">
     할일
@@ -105,28 +127,47 @@
       </div>
     </div>
   </div>
-  {#each characters as character (character.id)}
-    <div class="character" on:click={()=>onClickCharacter(character)}
-         draggable="true"
-         on:dragstart={(e)=>onDragStartCharacter(e,character)}
-         on:dragover={onDragOverCharacter}
-         on:drop={(e)=>onDragEndChracter(e,character)}
-    >
-      {#if character.imgUrl !== ""}
-        <div class="img" style={`background:url(${character.imgUrl})`}></div>
-      {/if}
-      {#if character.imgUrl === ""}
-        <div class="default-img">
-          <MdFavoriteBorder/>
+
+  {#each ($characterTree ?? []) as account (account.id)}
+  <div class="account">
+    {#if isMultiAccount}
+    <div class="account-bar">{account.name}</div>
+    {/if}
+    <div class="worlds">
+      {#each account.worlds as world (world.id)}
+      <div class="world">
+        {#if isMultiWorld}
+        <div class="world-bar">{world.world}</div>
+        {/if}
+        <div class="characters">
+          {#each world.characters as character (character.id)}
+          <div class="character" on:click={()=>onClickCharacter(character)}
+               draggable="true"
+               on:dragstart={(e)=>onDragStartCharacter(e,character)}
+               on:dragover={onDragOverCharacter}
+               on:drop={(e)=>onDragEndCharacter(e,character)}>
+            {#if character.imgUrl !== ""}
+              <div class={`img ${isMultiWorld?"multi-world":""} ${isMultiAccount?"multi-account":""}`}
+                   style={`background:url(${character.imgUrl})`}></div>
+            {/if}
+            {#if character.imgUrl === ""}
+              <div class={`default-img ${isMultiWorld?"multi-world":""} ${isMultiAccount?"multi-account":""}`}>
+                <MdFavoriteBorder/>
+              </div>
+            {/if}
+            <div class="name">
+              {character.name}
+            </div>
+            <div class="subtitle">
+              Lv.{character.level}, {character.classType}
+            </div>
+          </div>
+          {/each}
         </div>
-      {/if}
-      <div class="name">
-        {character.name}
       </div>
-      <div class="subtitle">
-        Lv.{character.level}, {character.classType}
-      </div>
+      {/each}
     </div>
+  </div>
   {/each}
 </div>
 <Modal isOpen={isOpenHelpModal} onClose={()=>isOpenHelpModal = false} title="기본 사용방법">
@@ -195,12 +236,41 @@
       }
     }
 
+    .account{
+      display: flex;
+      flex-direction: column;
+      .account-bar{
+        text-align: center;
+        font-size: 7px;
+        border-bottom:2px solid #44aaee;
+        box-sizing: border-box;
+      }
+      .worlds{
+        display:flex;
+        flex-direction:row;
+      }
+    }
+
+    .world{
+      display:flex;
+      flex-direction: column;
+      .world-bar{
+        text-align: center;
+        font-size: 7px;
+        border-bottom:2px solid #2cc642;
+        box-sizing: border-box;
+      }
+      .characters{
+        display:flex;
+        flex-direction:row;
+      }
+    }
+
     .character {
       cursor: pointer;
       flex-grow: 1;
       min-width: 80px;
       width:0;
-      padding-top: 5px;
       padding-bottom: 5px;
       margin-right: 2px;
 
@@ -235,12 +305,28 @@
         height: 50px;
         background-position: 52% 61% !important;
         background-size: 218% !important;
+        &.multi-world{
+          width:45px;
+          height:45px;
+        }
+        &.multi-account{
+          width:40px !important;
+          height:40px !important;
+        }
       }
 
       .default-img {
         width: 40px;
         height: 40px;
         padding: 5px;
+        &.multi-world{
+          width: 35px;
+          height: 35px;
+        }
+        &.multi-account{
+          width:30px !important;
+          height:30px !important;
+        }
       }
     }
 
@@ -292,12 +378,28 @@
           height: 36px;
           background-position: 52% 61% !important;
           background-size: 218% !important;
+          &.multi-world{
+            width:30px;
+            height:30px;
+          }
+          &.multi-account{
+            width:25px !important;
+            height:25px !important;
+          }
         }
 
         .default-img {
           width: 30px;
           height: 30px;
           padding: 3px;
+          &.multi-world{
+            width:25px;
+            height:25px;
+          }
+          &.multi-account{
+            width:20px !important;
+            height:20px !important;
+          }
         }
       }
 

@@ -1,6 +1,7 @@
 import {isInitialized} from "./storage";
 import type {Idb} from "./idb";
 import {v4 as uuidv4} from "uuid";
+import moment from "moment";
 
 export const initDefaultData = async (idb: Idb) => {
     if (isInitialized()) return;
@@ -38,7 +39,7 @@ export const initDefaultData = async (idb: Idb) => {
             level:200,
             classType:"비숍",
             imgUrl:"",
-            order:0
+            order:1
         }
     ])
 
@@ -154,4 +155,21 @@ export const initDefaultData = async (idb: Idb) => {
             order:12
         }
     ])
+
+    //기본설정 등록
+    await idb.settings.bulkAdd([
+        {
+            name:"shortHeightMode",
+            value:false
+        },
+        {
+            name:"showCharacterPreview",
+            value:true
+        }
+    ])
+
+    await idb.systemInfo.add({
+        name:"lastUpdate",
+        value:moment().format("YYYY-MM-DD")
+    })
 }

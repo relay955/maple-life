@@ -20,14 +20,13 @@ export class Idb extends Dexie {
     constructor() {
         super('maplelife');
         this.version(1).stores({
-            account: '++id',
-            accountWorld: '++id',
-            todo: '++id',
-            character: '++id',
+            account: '++id, order',
+            accountWorld: '++id, order',
+            todo: '++id, order',
+            character: '++id, order',
             settings: 'name',
             systemInfo: 'name',
         });
-
     }
 }
 
