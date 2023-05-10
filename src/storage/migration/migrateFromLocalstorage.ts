@@ -69,9 +69,7 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
         value: oldSettings.showCharacterPreview
     })
     setInitialized()
-
 }
-
 
 //구버전 로컬스토리지 코드. 여기서 데이터를 불러와 마이그레이션해야함
 interface OldCharacter {

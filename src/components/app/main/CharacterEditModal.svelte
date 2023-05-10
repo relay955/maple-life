@@ -19,8 +19,9 @@ export let isOpen = false;
 let account = liveQuery(async () => await idb.account.toArray())
 let character:Character = reset()
 let selectedWorld:World = "리부트"
-let isManualMode = true;
+let isManualMode = false;
 let isParsing = false;
+
 export let onClose = () => {};
 export let isEditMode = false;
 export let editCharacter:Character|undefined = undefined;
