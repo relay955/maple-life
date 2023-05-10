@@ -44,23 +44,32 @@
     isMultiWorld = value.some(account => (account.worlds?.length ?? 0) > 1)
   })
 
-  todos.subscribe((value)=>{
+  todos.subscribe(async (value) => {
     checkedDailyTodoCount = 0;
-    uncheckedDailyTodoCount =0;
+    uncheckedDailyTodoCount = 0;
     checkedWeeklyTodoCount = 0;
     uncheckedWeeklyTodoCount = 0;
-    value.forEach(todo => {
-      if (todo.type === "perCharacter" && typeof todo.isChecked === "object") {
-        //@ts-ignore
-        $characterIds.forEach(key => {
-          if (todo.isChecked[key] === "checked") addCheckedTodoCount(todo)
-          else if (todo.isChecked[key] === "unchecked") addUncheckedTodoCount(todo)
-          else if (todo.isChecked[key] === undefined) addUncheckedTodoCount(todo)
-        })
+
+    let localCharacterTree = await characterQuery.generateCharacterTree()
+    let localCharacterIds = (await idb.character.toArray()).map(character => character.id!.toString())
+
+    //@ts-ignore
+    $todos.forEach(todo => {
+      let iterationTarget: string[] = []
+      if (todo.type === "perCharacter") {
+        iterationTarget = localCharacterIds;
+      } else if (todo.type === "perWorld") {
+        iterationTarget = localCharacterTree
+          .map(account => account.worlds?.map(world => world.id.toString()) ?? []).flat()
       } else if (todo.type === "perAccount") {
-        if (todo.isChecked === "checked") addCheckedTodoCount(todo)
-        else if (todo.isChecked === "unchecked") addUncheckedTodoCount(todo)
+        iterationTarget = localCharacterTree.map(account => account.id!.toString())
       }
+
+      iterationTarget.forEach(key => {
+        if (todo.isChecked[key] === "checked") addCheckedTodoCount(todo)
+        else if (todo.isChecked[key] === "unchecked") addUncheckedTodoCount(todo)
+        else if (todo.isChecked[key] === undefined) addUncheckedTodoCount(todo)
+      })
     })
 
     totalDailyTodoCount = checkedDailyTodoCount + uncheckedDailyTodoCount;
@@ -68,6 +77,7 @@
     dailyCheckProgress = totalDailyTodoCount === 0 ? 0 : Math.round(checkedDailyTodoCount / totalDailyTodoCount * 100);
     weeklyCheckProgress = totalWeeklyTodoCount === 0 ? 0 : Math.round(checkedWeeklyTodoCount / totalWeeklyTodoCount * 100);
   })
+
   function addCheckedTodoCount(todo:Todo){
     if(todo.repeatType === "daily"){
       checkedDailyTodoCount++;
@@ -76,19 +86,20 @@
     }
   }
 
-  $:{
-    effectiveHeight = 50;
-    if(isMultiWorld) effectiveHeight += 10;
-    if(isMultiAccount) effectiveHeight += 10;
-    if($showCharacterPreview) effectiveHeight += 50;
-  }
-
   function addUncheckedTodoCount(todo:Todo){
     if(todo.repeatType === "daily"){
       uncheckedDailyTodoCount++;
     }else{
       uncheckedWeeklyTodoCount++;
     }
+  }
+
+
+  $:{
+    effectiveHeight = 50;
+    if(isMultiWorld) effectiveHeight += 10;
+    if(isMultiAccount) effectiveHeight += 10;
+    if($showCharacterPreview) effectiveHeight += 50;
   }
 
   const onDragStartCharacter = (e:Event,character:Character)=>{

@@ -98,9 +98,9 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
         <LargeCheckBox
           isShortHeight={$shortHeightMode}
           style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}`}
-          onClick={()=>onClickCheckbox("left",todo,`${account.id}:${world.id}`)}
-          onRightClick={()=>onClickCheckbox("right",todo,`${account.id}:${world.id}`)}
-          checked={todo.isChecked[`${account.id}:${world.id}`] ?? "unchecked"}/>
+          onClick={()=>onClickCheckbox("left",todo,`${world.id}`)}
+          onRightClick={()=>onClickCheckbox("right",todo,`${world.id}`)}
+          checked={todo.isChecked[`${world.id}`] ?? "unchecked"}/>
       </div>
     {/each}
   {/each}
