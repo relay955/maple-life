@@ -34,6 +34,8 @@
   let totalWeeklyTodoCount = 0;
   let weeklyCheckProgress = 0;
 
+  let effectiveHeight = 40;
+
   let dragCharacter:Character|undefined = undefined;
   let isOpenHelpModal = false;
 
@@ -73,6 +75,14 @@
       checkedWeeklyTodoCount++
     }
   }
+
+  $:{
+    effectiveHeight = 40;
+    if(isMultiWorld) effectiveHeight += 10;
+    if(isMultiAccount) effectiveHeight += 10;
+    if($showCharacterPreview) effectiveHeight += 50;
+  }
+
   function addUncheckedTodoCount(todo:Todo){
     if(todo.repeatType === "daily"){
       uncheckedDailyTodoCount++;
@@ -106,7 +116,7 @@
   }
 
 </script>
-<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}>
+<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}  style={`height:${calcEffectiveHeight()}px`}>
   <div class="title">
     <div class="text">
     할일
@@ -150,11 +160,11 @@
                on:dragover={onDragOverCharacter}
                on:drop={(e)=>onDragEndCharacter(e,character)}>
             {#if character.imgUrl !== ""}
-              <div class={`img ${isMultiWorld?"multi-world":""} ${isMultiAccount?"multi-account":""}`}
+              <div class='img'
                    style={`background:url(${character.imgUrl})`}></div>
             {/if}
             {#if character.imgUrl === ""}
-              <div class={`default-img ${isMultiWorld?"multi-world":""} ${isMultiAccount?"multi-account":""}`}>
+              <div class='default-img'>
                 <MdFavoriteBorder/>
               </div>
             {/if}
@@ -196,7 +206,6 @@
     position: sticky;
     top: 0;
     z-index: 5;
-    height: 100px;
     padding-top: 2px;
     margin-bottom: 5px;
 
@@ -308,28 +317,12 @@
         height: 50px;
         background-position: 52% 61% !important;
         background-size: 218% !important;
-        &.multi-world{
-          width:45px;
-          height:45px;
-        }
-        &.multi-account{
-          width:40px !important;
-          height:40px !important;
-        }
       }
 
       .default-img {
         width: 40px;
         height: 40px;
         padding: 5px;
-        &.multi-world{
-          width: 35px;
-          height: 35px;
-        }
-        &.multi-account{
-          width:30px !important;
-          height:30px !important;
-        }
       }
     }
 
