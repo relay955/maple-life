@@ -3,12 +3,13 @@
   import MdRadioButtonUnchecked from 'svelte-icons/md/MdRadioButtonUnchecked.svelte'
   import MdCheckCircle from 'svelte-icons/md/MdCheckCircle.svelte'
   export let checked:TodoCheckType;
+  export let isShortHeight = false;
   export let onClick:()=>void;
   export let onRightClick:()=>void;
   export let style:string="";
 
 </script>
-<div class={`main ${checked}`} on:click={onClick} style={style}
+<div class={`main ${checked} ${isShortHeight ? "short-height":""}`} on:click={onClick} style={style}
      on:contextmenu|preventDefault={onRightClick}>
   {#if checked==="checked"}
     <MdCheckCircle/>
@@ -36,6 +37,10 @@
     cursor:pointer;
 
     transition: 0.2s all;
+  }
+
+  .main.short-height{
+    height: 28px;
   }
 
   .main.checked{

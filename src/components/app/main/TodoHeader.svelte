@@ -11,6 +11,7 @@
   import type {Account} from "../../../storage/dto/account";
   import {characterQuery} from "../../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
+  import {WorldList} from "../../../storage/dto/world";
 
   export let onClickCharacter:(character:Character)=>void;
 
@@ -136,7 +137,7 @@
       {#each account.worlds as world (world.id)}
       <div class="world">
         {#if isMultiWorld}
-        <div class="world-bar">{world.world}</div>
+        <div class="world-bar" style={`border-bottom: 2px solid ${WorldList[world.world].color}`}>{world.world}</div>
         {/if}
         <div class="characters">
           {#each world.characters as character (character.id)}
@@ -256,7 +257,6 @@
       .world-bar{
         text-align: center;
         font-size: 7px;
-        border-bottom:2px solid #2cc642;
         box-sizing: border-box;
       }
       .characters{
