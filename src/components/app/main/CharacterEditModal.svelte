@@ -123,6 +123,9 @@ const onClickDeleteButton = async () => {
     return;
   }
   await idb.character.delete(character.id!)
+  if((await idb.character.where("worldId").equals(character.worldId).count()) <= 0){
+    await idb.accountWorld.delete(character.worldId)
+  }
   onCloseProxy()
 }
 
