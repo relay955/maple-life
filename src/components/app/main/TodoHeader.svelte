@@ -77,7 +77,7 @@
   }
 
   $:{
-    effectiveHeight = 40;
+    effectiveHeight = 50;
     if(isMultiWorld) effectiveHeight += 10;
     if(isMultiAccount) effectiveHeight += 10;
     if($showCharacterPreview) effectiveHeight += 50;
