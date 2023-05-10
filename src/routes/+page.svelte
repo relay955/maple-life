@@ -140,6 +140,7 @@
     min-width: 1420px;
     margin-left: 60px;
     margin-right: 20px;
+    padding-bottom: 400px;
   }
   @media(max-width: 1550px){
     .container{
