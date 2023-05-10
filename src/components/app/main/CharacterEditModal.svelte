@@ -7,7 +7,6 @@ import {requestMapleCharacterInfo} from "../../../util/mapleParser";
 import {PROXY_URL} from "../../../config";
 import { toast } from '@zerodevx/svelte-toast'
 import NumberInput from "../../shared/NumberInput.svelte";
-import {v4 as uuidv4} from "uuid";
 import IconButton from "../../shared/IconButton.svelte";
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import {liveQuery} from "dexie";

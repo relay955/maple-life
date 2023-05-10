@@ -16,6 +16,7 @@
   import {WorldList} from "../../../storage/dto/world";
 
   export let onClickCharacter:(character:Character)=>void;
+  export let onClickAccountBar:(account:Account)=>void;
 
   let characterTree = liveQuery(characterQuery.generateCharacterTree)
   let todos = liveQuery(async () => await idb.todo.toArray());
@@ -55,8 +56,7 @@
     let localCharacterTree = await characterQuery.generateCharacterTree()
     let localCharacterIds = (await idb.character.toArray()).map(character => character.id!.toString())
 
-    //@ts-ignore
-    $todos.forEach(todo => {
+    value.forEach(todo => {
       let iterationTarget: string[] = []
       if (todo.type === "perCharacter") {
         iterationTarget = localCharacterIds;
@@ -221,6 +221,7 @@
     {#if isMultiAccount}
     <div class="account-bar"
           draggable="true"
+           on:click={()=>onClickAccountBar(account)}
           on:dragstart={(e)=>onDragStartAccount(e,account)}
           on:dragover={onDragOverAccount}
           on:drop={(e)=>onDragEndAccount(e,account)}
