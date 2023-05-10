@@ -19,7 +19,6 @@
   import {migrateFromLocalstorage} from "../storage/migration/migrateFromLocalstorage";
   import {initDefaultData} from "../storage/defaultData";
   import {systemQuery} from "../storage/queries/systemQuery";
-  import {liveQuery} from "dexie";
   import TodoList from "../components/app/main/TodoList.svelte";
   import type {Account} from "../storage/dto/account";
   import AccountEditModal from "../components/app/main/AccountEditModal.svelte";
@@ -102,30 +101,36 @@
     editCharacterModalTarget = character;
   }
 
+  const onClickEditAccount = (account:Account) => {
+    isEditAccountModalOpen = true;
+    isEditAccountModalEditMode = true;
+    isEditAccountModalTarget = account;
+  }
+
 </script>
 
 <Logo isFixed/>
 <LeftBar/>
-<Toolbar onClickCharacterAddButton={onClickAddCharacterButton} onClickAccountAddButton={onClickAddAccountButton}/>
+<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
+         onClickAccountAddButton={onClickAddAccountButton}/>
 
-<!--<div class="main">-->
-  <div class="container">
-    <TodoHeader onClickCharacter={onClickEditCharacter}/>
-    <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
-    <AddTodoButton onClick={onClickAddTodoButton}/>
-  </div>
-  <TodoEditModal isOpen={isEditTodoModalOpen}
-                 isEditMode={editTodoModalEditMode}
-                 editTodo={editTodoModalTarget}
-                 onClose={()=>isEditTodoModalOpen = false}/>
-  <CharacterEditModal isOpen={isEditCharacterModalOpen}
-                      isEditMode={isEditCharacterModalEditMode}
-                      editCharacter={editCharacterModalTarget}
-                      onClose={()=>isEditCharacterModalOpen = false}/>
-  <AccountEditModal isOpen={isEditAccountModalOpen}
-                      isEditMode={isEditAccountModalEditMode}
-                      editAccount={isEditAccountModalTarget}
-                      onClose={()=>isEditAccountModalOpen = false}/>
+<div class="container">
+  <TodoHeader onClickCharacter={onClickEditCharacter} onClickAccountBar={onClickEditAccount}/>
+  <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
+  <AddTodoButton onClick={onClickAddTodoButton}/>
+</div>
+<TodoEditModal isOpen={isEditTodoModalOpen}
+               isEditMode={editTodoModalEditMode}
+               editTodo={editTodoModalTarget}
+               onClose={()=>isEditTodoModalOpen = false}/>
+<CharacterEditModal isOpen={isEditCharacterModalOpen}
+                    isEditMode={isEditCharacterModalEditMode}
+                    editCharacter={editCharacterModalTarget}
+                    onClose={()=>isEditCharacterModalOpen = false}/>
+<AccountEditModal isOpen={isEditAccountModalOpen}
+                    isEditMode={isEditAccountModalEditMode}
+                    editAccount={isEditAccountModalTarget}
+                    onClose={()=>isEditAccountModalOpen = false}/>
 <SvelteToast/>
 
 <style lang="scss">
