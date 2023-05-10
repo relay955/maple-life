@@ -153,7 +153,7 @@ const onCloseProxy = () => {
     <NumberInput title="레벨" bind:value={character.level}/>
     <Input title="직업" bind:value={character.classType}/>
     <Select title="월드" bind:value={selectedWorld}>
-      {#each WorldList as world}
+      {#each Object.keys(WorldList) as world}
         <option value={world}>{world}</option>
       {/each}
     </Select>
