@@ -98,7 +98,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
         flex-grow: ${world.characters.length}`}
         onClick={()=>onClickCheckbox("left",todo,`${account.id}:${world.id}`)}
         onRightClick={()=>onClickCheckbox("right",todo,`${account.id}:${world.id}`)}
-        checked={todo.isChecked[world.id] ?? "unchecked"}/>
+        checked={todo.isChecked[`${account.id}:${world.id}`] ?? "unchecked"}/>
     {/each}
   {/each}
 {/if}

@@ -8,6 +8,7 @@ import {v4 as uuidv4} from 'uuid'
 import {toast} from "@zerodevx/svelte-toast";
 import {getTodoPresets} from "$lib/preset/todoPresets";
 import {onMount} from "svelte";
+import {idb} from "../../../storage/idb";
 
 
 
@@ -15,7 +16,6 @@ export let isOpen = false;
 export let isEditMode = false;
 export let editTodo:Todo|undefined = undefined;
 export let onClose = () => {};
-export let onSubmit = (todo:Todo) => {};
 
 let nameRef;
 
@@ -24,12 +24,12 @@ let todoPresets = getTodoPresets()
 
 function resetTodo():Todo{
   return {
-    id:"",
     isChecked: {},
+    order:0,
     name:"",
     type:"perCharacter",
     repeatType:"daily",
-    color:"default",
+    color:"default"
   };
 }
 
@@ -49,14 +49,21 @@ const onCloseProxy = () => {
 }
 
 
-const onClickSubmitButton = () => {
-  todo.isChecked = todo.type === "perCharacter" ? {} : "unchecked";
-  if(todo.name.trim() === ""){
+const onClickSubmitButton = async () => {
+  if (todo.name.trim() === "") {
     toast.push("할일 이름을 입력해주세요.");
     return;
   }
-  if(!isEditMode) todo.id = uuidv4();
-  onSubmit(todo);
+  todo.isChecked = {}
+  if(!isEditMode) {
+    const allTodos = await idb.todo.toArray()
+    allTodos.forEach((item) => {
+      if (item.order > todo.order) todo.order = item.order
+    })
+    todo.order ++;
+  }
+
+  idb.todo.put(todo)
   todo = resetTodo();
   onCloseProxy()
 }
@@ -92,6 +99,7 @@ const onSelectAutoComplete = (e:any)=>{
   <Select title="할일 처리 단위" bind:value={todo.type}>
     <option value="perCharacter">캐릭터 별</option>
     <option value="perAccount">계정 별</option>
+    <option value="perWorld">월드 별</option>
   </Select>
 
   <Select title="(옵션) 색상" bind:value={todo.color}>

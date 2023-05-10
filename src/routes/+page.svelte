@@ -66,17 +66,6 @@
     }, 1000)
   })
 
-  const onSubmitEditTodo = (todo:Todo) => {
-    // const editTargetIndex = todos.findIndex(target => target.id === todo.id)
-    // if(editTargetIndex !== -1) {
-    //   todos[editTargetIndex] = todo
-    // } else {
-    //   todos.push(todo)
-    // }
-    // todos = todos
-    // // saveTodos(todos)
-  }
-
   const onClickAddTodoButton = () => {
     isEditTodoModalOpen = true;
     editTodoModalEditMode = false;
@@ -88,17 +77,6 @@
     editTodoModalEditMode = true;
     editTodoModalTarget = todo;
   }
-
-  const onSubmitEditCharacter = (character:Character) =>{
-    // const editTargetIndex = characters.findIndex(target => target.id === character.id)
-    // if(editTargetIndex !== -1) {
-    //   characters[editTargetIndex] = character
-    // } else {
-    //   characters.push(character)
-    // }
-    // characters = characters
-    // // saveCharacters(characters)
-  };
 
   const onClickAddCharacterButton = () => {
     isEditCharacterModalOpen = true;
@@ -112,16 +90,6 @@
     editCharacterModalTarget = character;
   }
 
-  const onSubmitDeleteCharacter = (character:Character) => {
-    // if(characters.length <= 1){
-    //   toast.push("최소 1개 이상의 캐릭터가 존재해야합니다.");
-    //   return;
-    // }
-    // characters = characters.filter(target => target.id !== character.id)
-    // characters = characters
-    // // saveCharacters(characters)
-  }
-
 </script>
 
 <Logo isFixed/>
@@ -132,19 +100,16 @@
   <div class="container">
     <TodoHeader onClickCharacter={onClickEditCharacter}/>
     <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
+    <AddTodoButton onClick={onClickAddTodoButton}/>
   </div>
-<!--  <TodoEditModal isOpen={isEditTodoModalOpen}-->
-<!--                 isEditMode={editTodoModalEditMode}-->
-<!--                 editTodo={editTodoModalTarget}-->
-<!--                 onClose={()=>isEditTodoModalOpen = false}-->
-<!--                 onSubmit={onSubmitEditTodo}/>-->
-<!--  <CharacterEditModal isOpen={isEditCharacterModalOpen}-->
-<!--                      isEditMode={isEditCharacterModalEditMode}-->
-<!--                      editCharacter={editCharacterModalTarget}-->
-<!--                      onClose={()=>isEditCharacterModalOpen = false}-->
-<!--                      onDelete={onSubmitDeleteCharacter}-->
-<!--                      onSubmit={onSubmitEditCharacter}/>-->
-<!--</div>-->
+  <TodoEditModal isOpen={isEditTodoModalOpen}
+                 isEditMode={editTodoModalEditMode}
+                 editTodo={editTodoModalTarget}
+                 onClose={()=>isEditTodoModalOpen = false}/>
+  <CharacterEditModal isOpen={isEditCharacterModalOpen}
+                      isEditMode={isEditCharacterModalEditMode}
+                      editCharacter={editCharacterModalTarget}
+                      onClose={()=>isEditCharacterModalOpen = false}/>
 <SvelteToast/>
 
 <style lang="scss">
