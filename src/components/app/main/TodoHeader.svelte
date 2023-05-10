@@ -271,7 +271,6 @@
       min-width: 80px;
       width:0;
       padding-bottom: 5px;
-      margin-right: 2px;
 
       display: flex;
       flex-direction: column;
