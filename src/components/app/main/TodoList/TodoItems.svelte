@@ -1,13 +1,10 @@
 <script lang="ts">
 import LargeCheckBox from "../../../shared/LargeCheckBox.svelte";
 import Label from "../../../shared/Label.svelte";
-import type {Character} from "../../../../storage/dto/character";
 import type {Todo} from "../../../../storage/dto/todo";
 import IconButton from "../../../shared/IconButton.svelte";
 import MdEdit from 'svelte-icons/md/MdEdit.svelte'
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
-import Space from "../../../shared/Space.svelte";
-import type {Settings} from "../../../../storage/dto/settings";
 import {liveQuery} from "dexie";
 import {idb} from "../../../../storage/idb";
 import {characterQuery} from "../../../../storage/queries/characterQuery";
