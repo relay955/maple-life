@@ -12,6 +12,7 @@
   import {characterQuery} from "../../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
   import {WorldList} from "../../../storage/dto/world";
+  import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
 
   export let onClickCharacter:(character:Character)=>void;
 
@@ -129,12 +130,14 @@
   </div>
 
   {#each ($characterTree ?? []) as account (account.id)}
+  {#if calcAccountCharacterCount(account) > 0}
   <div class="account">
     {#if isMultiAccount}
     <div class="account-bar">{account.name}</div>
     {/if}
     <div class="worlds">
       {#each account.worlds as world (world.id)}
+      {#if world.characters.length > 0}
       <div class="world">
         {#if isMultiWorld}
         <div class="world-bar" style={`border-bottom: 2px solid ${WorldList[world.world].color}`}>{world.world}</div>
@@ -165,9 +168,11 @@
           {/each}
         </div>
       </div>
+      {/if}
       {/each}
     </div>
   </div>
+  {/if}
   {/each}
 </div>
 <Modal isOpen={isOpenHelpModal} onClose={()=>isOpenHelpModal = false} title="기본 사용방법">
