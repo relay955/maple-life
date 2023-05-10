@@ -217,7 +217,7 @@
 
   {#each ($characterTree ?? []) as account,i (account.id)}
   {#if calcAccountCharacterCount(account) > 0}
-  <div class="account">
+  <div class="account" style={`flex-grow:${calcAccountCharacterCount(account)}`}>
     {#if isMultiAccount}
     <div class="account-bar"
           draggable="true"
@@ -232,7 +232,7 @@
     <div class="worlds">
       {#each account.worlds as world (world.id)}
       {#if world.characters.length > 0}
-      <div class="world">
+      <div class="world" style={`flex-grow:${world.characters.length}`}>
         {#if isMultiWorld}
         <div class="world-bar"
              draggable="true"
