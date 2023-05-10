@@ -104,6 +104,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
 {/if}
 {#if todo.type === "perAccount"}
   {#each ($characterTree ?? []) as account (account.id)}
+  {#if account.worlds.length > 0}
     <div class="checkbox-item" style={`min-width:80px; flex-grow:${calcAccountCharacterCount(account)}`}>
       <LargeCheckBox
         isShortHeight={$shortHeightMode}
@@ -112,6 +113,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
         onRightClick={()=>onClickCheckbox("right",todo,`${account.id}`)}
         checked={todo.isChecked[account.id] ?? "unchecked"}/>
     </div>
+  {/if}
   {/each}
 {/if}
 </div>
@@ -152,6 +154,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
 
   .checkbox-item{
     display: flex;
+    flex-grow: 1;
     width:0;
   }
 
