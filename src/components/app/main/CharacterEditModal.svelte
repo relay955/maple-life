@@ -72,10 +72,12 @@ const onClickSubmitButton = async () => {
         return;
       }
     }
-    if(!isEditMode) character.order = (await idb.character
-      .filter(c => c.worldId === character.worldId).count()+1)
 
     character.worldId = await getOrCreateWorld(character.accountId, selectedWorld)
+
+    if(!isEditMode) character.order = (await idb.character
+      .filter(c => c.worldId === character.worldId).count())+1
+
     await idb.character.put(character)
     onCloseProxy()
   }catch (e){
@@ -102,7 +104,7 @@ async function getOrCreateWorld(accountId: number, worldName: World) {
     }
 
     worldInAccount.forEach((world)=>{
-      if(world.order >= newWorld.order) world.order = newWorld.order
+      if(world.order > newWorld.order) newWorld.order = world.order
     })
     newWorld.order ++;
 
