@@ -139,11 +139,11 @@
     </div>
   </div>
 
-  {#each ($characterTree ?? []) as account (account.id)}
+  {#each ($characterTree ?? []) as account,i (account.id)}
   {#if calcAccountCharacterCount(account) > 0}
   <div class="account">
     {#if isMultiAccount}
-    <div class="account-bar">{account.name}</div>
+    <div class="account-bar" style={`border-bottom:2px solid ${i%2===0 ? "#338cc8":"#bfdbed"}`}>{account.name}</div>
     {/if}
     <div class="worlds">
       {#each account.worlds as world (world.id)}
@@ -256,7 +256,6 @@
       .account-bar{
         text-align: center;
         font-size: 7px;
-        border-bottom:2px solid #44aaee;
         box-sizing: border-box;
       }
       .worlds{
