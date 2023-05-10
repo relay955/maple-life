@@ -11,13 +11,13 @@
   import type {Account} from "../../../storage/dto/account";
   import {characterQuery} from "../../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
-  import {WorldList} from "../../../storage/dto/world";
   import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
+  import type {AccountWorld} from "../../../storage/dto/world";
+  import {WorldList} from "../../../storage/dto/world";
 
   export let onClickCharacter:(character:Character)=>void;
 
   let characterTree = liveQuery(characterQuery.generateCharacterTree)
-  let characterIds = liveQuery(async () => (await idb.character.toArray()).map(character => character.id))
   let todos = liveQuery(async () => await idb.todo.toArray());
   let showCharacterPreview =
     liveQuery(async () => (await idb.settings.get("showCharacterPreview"))?.value);
@@ -37,6 +37,8 @@
   let effectiveHeight = 40;
 
   let dragCharacter:Character|undefined = undefined;
+  let dragAccount:Account|undefined = undefined;
+  let dragWorld:AccountWorld|undefined = undefined;
   let isOpenHelpModal = false;
 
   characterTree.subscribe((value)=>{
@@ -102,28 +104,91 @@
     if($showCharacterPreview) effectiveHeight += 50;
   }
 
-  const onDragStartCharacter = (e:Event,character:Character)=>{
-    dragCharacter = character;
-  }
-  const onDragOverCharacter = (e:Event)=>{
+  const onDragStartCharacter = (e:Event,character:Character)=> dragCharacter = character
+  const onDragOverCharacter = (e:Event)=> e.preventDefault()
+  const onDragEndCharacter = async (e: Event, character: Character) => {
     e.preventDefault()
-  }
-  const onDragEndCharacter = (e:Event, character:Character)=>{
-    e.preventDefault()
-    if(character.accountId !== dragCharacter?.accountId || character.worldId !== dragCharacter?.worldId){
-      toast.push("캐릭터 이동은 동일한 계정, 월드에서만 가능합니다. 계정/월드의 순서는 윗부분을 드래그하여 옮겨주세요. ")
-      dragCharacter = undefined;
-      return;
+    if (dragCharacter !== undefined) {
+      if (character.accountId !== dragCharacter?.accountId || character.worldId !== dragCharacter?.worldId) {
+        toast.push("캐릭터 이동은 동일한 계정, 월드에서만 가능합니다. 계정/월드의 순서는 윗부분을 드래그하여 옮겨주세요. ")
+        resetDragState()
+        return;
+      }
+      await swapCharacter(character, dragCharacter)
+
+    } else if (dragAccount !== undefined) {
+      const targetAccount = await idb.account.get(character.accountId)
+      await swapAccount(dragAccount, targetAccount!)
+
+    }else if(dragWorld !== undefined){
+      const targetWorld = await idb.accountWorld.get(character.worldId)
+      if(targetWorld!.accountId !== dragWorld.accountId){
+        toast.push("월드 이동은 동일한 계정에서만 가능합니다. 계정의 순서는 윗부분을 드래그하여 옮겨주세요. ")
+        resetDragState()
+        return;
+      }
+      await swapWorld(dragWorld, targetWorld!)
     }
-    if(dragCharacter === undefined) return;
-    if(dragCharacter.id === character.id) return;
+    resetDragState()
+  }
 
-    const temp = dragCharacter.order
-    dragCharacter.order = character.order
-    character.order = temp;
+  const onDragStartAccount = (e:Event,account:Account)=> dragAccount = account
+  const onDragOverAccount = (e:Event)=> e.preventDefault()
+  const onDragEndAccount = async (e: Event, account: Account) => {
+    e.preventDefault()
+    if (dragAccount !== undefined) {
+      await swapAccount(account, dragAccount)
+    }
+    resetDragState()
+  }
 
-    idb.character.bulkPut([dragCharacter, character])
+  const onDragStartWorld = (e:Event,world:AccountWorld)=> dragWorld = world
+  const onDragOverWorld = (e:Event)=> e.preventDefault()
+  const onDragEndWorld = async (e: Event, world: AccountWorld) => {
+    e.preventDefault()
+    if (dragWorld !== undefined) {
+      if(world!.accountId !== dragWorld.accountId){
+        toast.push("월드 이동은 동일한 계정에서만 가능합니다. 계정의 순서는 윗부분을 드래그하여 옮겨주세요. ")
+        resetDragState()
+        return;
+      }
+      await swapWorld(world, dragWorld)
+    } else if (dragAccount !==undefined){
+      const targetAccount = await idb.account.get(world.accountId)
+      await swapAccount(dragAccount,targetAccount!)
+    }
+    resetDragState()
+  }
+
+
+  const swapCharacter = async (character: Character, targetCharacter: Character) => {
+    const temp = character.order
+    character.order = targetCharacter.order
+    targetCharacter.order = temp;
+
+    await idb.character.bulkPut([character, targetCharacter])
+  }
+
+  const swapAccount = async (account: Account, targetAccount: Account) => {
+    const temp = account.order
+    account.order = targetAccount.order
+    targetAccount.order = temp;
+
+    await idb.account.bulkPut([account, targetAccount])
+  }
+
+  const swapWorld = async (world: AccountWorld, targetWorld: AccountWorld) => {
+    const temp = world.order
+    world.order = targetWorld.order
+    targetWorld.order = temp;
+
+    await idb.accountWorld.bulkPut([world, targetWorld])
+  }
+
+  const resetDragState = () => {
     dragCharacter = undefined;
+    dragAccount = undefined;
+    dragWorld = undefined;
   }
 
 </script>
@@ -154,14 +219,28 @@
   {#if calcAccountCharacterCount(account) > 0}
   <div class="account">
     {#if isMultiAccount}
-    <div class="account-bar" style={`border-bottom:2px solid ${i%2===0 ? "#338cc8":"#bfdbed"}`}>{account.name}</div>
+    <div class="account-bar"
+          draggable="true"
+          on:dragstart={(e)=>onDragStartAccount(e,account)}
+          on:dragover={onDragOverAccount}
+          on:drop={(e)=>onDragEndAccount(e,account)}
+         style={`border-bottom:2px solid ${i%2===0 ? "#338cc8":"#bfdbed"}`}>
+      {account.name}
+    </div>
     {/if}
     <div class="worlds">
       {#each account.worlds as world (world.id)}
       {#if world.characters.length > 0}
       <div class="world">
         {#if isMultiWorld}
-        <div class="world-bar" style={`border-bottom: 2px solid ${WorldList[world.world].color}`}>{world.world}</div>
+        <div class="world-bar"
+             draggable="true"
+             on:dragstart={(e)=>onDragStartWorld(e,world)}
+             on:dragover={onDragOverWorld}
+             on:drop={(e)=>onDragEndWorld(e,world)}
+             style={`border-bottom: 2px solid ${WorldList[world.world].color}`}>
+          {world.world}
+        </div>
         {/if}
         <div class="characters">
           {#each world.characters as character (character.id)}
