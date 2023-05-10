@@ -37,7 +37,6 @@
 
   characterTree.subscribe((value)=>{
     isMultiAccount = value.length > 1;
-    console.log(value[0].worlds)
     isMultiWorld = value.some(account => (account.worlds?.length ?? 0) > 1)
   })
 

@@ -21,9 +21,9 @@ export class Idb extends Dexie {
         super('maplelife');
         this.version(1).stores({
             account: '++id, order',
-            accountWorld: '++id, order',
+            accountWorld: '++id, accountId, order',
             todo: '++id, order',
-            character: '++id, order',
+            character: '++id,accountId, worldId, order',
             settings: 'name',
             systemInfo: 'name',
         });

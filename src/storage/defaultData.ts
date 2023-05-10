@@ -48,7 +48,7 @@ export const initDefaultData = async (idb: Idb) => {
             name:"유니온코인 수령",
             type:"perAccount",
             repeatType:"daily",
-            isChecked:"unchecked",
+            isChecked:{},
             color:"default",
             order:0
         },
@@ -80,7 +80,7 @@ export const initDefaultData = async (idb: Idb) => {
             name: "데일리 기프트 수령",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked",
+            isChecked: {},
             color:"default",
             order:4
         },
@@ -88,7 +88,7 @@ export const initDefaultData = async (idb: Idb) => {
             name: "우르스",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked",
+            isChecked: {},
             color:"default",
             order:5
         },
@@ -96,7 +96,7 @@ export const initDefaultData = async (idb: Idb) => {
             name: "몬스터 파크",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked",
+            isChecked: {},
             color:"default",
             order:6
         },
@@ -104,7 +104,7 @@ export const initDefaultData = async (idb: Idb) => {
             name: "황금마차 출석",
             type: "perAccount",
             repeatType: "daily",
-            isChecked: "unchecked",
+            isChecked: {},
             color:"default",
             order:7
         },
