@@ -25,9 +25,11 @@
     border-radius: 5px;
     height: 40px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-left: 2px;
     margin-right: 2px;
+    align-items: center;
+    flex-grow: 1;;
+    justify-content: center;
     box-sizing: border-box;
     padding-top: 3px;
     padding-bottom: 3px;
