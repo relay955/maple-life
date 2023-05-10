@@ -97,7 +97,7 @@ async function getOrCreateWorld(accountId: number, worldName: World) {
 
   if (targetWorld === undefined) {
     let newWorld:AccountWorld = {
-      accountId: $account[0].id,
+      accountId: accountId,
       world: worldName,
       order: 0,
     }
