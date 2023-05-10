@@ -29,7 +29,7 @@
     margin-left: 2px;
     margin-right: 2px;
     align-items: center;
-    flex-grow: 1;;
+    flex-grow: 1;
     justify-content: center;
     box-sizing: border-box;
     padding-top: 3px;
