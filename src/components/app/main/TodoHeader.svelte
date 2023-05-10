@@ -257,6 +257,11 @@
         text-align: center;
         font-size: 7px;
         box-sizing: border-box;
+        transition: 0.2s all;
+        cursor:pointer;
+      }
+      .account-bar:hover{
+        background-color: #f5f5f5;
       }
       .worlds{
         display:flex;
@@ -271,6 +276,11 @@
         text-align: center;
         font-size: 7px;
         box-sizing: border-box;
+        transition: 0.2s all;
+        cursor:pointer;
+      }
+      .world-bar:hover{
+        background-color: #f5f5f5;
       }
       .characters{
         display:flex;
