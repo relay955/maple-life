@@ -21,6 +21,8 @@
   import {systemQuery} from "../storage/queries/systemQuery";
   import {liveQuery} from "dexie";
   import TodoList from "../components/app/main/TodoList.svelte";
+  import type {Account} from "../storage/dto/account";
+  import AccountEditModal from "../components/app/main/AccountEditModal.svelte";
 
   export const prerender = true;
   export const ssr = true;
@@ -32,6 +34,10 @@
   let isEditCharacterModalOpen = false;
   let isEditCharacterModalEditMode = false;
   let editCharacterModalTarget:Character|undefined = undefined;
+
+  let isEditAccountModalOpen = false;
+  let isEditAccountModalEditMode = false;
+  let isEditAccountModalTarget:Account|undefined = undefined;
 
 
   onMount(async () => {
@@ -84,6 +90,12 @@
     editCharacterModalTarget = undefined;
   }
 
+  const onClickAddAccountButton = () => {
+    isEditAccountModalOpen = true;
+    isEditAccountModalEditMode = false;
+    isEditAccountModalTarget = undefined;
+  }
+
   const onClickEditCharacter = (character:Character) => {
     isEditCharacterModalOpen = true;
     isEditCharacterModalEditMode = true;
@@ -94,7 +106,7 @@
 
 <Logo isFixed/>
 <LeftBar/>
-<Toolbar onClickCharacterAddButton={onClickAddCharacterButton}/>
+<Toolbar onClickCharacterAddButton={onClickAddCharacterButton} onClickAccountAddButton={onClickAddAccountButton}/>
 
 <!--<div class="main">-->
   <div class="container">
@@ -110,6 +122,10 @@
                       isEditMode={isEditCharacterModalEditMode}
                       editCharacter={editCharacterModalTarget}
                       onClose={()=>isEditCharacterModalOpen = false}/>
+  <AccountEditModal isOpen={isEditAccountModalOpen}
+                      isEditMode={isEditAccountModalEditMode}
+                      editAccount={isEditAccountModalTarget}
+                      onClose={()=>isEditAccountModalOpen = false}/>
 <SvelteToast/>
 
 <style lang="scss">

@@ -2,13 +2,14 @@
   import MdPersonAdd from 'svelte-icons/md/MdPersonAdd.svelte'
   import MdUnfoldLess from 'svelte-icons/md/MdUnfoldLess.svelte'
   import MdPhotoSizeSelectLarge from 'svelte-icons/md/MdPhotoSizeSelectLarge.svelte'
+  import MdGroupAdd from 'svelte-icons/md/MdGroupAdd.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/IconButton.svelte";
-  import type {Settings} from "../../../storage/dto/settings";
   import {liveQuery} from "dexie";
   import {idb} from "../../../storage/idb";
 
+  export let onClickAccountAddButton:()=>void;
   export let onClickCharacterAddButton:()=>void;
 
   const onClickShortHeightModeButton = () => {
@@ -28,6 +29,9 @@
   <IconButton onClick={onClickCharacterAddButton} tooltip="캐릭터 추가"
               activated="">
     <MdPersonAdd/>
+  </IconButton>
+  <IconButton onClick={onClickAccountAddButton} tooltip="계정 추가 :메이플스토리 계정을 여러개 사용하는 경우에만 추가하세요.">
+    <MdGroupAdd/>
   </IconButton>
   <IconButton onClick={onClickShortHeightModeButton}
               tooltip="좁은높이 모드 - 한 화면에 더 많은 할일을 보고싶을때 사용해보세요."
