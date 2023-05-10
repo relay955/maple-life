@@ -30,7 +30,7 @@
               activated="">
     <MdPersonAdd/>
   </IconButton>
-  <IconButton onClick={onClickAccountAddButton} tooltip="계정 추가 :메이플스토리 계정을 여러개 사용하는 경우에만 추가하세요.">
+  <IconButton onClick={onClickAccountAddButton} tooltip="계정 추가 - 메이플스토리 계정을 여러개 사용하는 경우에만 추가하세요.">
     <MdGroupAdd/>
   </IconButton>
   <IconButton onClick={onClickShortHeightModeButton}
