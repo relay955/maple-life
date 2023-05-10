@@ -155,6 +155,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
 
   .checkbox-item{
     display: flex;
+    width:0;
   }
 
   @media (max-width: 1250px){
