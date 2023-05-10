@@ -123,7 +123,7 @@ const onClickDelete = (todo:Todo) => idb.todo.delete(todo.id!)
   .item-title-container{
     position: sticky;
     height:40px;
-    left:61px;
+    left:50px;
     &.short-height{
       height: 28px;
     }

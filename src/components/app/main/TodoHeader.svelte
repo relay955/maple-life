@@ -239,7 +239,7 @@
       height: 100%;
       position: sticky;
       background-color: white;
-      left: 60px;
+      left: 50px;
       display: flex;
       align-items: center;
       .text{
