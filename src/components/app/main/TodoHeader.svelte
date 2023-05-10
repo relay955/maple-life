@@ -116,7 +116,7 @@
   }
 
 </script>
-<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}  style={`height:${calcEffectiveHeight()}px`}>
+<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
   <div class="title">
     <div class="text">
     할일
