@@ -2,14 +2,14 @@
   import MdInbox from 'svelte-icons/md/MdInbox.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
-  import IconButton from "../../shared/IconButton.svelte";
+  import IconButton from "../../shared/basicComponent/IconButton.svelte";
   import MdHome from 'svelte-icons/md/MdHome.svelte'
   import MdInsertComment from 'svelte-icons/md/MdInsertComment.svelte'
   import MdBuild from 'svelte-icons/md/MdBuild.svelte'
   import MdMonetizationOn from 'svelte-icons/md/MdMonetizationOn.svelte'
   import MdInfoOutline from 'svelte-icons/md/MdInfoOutline.svelte'
   import {onMount} from "svelte";
-  import Space from "../../shared/Space.svelte";
+  import Space from "../../shared/basicComponent/Space.svelte";
   import Modal from "../../shared/Modal.svelte";
   import logo from '$lib/images/icon/logo.png'
   import Logo from "../../shared/Logo.svelte";

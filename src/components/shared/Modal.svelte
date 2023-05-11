@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Space from "./Space.svelte";
+  import Space from "./basicComponent/Space.svelte";
 
   export let title = "";
   export let isOpen = false;

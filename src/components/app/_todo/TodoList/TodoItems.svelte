@@ -1,8 +1,8 @@
 <script lang="ts">
-import LargeCheckBox from "../../../shared/LargeCheckBox.svelte";
-import Label from "../../../shared/Label.svelte";
+import LargeCheckBox from "../LargeCheckBox.svelte";
+import Label from "../../../shared/basicComponent/Label.svelte";
 import type {Todo} from "../../../../storage/dto/todo";
-import IconButton from "../../../shared/IconButton.svelte";
+import IconButton from "../../../shared/basicComponent/IconButton.svelte";
 import MdEdit from 'svelte-icons/md/MdEdit.svelte'
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import {liveQuery} from "dexie";
