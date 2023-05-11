@@ -9,19 +9,19 @@
   import {liveQuery} from "dexie";
   import {idb} from "../../../storage/idb";
   import type {Account} from "../../../storage/dto/account";
-  import {characterQuery} from "../../../storage/queries/characterQuery";
+  import {
+    generateCharacterTree,
+    lqCharacterTree
+  } from "../../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
   import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
   import type {AccountWorld} from "../../../storage/dto/world";
   import {WorldList} from "../../../storage/dto/world";
+  import {lqTodos} from "../../../storage/queries/todoQuery";
+  import {lqShowCharacterPreview} from "../../../storage/queries/systemQuery";
 
   export let onClickCharacter:(character:Character)=>void;
   export let onClickAccountBar:(account:Account)=>void;
-
-  let characterTree = liveQuery(characterQuery.generateCharacterTree)
-  let todos = liveQuery(async () => await idb.todo.toArray());
-  let showCharacterPreview =
-    liveQuery(async () => (await idb.settings.get("showCharacterPreview"))?.value);
 
   let isMultiAccount = false;
   let isMultiWorld = false;
@@ -42,18 +42,18 @@
   let dragWorld:AccountWorld|undefined = undefined;
   let isOpenHelpModal = false;
 
-  characterTree.subscribe((value)=>{
+  lqCharacterTree.subscribe((value)=>{
     isMultiAccount = value.length > 1;
     isMultiWorld = value.some(account => (account.worlds?.length ?? 0) > 1)
   })
 
-  todos.subscribe(async (value) => {
+  lqTodos.subscribe(async (value) => {
     checkedDailyTodoCount = 0;
     uncheckedDailyTodoCount = 0;
     checkedWeeklyTodoCount = 0;
     uncheckedWeeklyTodoCount = 0;
 
-    let localCharacterTree = await characterQuery.generateCharacterTree()
+    let localCharacterTree = await generateCharacterTree()
     let localCharacterIds = (await idb.character.toArray()).map(character => character.id!.toString())
 
     value.forEach(todo => {
@@ -89,7 +89,7 @@
     effectiveHeight = 50;
     if(isMultiWorld) effectiveHeight += 10;
     if(isMultiAccount) effectiveHeight += 10;
-    if($showCharacterPreview) effectiveHeight += 50;
+    if($lqShowCharacterPreview) effectiveHeight += 50;
   }
 
   const onDragStartCharacter = (e:Event,character:Character)=> dragCharacter = character
@@ -180,7 +180,7 @@
   }
 
 </script>
-<div class={`${$showCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
+<div class={`${$lqShowCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
   <div class="title">
     <div class="text">
     할일
@@ -203,7 +203,7 @@
     </div>
   </div>
 
-  {#each ($characterTree ?? []) as account,i (account.id)}
+  {#each ($lqCharacterTree ?? []) as account,i (account.id)}
   {#if calcAccountCharacterCount(account) > 0}
   <div class="account" style={`flex-grow:${calcAccountCharacterCount(account)}`}>
     {#if isMultiAccount}

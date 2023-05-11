@@ -1,6 +1,6 @@
 import moment from "moment";
 import {idb} from "../storage/idb";
-import {systemQuery} from "../storage/queries/systemQuery";
+import {updateLastUpdatedTime} from "../storage/queries/systemQuery";
 
 export const checkAndResetRepeatlyTodo = async () => {
     const today = moment().startOf('day')
@@ -25,6 +25,6 @@ export const checkAndResetRepeatlyTodo = async () => {
                 )
             }
         })
-        systemQuery.updateLastUpdatedTime()
+        await updateLastUpdatedTime()
     }
 }
