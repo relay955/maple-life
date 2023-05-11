@@ -1,5 +1,5 @@
 <script lang="ts">
-import LargeCheckBox from "../LargeCheckBox.svelte";
+import LargeCheckBox from "./LargeCheckBox.svelte";
 import Label from "../../../shared/basicComponent/Label.svelte";
 import type {Todo} from "../../../../storage/dto/todo";
 import IconButton from "../../../shared/basicComponent/IconButton.svelte";
