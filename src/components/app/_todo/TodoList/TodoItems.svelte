@@ -7,8 +7,8 @@ import MdEdit from 'svelte-icons/md/MdEdit.svelte'
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import {liveQuery} from "dexie";
 import {idb} from "../../../../storage/idb";
-import {characterQuery} from "../../../../storage/queries/characterQuery";
 import {calcAccountCharacterCount} from "../../../../storage/dto/account.js";
+import {lqCharacterTree} from "../../../../storage/queries/characterQuery";
 
 export let todo:Todo;
 export let onClickEdit:(todo:Todo)=>void;
@@ -16,16 +16,12 @@ export let isMouseOver=false;
 
 let shortHeightMode = liveQuery(async () => (await idb.settings.get("shortHeightMode"))?.value)
 
-let characterTree = liveQuery(characterQuery.generateCharacterTree)
+let characterTree = lqCharacterTree
 
 const onClickCheckbox = (type:"right"|"left",item:Todo,checkId:string) =>{
   if(type==="right"){
     const targetCharacterChecked = item.isChecked[checkId];
-    if (targetCharacterChecked === "blocked") {
-      item.isChecked[checkId] = "unchecked";
-    } else {
-      item.isChecked[checkId] = "blocked";
-    }
+    item.isChecked[checkId] = targetCharacterChecked === "blocked" ? "unchecked" : "blocked";
   }
 
   if(type==="left" && item.isChecked !== "blocked") {
