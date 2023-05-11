@@ -7,7 +7,27 @@ interface MapleCharacterInfo{
     nickname:string;
     classType:string;
     level:number;
+    world:string;
 }
+
+const worldByIconFileName:{[index:string]:string} = {
+    "icon_4.png":"오로라",
+    "icon_5.png":"레드",
+    "icon_6.png":"이노시스",
+    "icon_7.png":"유니온",
+    "icon_8.png":"스카니아",
+    "icon_9.png":"루나",
+    "icon_10.png":"제니스",
+    "icon_11.png":"크로아",
+    "icon_12.png":"베라",
+    "icon_13.png":"엘리시움",
+    "icon_14.png":"아케인",
+    "icon_15.png":"노바",
+    "icon_3.png":"리부트",
+    "icon_2.png":"리부트2",
+}
+
+
 export const requestMapleCharacterInfo = async (characterName: string,proxy:string) => {
     let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=0`
     const res = await axios.get(url)
@@ -33,6 +53,7 @@ const parseMapleCharacterInfo = (rankingHtmlData:string):MapleCharacterInfo => {
             .trim(),
         level: Number(tr.querySelector("td:nth-child(3)")!.textContent
             .split(".")[1]
-            .trim())
+            .trim()),
+        world: worldByIconFileName[tr.querySelector(".left > dl > dt > a > img")?.getAttribute("src")?.split("/").pop()!]
     }
 }

@@ -67,14 +67,15 @@ const onClickSubmitButton = async () => {
       character.classType = result.classType;
       character.imgUrl = result.imgUrl;
       character.level = result.level;
+      character.worldId = await getOrCreateWorld(character.accountId, result.world as World)
     }else{
       if(character.level < 1 || character.level > 300){
         toast.push("레벨은 1~300 사이입니다.");
         return;
       }
+      character.worldId = await getOrCreateWorld(character.accountId, selectedWorld)
     }
 
-    character.worldId = await getOrCreateWorld(character.accountId, selectedWorld)
 
     if(!isEditMode) character.order = (await idb.character
       .filter(c => c.worldId === character.worldId).count())+1
