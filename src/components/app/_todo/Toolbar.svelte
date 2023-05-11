@@ -5,7 +5,7 @@
   import MdGroupAdd from 'svelte-icons/md/MdGroupAdd.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
-  import IconButton from "../../shared/IconButton.svelte";
+  import IconButton from "../../shared/basicComponent/IconButton.svelte";
   import {liveQuery} from "dexie";
   import {idb} from "../../../storage/idb";
 

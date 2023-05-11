@@ -1,17 +1,17 @@
 <script lang="ts">
-import Input from "../../shared/Input.svelte";
+import Input from "../../shared/basicComponent/Input.svelte";
 import Modal from "../../shared/Modal.svelte";
-import Button from "../../shared/Button.svelte";
+import Button from "../../shared/basicComponent/Button.svelte";
 import type {Character} from "../../../storage/dto/character";
 import {requestMapleCharacterInfo} from "../../../util/mapleParser";
 import {PROXY_URL} from "../../../config";
 import { toast } from '@zerodevx/svelte-toast'
-import NumberInput from "../../shared/NumberInput.svelte";
-import IconButton from "../../shared/IconButton.svelte";
+import NumberInput from "../../shared/basicComponent/NumberInput.svelte";
+import IconButton from "../../shared/basicComponent/IconButton.svelte";
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import {liveQuery} from "dexie";
 import {idb} from "../../../storage/idb";
-import Select from "../../shared/Select.svelte";
+import Select from "../../shared/basicComponent/Select.svelte";
 import type {AccountWorld, World} from "../../../storage/dto/world";
 import {WorldList} from "../../../storage/dto/world";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Logo from "../components/shared/Logo.svelte";
-  import LeftBar from "../components/app/main/LeftBar.svelte";
+  import LeftBar from "../components/app/layout/LeftBar.svelte";
   import {SvelteToast} from "@zerodevx/svelte-toast";
   import {onMount} from "svelte";
   import {runOnInitialize} from "../logic/runOnInitialize";

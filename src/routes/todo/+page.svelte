@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Toolbar from "../../components/app/main/Toolbar.svelte";
+  import Toolbar from "../../components/app/_todo/Toolbar.svelte";
   import type {Character} from "../../storage/dto/character";
   import type {Todo} from "../../storage/dto/todo";
   import {onMount} from "svelte";
-  import TodoEditModal from "../../components/app/main/TodoEditModal.svelte";
-  import CharacterEditModal from "../../components/app/main/CharacterEditModal.svelte";
-  import TodoHeader from "../../components/app/main/TodoHeader.svelte";
-  import AddTodoButton from "../../components/app/main/AddTodoButton.svelte";
-  import TodoList from "../../components/app/main/TodoList.svelte";
+  import TodoEditModal from "../../components/app/_todo/TodoEditModal.svelte";
+  import CharacterEditModal from "../../components/app/_todo/CharacterEditModal.svelte";
+  import TodoHeader from "../../components/app/_todo/TodoHeader.svelte";
+  import AddTodoButton from "../../components/app/_todo/AddTodoButton.svelte";
+  import TodoList from "../../components/app/_todo/TodoList.svelte";
   import type {Account} from "../../storage/dto/account";
-  import AccountEditModal from "../../components/app/main/AccountEditModal.svelte";
+  import AccountEditModal from "../../components/app/_todo/AccountEditModal.svelte";
   import {runOnInitialize} from "../../logic/runOnInitialize";
 
   export const prerender = true;

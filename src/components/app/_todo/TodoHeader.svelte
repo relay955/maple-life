@@ -1,7 +1,7 @@
 <script lang="ts">
   import type {Character} from "../../../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
-  import IconButton from "../../shared/IconButton.svelte";
+  import IconButton from "../../shared/basicComponent/IconButton.svelte";
   import MdHelpOutline from 'svelte-icons/md/MdHelpOutline.svelte'
   import Modal from "../../shared/Modal.svelte";
   import type {Todo} from "../../../storage/dto/todo";

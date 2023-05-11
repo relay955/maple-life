@@ -1,8 +1,8 @@
 <script lang="ts">
-import Input from "../../shared/Input.svelte";
-import Select from "../../shared/Select.svelte";
+import Input from "../../shared/basicComponent/Input.svelte";
+import Select from "../../shared/basicComponent/Select.svelte";
 import Modal from "../../shared/Modal.svelte";
-import Button from "../../shared/Button.svelte";
+import Button from "../../shared/basicComponent/Button.svelte";
 import type {Todo} from "../../../storage/dto/todo";
 import {v4 as uuidv4} from 'uuid'
 import {toast} from "@zerodevx/svelte-toast";
