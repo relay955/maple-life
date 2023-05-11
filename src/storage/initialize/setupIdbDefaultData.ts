@@ -1,5 +1,5 @@
-import {isInitialized, setInitialized} from "./storage";
-import type {Idb} from "./idb";
+import {isInitialized, setInitialized} from "../localStorageWrapper";
+import type {Idb} from "../idb";
 import {v4 as uuidv4} from "uuid";
 import moment from "moment";
 

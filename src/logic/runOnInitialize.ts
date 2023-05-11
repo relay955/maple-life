@@ -1,6 +1,6 @@
 import {idb} from "../storage/idb";
-import {migrateFromLocalstorage} from "../storage/migration/migrateFromLocalstorage";
-import {initDefaultData} from "../storage/idbSetupDefaultData";
+import {migrateFromLocalstorage} from "../storage/initialize/migrateFromLocalstorage";
+import {initDefaultData} from "../storage/initialize/setupIdbDefaultData";
 import {checkAndResetRepeatlyTodo} from "./checkAndResetRepeatlyTodo";
 
 /**
