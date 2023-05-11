@@ -9,6 +9,7 @@ import {toast} from "@zerodevx/svelte-toast";
 import {getTodoPresets} from "$lib/preset/todoPresets";
 import {onMount} from "svelte";
 import {idb} from "../../../storage/idb";
+import {putTodo} from "../../../storage/queries/todoQuery";
 
 
 
@@ -33,47 +34,27 @@ function resetTodo():Todo{
   };
 }
 
-$: {
-  if (editTodo !== undefined && isEditMode) {
-    todo = editTodo
-  }
-}
+$: if(editTodo !== undefined && isEditMode) todo = editTodo
 
-$: if(isOpen){
-  setTimeout(()=> nameRef.focus(),100)
-}
+$: if(isOpen) setTimeout(() => nameRef.focus(), 100)
 
 const onCloseProxy = () => {
   todo = resetTodo();
   onClose()
 }
 
-
 const onClickSubmitButton = async () => {
   if (todo.name.trim() === "") {
     toast.push("할일 이름을 입력해주세요.");
     return;
   }
-  todo.isChecked = {}
-  if(!isEditMode) {
-    const allTodos = await idb.todo.toArray()
-    allTodos.forEach((item) => {
-      if (item.order > todo.order) todo.order = item.order
-    })
-    todo.order ++;
-  }
-
-  idb.todo.put(todo)
-  todo = resetTodo();
+  await putTodo(todo)
   onCloseProxy()
 }
 
 const onSelectAutoComplete = (e:any)=>{
   const todoPreset = todoPresets[e.target.value]
-  todo = {
-    ...todo,
-    ...todoPreset,
-  }
+  todo = {...todo, ...todoPreset}
 }
 </script>
 
