@@ -1,6 +1,7 @@
 import {liveQuery} from "dexie";
 import {idb} from "../idb";
 import type {Account} from "../dto/account";
+import type {Character} from "../dto/character";
 
 export const generateCharacterTree = async () => {
     let accounts = await idb.account
@@ -26,6 +27,14 @@ export const generateCharacterTree = async () => {
             })
         }
     })
+}
+
+export const swapCharacterOrder = async (character:Character, targetCharacter:Character) => {
+    const temp = character.order
+    character.order = targetCharacter.order
+    targetCharacter.order = temp;
+
+    await idb.character.bulkPut([character, targetCharacter])
 }
 
 export const lqCharacterTree = liveQuery(generateCharacterTree)
