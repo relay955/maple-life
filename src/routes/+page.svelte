@@ -17,11 +17,12 @@
   import LeftBar from "../components/app/main/LeftBar.svelte";
   import {idb} from "../storage/idb";
   import {migrateFromLocalstorage} from "../storage/migration/migrateFromLocalstorage";
-  import {initDefaultData} from "../storage/defaultData";
+  import {initDefaultData} from "../storage/idbSetupDefaultData";
   import {systemQuery} from "../storage/queries/systemQuery";
   import TodoList from "../components/app/main/TodoList.svelte";
   import type {Account} from "../storage/dto/account";
   import AccountEditModal from "../components/app/main/AccountEditModal.svelte";
+  import {runOnInitialize} from "../logic/runOnInitialize";
 
   export const prerender = true;
   export const ssr = true;
@@ -38,38 +39,7 @@
   let isEditAccountModalEditMode = false;
   let isEditAccountModalTarget:Account|undefined = undefined;
 
-
-  onMount(async () => {
-    await idb.open()
-    await migrateFromLocalstorage(idb)
-    await initDefaultData(idb)
-
-    setInterval(async () => {
-      const today = moment().startOf('day')
-      let lastUpdatedinDb = await idb.systemInfo.get("lastUpdated");
-      if (lastUpdatedinDb === undefined) {
-        console.error("왜 lastupdated가 undefined이지?")
-        return;
-      }
-      const lastUpdated = moment(lastUpdatedinDb.value)
-
-      if (today.isAfter(lastUpdated)) {
-        //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
-        idb.todo.toCollection().modify(todo => {
-          if (todo.repeatType === "daily" ||
-            (todo.repeatType === "weeklyMonday" && today.day() === 1) ||
-            (todo.repeatType === "weeklyThursday" && today.day() === 4) ||
-            (todo.repeatType === "monthly" && today.date() === 1)) {
-
-            Object.keys(todo.isChecked as object).forEach(key =>
-              todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
-            )
-          }
-        })
-        systemQuery.updateLastUpdatedTime()
-      }
-    }, 1000)
-  })
+  onMount(runOnInitialize)
 
   const onClickAddTodoButton = () => {
     isEditTodoModalOpen = true;
