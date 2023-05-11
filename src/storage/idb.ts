@@ -1,4 +1,4 @@
-import {migrateFromLocalstorage} from "./migration/migrateFromLocalstorage";
+import {migrateFromLocalstorage} from "./initialize/migrateFromLocalstorage";
 
 // db.ts
 import Dexie, { type Table } from 'dexie';

@@ -4,7 +4,7 @@ import type {Account} from "../dto/account";
 import type {Idb} from "../idb";
 import type {Todo} from "../dto/todo";
 import moment from "moment";
-import {isInitialized, loadLastUpdated, setInitialized} from "../storage";
+import {isInitialized, loadLastUpdated, setInitialized} from "../localStorageWrapper";
 
 /** localstorage에서 바로 현재 버전으로 마이그레이션합니다. */
 export const migrateFromLocalstorage = async (idb: Idb) => {
