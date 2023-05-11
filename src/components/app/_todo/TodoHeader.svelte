@@ -68,9 +68,14 @@
       }
 
       iterationTarget.forEach(key => {
-        if (todo.isChecked[key] === "checked") addCheckedTodoCount(todo)
-        else if (todo.isChecked[key] === "unchecked") addUncheckedTodoCount(todo)
-        else if (todo.isChecked[key] === undefined) addUncheckedTodoCount(todo)
+        if (todo.isChecked[key] === "checked") {
+          if (todo.repeatType === "daily") checkedDailyTodoCount++;
+          else checkedWeeklyTodoCount++
+        }
+        else if (todo.isChecked[key] === undefined || todo.isChecked[key] === "unchecked") {
+          if (todo.repeatType === "daily") uncheckedDailyTodoCount++;
+          else uncheckedWeeklyTodoCount++;
+        }
       })
     })
 
@@ -79,23 +84,6 @@
     dailyCheckProgress = totalDailyTodoCount === 0 ? 0 : Math.round(checkedDailyTodoCount / totalDailyTodoCount * 100);
     weeklyCheckProgress = totalWeeklyTodoCount === 0 ? 0 : Math.round(checkedWeeklyTodoCount / totalWeeklyTodoCount * 100);
   })
-
-  function addCheckedTodoCount(todo:Todo){
-    if(todo.repeatType === "daily"){
-      checkedDailyTodoCount++;
-    }else{
-      checkedWeeklyTodoCount++
-    }
-  }
-
-  function addUncheckedTodoCount(todo:Todo){
-    if(todo.repeatType === "daily"){
-      uncheckedDailyTodoCount++;
-    }else{
-      uncheckedWeeklyTodoCount++;
-    }
-  }
-
 
   $:{
     effectiveHeight = 50;
