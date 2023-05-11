@@ -1,4 +1,4 @@
-import {isInitialized} from "./storage";
+import {isInitialized, setInitialized} from "./storage";
 import type {Idb} from "./idb";
 import {v4 as uuidv4} from "uuid";
 import moment from "moment";
@@ -169,7 +169,8 @@ export const initDefaultData = async (idb: Idb) => {
     ])
 
     await idb.systemInfo.add({
-        name:"lastUpdate",
+        name:"lastUpdated",
         value:moment().format("YYYY-MM-DD")
     })
+    setInitialized()
 }
