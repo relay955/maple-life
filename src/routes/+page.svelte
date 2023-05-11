@@ -114,10 +114,12 @@
 <Toolbar onClickCharacterAddButton={onClickAddCharacterButton}
          onClickAccountAddButton={onClickAddAccountButton}/>
 
-<div class="container">
-  <TodoHeader onClickCharacter={onClickEditCharacter} onClickAccountBar={onClickEditAccount}/>
-  <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
-  <AddTodoButton onClick={onClickAddTodoButton}/>
+<div class="main">
+  <div class="container">
+    <TodoHeader onClickCharacter={onClickEditCharacter} onClickAccountBar={onClickEditAccount}/>
+    <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
+    <AddTodoButton onClick={onClickAddTodoButton}/>
+  </div>
 </div>
 <TodoEditModal isOpen={isEditTodoModalOpen}
                isEditMode={editTodoModalEditMode}
