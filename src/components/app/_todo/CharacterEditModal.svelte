@@ -14,6 +14,11 @@ import {idb} from "../../../storage/idb";
 import Select from "../../shared/basicComponent/Select.svelte";
 import type {AccountWorld, World} from "../../../storage/dto/world";
 import {WorldList} from "../../../storage/dto/world";
+import {insertWorldOrGetWorldId} from "../../../storage/queries/worldQuery.js";
+import {
+  deleteCharacter,
+  putCharacter
+} from "../../../storage/queries/characterQuery";
 
 export let isOpen = false;
 let account = liveQuery(async () => await idb.account.toArray())
@@ -67,20 +72,16 @@ const onClickSubmitButton = async () => {
       character.classType = result.classType;
       character.imgUrl = result.imgUrl;
       character.level = result.level;
-      character.worldId = await getOrCreateWorld(character.accountId, result.world as World)
+      character.worldId = await insertWorldOrGetWorldId(character.accountId, result.world as World)
     }else{
       if(character.level < 1 || character.level > 300){
         toast.push("레벨은 1~300 사이입니다.");
         return;
       }
-      character.worldId = await getOrCreateWorld(character.accountId, selectedWorld)
+      character.worldId = await insertWorldOrGetWorldId(character.accountId, selectedWorld)
     }
 
-
-    if(!isEditMode) character.order = (await idb.character
-      .filter(c => c.worldId === character.worldId).count())+1
-
-    await idb.character.put(character)
+    await putCharacter(character)
     onCloseProxy()
   }catch (e){
     isManualMode = true;
@@ -89,47 +90,17 @@ const onClickSubmitButton = async () => {
   }
 }
 
-async function getOrCreateWorld(accountId: number, worldName: World) {
-  let worldInAccount = await idb.accountWorld.where("accountId")
-    .equals(accountId)
-    .toArray()
-
-  let targetWorld = worldInAccount
-    .filter(accountWorld => accountWorld.world === worldName)
-    .pop()
-
-  if (targetWorld === undefined) {
-    let newWorld:AccountWorld = {
-      accountId: accountId,
-      world: worldName,
-      order: 0,
-    }
-
-    worldInAccount.forEach((world)=>{
-      if(world.order > newWorld.order) newWorld.order = world.order
-    })
-    newWorld.order ++;
-
-    return idb.accountWorld.add(newWorld);
-  }else{
-    return targetWorld.id!
-  }
-}
-
 const onClickDeleteButton = async () => {
   if (isParsing) {
     toast.push("캐릭터 정보를 불러오는 중입니다. 잠시만 기다려 주세요.")
     return;
   }
-  if ((await idb.character.count()) <= 1) {
-    toast.push("최소 1개 이상의 캐릭터가 존재해야합니다.");
-    return;
+  try{
+    await deleteCharacter(character)
+    onCloseProxy()
+  }catch (e){
+    toast.push(e.message)
   }
-  await idb.character.delete(character.id!)
-  if((await idb.character.where("worldId").equals(character.worldId).count()) <= 0){
-    await idb.accountWorld.delete(character.worldId)
-  }
-  onCloseProxy()
 }
 
 const onCloseProxy = () => {
