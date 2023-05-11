@@ -11,7 +11,7 @@
   import type {Account} from "../../../storage/dto/account";
   import {
     generateCharacterTree,
-    lqCharacterTree
+    lqCharacterTree, swapCharacterOrder
   } from "../../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
   import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
@@ -19,10 +19,14 @@
   import {WorldList} from "../../../storage/dto/world";
   import {lqTodos} from "../../../storage/queries/todoQuery";
   import {lqShowCharacterPreview} from "../../../storage/queries/systemQuery";
+  import TodoHelpModal from "./TodoHeader/TodoHelpModal.svelte";
+  import {swapWorldOrder} from "../../../storage/queries/worldQuery";
+  import {swapAccountOrder} from "../../../storage/queries/accountQuery";
 
   export let onClickCharacter:(character:Character)=>void;
   export let onClickAccountBar:(account:Account)=>void;
 
+  let screenWidth;
   let isMultiAccount = false;
   let isMultiWorld = false;
 
@@ -30,6 +34,7 @@
   let checkedDailyTodoCount = 0;
   let totalDailyTodoCount = 0;
   let dailyCheckProgress = 0;
+
   let uncheckedWeeklyTodoCount = 0;
   let checkedWeeklyTodoCount = 0;
   let totalWeeklyTodoCount = 0;
@@ -87,91 +92,64 @@
 
   $:{
     effectiveHeight = 50;
+    if(screenWidth <= 750) effectiveHeight += 40;
     if(isMultiWorld) effectiveHeight += 10;
     if(isMultiAccount) effectiveHeight += 10;
     if($lqShowCharacterPreview) effectiveHeight += 50;
   }
 
   const onDragStartCharacter = (e:Event,character:Character)=> dragCharacter = character
-  const onDragOverCharacter = (e:Event)=> e.preventDefault()
   const onDragEndCharacter = async (e: Event, character: Character) => {
     e.preventDefault()
-    if (dragCharacter !== undefined) {
-      if (character.accountId !== dragCharacter?.accountId || character.worldId !== dragCharacter?.worldId) {
-        toast.push("캐릭터 이동은 동일한 계정, 월드에서만 가능합니다. 계정/월드의 순서는 윗부분을 드래그하여 옮겨주세요. ")
-        resetDragState()
-        return;
-      }
-      await swapCharacter(character, dragCharacter)
-
-    } else if (dragAccount !== undefined) {
+    if (dragAccount !== undefined) {
       const targetAccount = await idb.account.get(character.accountId)
-      await swapAccount(dragAccount, targetAccount!)
+      await swapAccountOrder(dragAccount, targetAccount!)
 
-    }else if(dragWorld !== undefined){
+    } else if(dragWorld !== undefined){
       const targetWorld = await idb.accountWorld.get(character.worldId)
       if(targetWorld!.accountId !== dragWorld.accountId){
         toast.push("월드 이동은 동일한 계정에서만 가능합니다. 계정의 순서는 윗부분을 드래그하여 옮겨주세요. ")
         resetDragState()
         return;
       }
-      await swapWorld(dragWorld, targetWorld!)
+      await swapWorldOrder(dragWorld, targetWorld!)
+
+    } else if (dragCharacter !== undefined) {
+      if (character.accountId !== dragCharacter?.accountId || character.worldId !== dragCharacter?.worldId) {
+        toast.push("캐릭터 이동은 동일한 계정, 월드에서만 가능합니다. 계정/월드의 순서는 윗부분을 드래그하여 옮겨주세요. ")
+        resetDragState()
+        return;
+      }
+      await swapCharacterOrder(character, dragCharacter)
     }
     resetDragState()
   }
 
   const onDragStartAccount = (e:Event,account:Account)=> dragAccount = account
-  const onDragOverAccount = (e:Event)=> e.preventDefault()
   const onDragEndAccount = async (e: Event, account: Account) => {
     e.preventDefault()
-    if (dragAccount !== undefined) {
-      await swapAccount(account, dragAccount)
-    }
+    if (dragAccount !== undefined) await swapAccountOrder(account, dragAccount)
     resetDragState()
   }
 
   const onDragStartWorld = (e:Event,world:AccountWorld)=> dragWorld = world
-  const onDragOverWorld = (e:Event)=> e.preventDefault()
   const onDragEndWorld = async (e: Event, world: AccountWorld) => {
     e.preventDefault()
-    if (dragWorld !== undefined) {
+    if(dragAccount !== undefined){
+      const targetAccount = await idb.account.get(world.accountId)
+      await swapAccountOrder(dragAccount,targetAccount!)
+
+    } else if (dragWorld !== undefined) {
       if(world!.accountId !== dragWorld.accountId){
         toast.push("월드 이동은 동일한 계정에서만 가능합니다. 계정의 순서는 윗부분을 드래그하여 옮겨주세요. ")
         resetDragState()
         return;
       }
-      await swapWorld(world, dragWorld)
-    } else if (dragAccount !==undefined){
-      const targetAccount = await idb.account.get(world.accountId)
-      await swapAccount(dragAccount,targetAccount!)
+      await swapWorldOrder(world, dragWorld)
     }
     resetDragState()
   }
 
-
-  const swapCharacter = async (character: Character, targetCharacter: Character) => {
-    const temp = character.order
-    character.order = targetCharacter.order
-    targetCharacter.order = temp;
-
-    await idb.character.bulkPut([character, targetCharacter])
-  }
-
-  const swapAccount = async (account: Account, targetAccount: Account) => {
-    const temp = account.order
-    account.order = targetAccount.order
-    targetAccount.order = temp;
-
-    await idb.account.bulkPut([account, targetAccount])
-  }
-
-  const swapWorld = async (world: AccountWorld, targetWorld: AccountWorld) => {
-    const temp = world.order
-    world.order = targetWorld.order
-    targetWorld.order = temp;
-
-    await idb.accountWorld.bulkPut([world, targetWorld])
-  }
 
   const resetDragState = () => {
     dragCharacter = undefined;
@@ -180,6 +158,9 @@
   }
 
 </script>
+
+<svelte:window bind:innerWidth={screenWidth} />
+
 <div class={`${$lqShowCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
   <div class="title">
     <div class="text">
@@ -189,7 +170,6 @@
       <MdHelpOutline/>
     </IconButton>
     <div class="progress-bar-list">
-<!--      #ace594-->
       <div class="progress-bar">
       <ProgressBar series={[{perc:dailyCheckProgress,color:'#70a5e0'}]}
                    height="12" textSize="65"
@@ -211,7 +191,7 @@
           draggable="true"
            on:click={()=>onClickAccountBar(account)}
           on:dragstart={(e)=>onDragStartAccount(e,account)}
-          on:dragover={onDragOverAccount}
+          on:dragover={(e)=>e.preventDefault()}
           on:drop={(e)=>onDragEndAccount(e,account)}
          style={`border-bottom:2px solid ${i%2===0 ? "#338cc8":"#bfdbed"}`}>
       {account.name}
@@ -225,7 +205,7 @@
         <div class="world-bar"
              draggable="true"
              on:dragstart={(e)=>onDragStartWorld(e,world)}
-             on:dragover={onDragOverWorld}
+             on:dragover={(e)=>e.preventDefault()}
              on:drop={(e)=>onDragEndWorld(e,world)}
              style={`border-bottom: 2px solid ${WorldList[world.world].color}`}>
           {world.world}
@@ -236,11 +216,11 @@
           <div class="character" on:click={()=>onClickCharacter(character)}
                draggable="true"
                on:dragstart={(e)=>onDragStartCharacter(e,character)}
-               on:dragover={onDragOverCharacter}
+               on:dragover={(e)=>e.preventDefault()}
                on:drop={(e)=>onDragEndCharacter(e,character)}>
             {#if character.imgUrl !== ""}
-              <div class='img'
-                   style={`background:url(${character.imgUrl})`}></div>
+              <div class='img' style={`background:url(${character.imgUrl})`}>
+              </div>
             {/if}
             {#if character.imgUrl === ""}
               <div class='default-img'>
@@ -264,21 +244,8 @@
   {/if}
   {/each}
 </div>
-<Modal isOpen={isOpenHelpModal} onClose={()=>isOpenHelpModal = false} title="기본 사용방법">
-  <div class="usage-modal">
-    <p>
-      일일/주간/월간 해야할 일들을 확인하고 진행후 체크하시면 됩니다.<br/>
-      <b>날짜가 지나면 자동으로 해당 할일이 체크해제</b>됩니다.
-    </p>
-    <ul>
-      <li>캐릭터 추가는 <b>하단 중앙의 툴바</b>에서 할 수 있습니다.</li>
-      <li>할일들을 <b>위아래로 드래그&드롭</b>하여 위치를 변경할 수 있습니다. 할일을 위에서부터 순서대로 보고싶을때 유용합니다.</li>
-      <li>캐릭터들을 <b>좌우로 드래그&드롭</b>하여 위치를 변경할 수 있습니다.</li>
-      <li>할일 체크박스를 우클릭하면 <b>블로킹 모드로 전환</b>할 수 있으며, 해당 캐릭터는 해당 할일을 하고싶지 않음을 표시할때 유용합니다.</li>
-      <li>할일이 많을때, <b>좁은높이 모드를 사용하거나 캐릭터 사진 보기를 꺼서</b> 더 많은 할일들을 한 화면에 확인할 수 있습니다.</li>
-    </ul>
-  </div>
-</Modal>
+
+<TodoHelpModal bind:isOpen={isOpenHelpModal}/>
 
 <style lang="scss">
   .header {
@@ -293,7 +260,6 @@
     background-color: white;
 
     &.hidden-image{
-      height: 50px;
       .img{
         display: none;
       }
@@ -427,14 +393,10 @@
       }
     }
   }
+
   @media (max-width: 750px){
     .header {
       flex-wrap: wrap;
-      height: 130px;
-
-      &.hidden-image{
-        height: 80px;
-      }
 
       .title {
         width: 100%;
@@ -444,6 +406,7 @@
       .progress-bar-list {
         flex-grow: 1;
       }
+
       .character {
         width: 50px;
         .name {
@@ -462,36 +425,15 @@
           height: 36px;
           background-position: 52% 61% !important;
           background-size: 218% !important;
-          &.multi-world{
-            width:30px;
-            height:30px;
-          }
-          &.multi-account{
-            width:25px !important;
-            height:25px !important;
-          }
         }
 
         .default-img {
           width: 30px;
           height: 30px;
           padding: 3px;
-          &.multi-world{
-            width:25px;
-            height:25px;
-          }
-          &.multi-account{
-            width:20px !important;
-            height:20px !important;
-          }
         }
       }
 
     }
-  }
-
-  .usage-modal{
-    font-size: 15px;
-    color: #373737;
   }
 </style>

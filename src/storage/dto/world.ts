@@ -9,7 +9,7 @@ export interface WorldInfo{
 export const WorldList:{[index:string]:WorldInfo} = {
     "스카니아":{color:'lightblue'},
     "베라":{color:'orange'},
-    "루나":{color:'yellow'},
+    "루나":{color:'#edd500'},
     "제니스":{color:'lightgray'},
     "크로아":{color:'lightgreen'},
     "유니온":{color:'purple'},
@@ -19,8 +19,8 @@ export const WorldList:{[index:string]:WorldInfo} = {
     "오로라":{color:'#DDFED1'},
     "아케인":{color:'blue'},
     "노바":{color:'#3f7fa7'},
-    "리부트":{color:'yellow'},
-    "리부트2":{color:'#EDDD3E'},
+    "리부트":{color:'#fdf7a8'},
+    "리부트2":{color:'#c0b334'},
     "이벤트":{color:'red'},
 }
 
