@@ -6,23 +6,17 @@
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/basicComponent/IconButton.svelte";
-  import {liveQuery} from "dexie";
-  import {idb} from "../../../storage/idb";
+  import {
+    lqShortHeightMode,
+    lqShowCharacterPreview, updateShortHeightMode, updateShowCharacterPreview
+  } from "../../../storage/queries/systemQuery";
 
   export let onClickAccountAddButton:()=>void;
   export let onClickCharacterAddButton:()=>void;
 
-  const onClickShortHeightModeButton = () => {
-    idb.settings.update("shortHeightMode", {value: !$shortHeightMode});
-  }
-  const onClickShowCharacterPreviewButton = () => {
-    idb.settings.update("showCharacterPreview", {value: !$showCharacterPreview});
-  }
+  const onClickShortHeightModeButton = () => updateShortHeightMode(!$lqShortHeightMode)
+  const onClickShowCharacterPreviewButton = () => updateShowCharacterPreview(!$lqShowCharacterPreview)
 
-  let showCharacterPreview =
-    liveQuery(async () => (await idb.settings.get("showCharacterPreview"))?.value);
-  let shortHeightMode =
-    liveQuery(async () => (await idb.settings.get("shortHeightMode"))?.value);
 </script>
 
 <div class="toolbar">
@@ -35,12 +29,12 @@
   </IconButton>
   <IconButton onClick={onClickShortHeightModeButton}
               tooltip="좁은높이 모드 - 한 화면에 더 많은 할일을 보고싶을때 사용해보세요."
-              activated={$shortHeightMode}>
+              activated={$lqShortHeightMode}>
     <MdUnfoldLess/>
   </IconButton>
   <IconButton onClick={onClickShowCharacterPreviewButton}
               tooltip="캐릭터 사진 보기 - 한 화면에 더 많은 할일을 보고싶다면 끌 수 있어요."
-              activated={$showCharacterPreview}>
+              activated={$lqShowCharacterPreview}>
     <MdPhotoSizeSelectLarge/>
   </IconButton>
 </div>
