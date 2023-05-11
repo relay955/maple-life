@@ -8,6 +8,7 @@ import type {Account} from "../../../storage/dto/account";
 import IconButton from "../../shared/basicComponent/IconButton.svelte";
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import Input from "../../shared/basicComponent/Input.svelte";
+import {deleteAccount, putAccount} from "../../../storage/queries/accountQuery";
 
 
 
@@ -27,15 +28,9 @@ function resetAccount():Account{
   };
 }
 
-$: {
-  if (editAccount !== undefined && isEditMode) {
-    account = editAccount
-  }
-}
+$: if(editAccount !== undefined && isEditMode) account = editAccount
 
-$: if(isOpen){
-  setTimeout(()=> nameRef.focus(),100)
-}
+$: if(isOpen) setTimeout(()=> nameRef.focus(),100)
 
 const onCloseProxy = () => {
   account = resetAccount();
@@ -48,35 +43,20 @@ const onClickSubmitButton = async () => {
     toast.push("계정 이름을 입력해주세요.");
     return;
   }
-  if(!isEditMode) {
-    const allAccounts = await idb.account.toArray()
-    allAccounts.forEach((item) => {
-      if (item.order > account.order) account.order = item.order
-    })
-    account.order ++;
-  }
-
-  idb.account.put(account)
-  account = resetAccount();
+  await putAccount(account)
   onCloseProxy()
 }
 
 const onClickDeleteButton = async () => {
   if(account.id === undefined) return;
-  if(await idb.account.count() <= 1) {
-    toast.push("계정은 최소 1개 이상이어야 합니다.");
-    return;
-  }
-  const deleteTargetCharactersId = await idb.character.where("accountId").equals(account.id).primaryKeys()
-  if(deleteTargetCharactersId.length === await idb.character.count()){
-    toast.push("해당 계정이 삭제되면 모든 캐릭터가 제거되므로 삭제할 수 없습니다.");
-    return;
-  }
   let result = confirm("경고: 계정을 삭제하면 계정에 포함된 모든 캐릭터 정보가 삭제됩니다. 삭제하시겠습니까?")
   if(result === false) return;
-  await idb.character.bulkDelete(deleteTargetCharactersId)
-  await idb.account.delete(account.id)
-  onCloseProxy()
+  try {
+    await deleteAccount(account)
+    onCloseProxy()
+  }catch (e) {
+    toast.push(e.message)
+  }
 }
 
 </script>
