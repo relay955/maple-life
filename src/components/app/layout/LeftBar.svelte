@@ -8,20 +8,11 @@
   import MdBuild from 'svelte-icons/md/MdBuild.svelte'
   import MdMonetizationOn from 'svelte-icons/md/MdMonetizationOn.svelte'
   import MdInfoOutline from 'svelte-icons/md/MdInfoOutline.svelte'
-  import {onMount} from "svelte";
   import Space from "../../shared/basicComponent/Space.svelte";
-  import Modal from "../../shared/Modal.svelte";
-  import logo from '$lib/images/icon/logo.png'
-  import Logo from "../../shared/Logo.svelte";
+  import WebsiteInfoModal from "./LeftBar/WebsiteInfoModal.svelte";
 
-  let location;
   let isOpenInfoPopup = false;
-
-  onMount(()=>{
-    location = window.location;
-  })
 </script>
-
 
 <div class="main">
   <div class="link-header">Link</div>
@@ -63,22 +54,8 @@
     <MdInfoOutline/>
   </IconButton>
 </div>
-<Modal isOpen={isOpenInfoPopup} onClose={()=>isOpenInfoPopup = false}>
-  <div class="info-modal">
-    <Logo/>
-    <div class="description">for playing Maplestory as life</div>
-    <div class="description">
-      모든 데이터는 사용자 PC에 저장되며, 사이트는 데이터를 수집하지 않습니다.
-    </div>
-    <div class="license">
-      distributed under the MIT license
-    </div>
-    <div class="info-body">
-      <div><a href="https://github.com/relay955/maple-life">github</a></div>
-      <div>contact : <a href="mailto:refcell22@naver.com">refcell22@naver.com</a></div>
-    </div>
-  </div>
-</Modal>
+
+<WebsiteInfoModal bind:isOpen={isOpenInfoPopup}/>
 
 <style lang="scss">
   .main{
@@ -99,25 +76,5 @@
     margin-bottom: 10px;
   }
 
-  .info-modal{
-    text-align: center;
-    margin-bottom: 40px;
-    .description{
-      font-size: 12px;
-      color: gray;
-      margin-bottom: 3px;
-    }
-    .license{
-      margin-top: 10px;
-      font-size: 12px;
-      color: gray;
-      margin-bottom: 13px;
-    }
-    .info-body{
-      font-size: 13px;
-      div{
-        margin-bottom: 3px;
-      }
-    }
-  }
+
 </style>
