@@ -1,4 +1,5 @@
 <script>
+  export let placeholder = '';
   export let value = '';
   export let onUpdate = (e) => {};
 
@@ -13,7 +14,7 @@
     style="max-height: {maxHeight}"
   >{value + '\n'}</pre>
 
-  <textarea on:input={onUpdate}>{value}</textarea>
+  <textarea on:input={onUpdate} placeholder={placeholder}>{value}</textarea>
 </div>
 
 <style>
