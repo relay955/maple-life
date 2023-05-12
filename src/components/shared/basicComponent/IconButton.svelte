@@ -2,7 +2,7 @@
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
 
-  export let tooltip;
+  export let tooltip = undefined;
   export let onClick = () => {};
   export let style:string = "";
   export let activated=false;

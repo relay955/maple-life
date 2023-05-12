@@ -63,7 +63,7 @@ const onSelectAutoComplete = (e:any)=>{
   <Input title="할일 이름" bind:value={todo.name}
          listId="todo-name"
          bind:ref={nameRef}
-         useAutoComplete={true} onSelect={(e)=>onSelectAutoComplete(e)}>
+         onSelect={(e)=>onSelectAutoComplete(e)}>
   </Input>
   <datalist id="todo-name">
     {#each Object.keys(todoPresets) as todoPresetName (todoPresetName)}
