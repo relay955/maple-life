@@ -11,6 +11,7 @@
 
 {#if $lqShowMemo}
   <TextAreaAutoResize onUpdate={(e)=>updateMemo(e.target.value)}
+                      placeholder="여기에 메모를 남겨보세요!"
                       value={$lqMemo}/>
 {/if}
 
