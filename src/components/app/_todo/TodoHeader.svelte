@@ -40,7 +40,7 @@
   let totalWeeklyTodoCount = 0;
   let weeklyCheckProgress = 0;
 
-  let effectiveHeight = 40;
+  let effectiveHeight = 45;
 
   let dragCharacter:Character|undefined = undefined;
   let dragAccount:Account|undefined = undefined;
@@ -91,10 +91,10 @@
   })
 
   $:{
-    effectiveHeight = 50;
+    effectiveHeight = 45;
     if(screenWidth <= 750) effectiveHeight += 40;
-    if(isMultiWorld) effectiveHeight += 10;
-    if(isMultiAccount) effectiveHeight += 10;
+    if(isMultiWorld) effectiveHeight += 17;
+    if(isMultiAccount) effectiveHeight += 17;
     if($lqShowCharacterPreview) effectiveHeight += 50;
   }
 
