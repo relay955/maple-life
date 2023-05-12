@@ -4,14 +4,15 @@
   import MdPhotoSizeSelectLarge
     from 'svelte-icons/md/MdPhotoSizeSelectLarge.svelte'
   import MdGroupAdd from 'svelte-icons/md/MdGroupAdd.svelte'
+  import MdDescription from 'svelte-icons/md/MdDescription.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/basicComponent/IconButton.svelte";
   import {
     lqShortHeightMode,
-    lqShowCharacterPreview,
+    lqShowCharacterPreview, lqShowMemo,
     updateShortHeightMode,
-    updateShowCharacterPreview
+    updateShowCharacterPreview, updateShowMemo
   } from "../../../storage/queries/systemQuery";
 
   export let onClickAccountAddButton:()=>void;
@@ -38,6 +39,11 @@
               tooltip="캐릭터 사진 보기 - 한 화면에 더 많은 할일을 보고싶다면 끌 수 있어요."
               activated={$lqShowCharacterPreview}>
     <MdPhotoSizeSelectLarge/>
+  </IconButton>
+  <IconButton onClick={() => updateShowMemo(!$lqShowMemo)}
+              tooltip="메모 사용 - 간략한 메모를 남길 수 있어요. (할일목록 최상단에 표시)"
+              activated={$lqShowMemo}>
+    <MdDescription/>
   </IconButton>
 </div>
 
