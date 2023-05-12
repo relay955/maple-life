@@ -2,11 +2,16 @@ import {idb} from "../idb";
 import type {AccountWorld, World} from "../dto/world";
 
 export const swapWorldOrder = async (world: AccountWorld, targetWorld: AccountWorld) => {
-    const temp = world.order
-    world.order = targetWorld.order
-    targetWorld.order = temp;
+    let world1:AccountWorld = JSON.parse(JSON.stringify(world))
+    let world2:AccountWorld = JSON.parse(JSON.stringify(targetWorld))
+    const temp = world1.order
+    world1.order = world2.order
+    world2.order = temp;
 
-    await idb.accountWorld.bulkPut([world, targetWorld])
+    //저장시에는 월드에 포함된 캐릭터는 저장하면 안됨
+    world1.characters = undefined;
+    world2.characters = undefined;
+    await idb.accountWorld.bulkPut([world1, world2])
 }
 
 
