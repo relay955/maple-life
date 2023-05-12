@@ -44,8 +44,11 @@ export const putCharacter = async (character:Character) => {
         const beforeCharacter = await idb.character.get(character.id)
         if(beforeCharacter === undefined) throw Error("character id is not undefined but character is undefined")
 
-        character.order = (await idb.character
-            .filter(c => c.worldId === character.worldId).count()) + 1
+        //월드가 이동된경우 캐릭터 순서를 해당월드 기준으로 재배치
+        if(beforeCharacter.worldId !== character.worldId){
+            character.order = (await idb.character
+                .filter(c => c.worldId === character.worldId).count()) + 1
+        }
 
         await idb.character.put(character)
 
@@ -54,6 +57,8 @@ export const putCharacter = async (character:Character) => {
             await idb.accountWorld.delete(beforeCharacter.worldId)
         }
     }else{
+        character.order = (await idb.character
+            .filter(c => c.worldId === character.worldId).count()) + 1
         await idb.character.add(character)
     }
 }
