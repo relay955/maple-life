@@ -40,13 +40,22 @@ export const swapCharacterOrder = async (character:Character, targetCharacter:Ch
 }
 
 export const putCharacter = async (character:Character) => {
-    const isFirstCreate = character.id === undefined ||
-        (await idb.todo.get(character.id)) === undefined
+    if (character.id !== undefined) {
+        const beforeCharacter = await idb.character.get(character.id)
+        if(beforeCharacter === undefined) throw Error("character id is not undefined but character is undefined")
 
-    if(!isFirstCreate) character.order = (await idb.character
-        .filter(c => c.worldId === character.worldId).count())+1
+        character.order = (await idb.character
+            .filter(c => c.worldId === character.worldId).count()) + 1
 
-    await idb.character.put(character)
+        await idb.character.put(character)
+
+        //캐릭터 변경인 경우, 월드를 수동변경할 때에는 해당 월드에 캐릭터가 없어질수 있는데 이때 월드를 삭제해주어야함.
+        if((await idb.character.where("worldId").equals(beforeCharacter.worldId).count()) <= 0){
+            await idb.accountWorld.delete(beforeCharacter.worldId)
+        }
+    }else{
+        await idb.character.add(character)
+    }
 }
 
 export const deleteCharacter = async (character:Character) => {
