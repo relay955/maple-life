@@ -22,9 +22,31 @@ export const updateShowCharacterPreview = async (value: boolean) => {
     })
 }
 
+export const updateShowMemo = async (value: boolean) => {
+    await idb.settings.put({
+        name: "showMemo",
+        value: value
+    })
+}
+
+export const updateMemo = async (value: string) => {
+    await idb.settings.put({
+        name: "memo",
+        value: value
+    })
+}
+
+
+
 
 export const lqShowCharacterPreview =
     liveQuery(async () => (await idb.settings.get("showCharacterPreview"))?.value);
 export const lqShortHeightMode =
     liveQuery(async () => (await idb.settings.get("shortHeightMode"))?.value);
+
+export const lqShowMemo =
+    liveQuery(async () => (await idb.settings.get("showMemo"))?.value ?? false);
+
+export const lqMemo =
+    liveQuery(async () => (await idb.settings.get("memo"))?.value ?? "");
 

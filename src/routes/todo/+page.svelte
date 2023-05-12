@@ -10,7 +10,12 @@
   import TodoList from "../../components/app/_todo/TodoList.svelte";
   import type {Account} from "../../storage/dto/account";
   import AccountEditModal from "../../components/app/_todo/AccountEditModal.svelte";
-  import {runOnInitialize} from "../../logic/runOnInitialize";
+  import {
+    lqMemo,
+    lqShowMemo,
+    updateMemo
+  } from "../../storage/queries/systemQuery";
+  import TodoMemo from "../../components/app/_todo/TodoMemo.svelte";
 
   export const prerender = true;
   export const ssr = true;
@@ -70,6 +75,7 @@
 
 <div class="container">
   <TodoHeader onClickCharacter={onClickEditCharacter} onClickAccountBar={onClickEditAccount}/>
+  <TodoMemo/>
   <TodoList onClickEditTodoButton={onClickEditTodoButton}/>
   <AddTodoButton onClick={onClickAddTodoButton}/>
 </div>
