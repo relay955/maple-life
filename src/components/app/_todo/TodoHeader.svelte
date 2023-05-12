@@ -69,7 +69,9 @@
         iterationTarget = localCharacterTree
           .map(account => account.worlds?.map(world => world.id.toString()) ?? []).flat()
       } else if (todo.type === "perAccount") {
-        iterationTarget = localCharacterTree.map(account => account.id!.toString())
+        iterationTarget = localCharacterTree
+          .filter(account => (account.worlds ?? []).length > 0)
+          .map(account => account.id!.toString())
       }
 
       iterationTarget.forEach(key => {
