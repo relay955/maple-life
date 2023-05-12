@@ -21,6 +21,11 @@
     position: relative;
   }
 
+  pre{
+    margin-top: 3px;
+    margin-bottom:12px;
+  }
+
   pre, textarea {
     font-family: inherit;
     padding: 0.5em;
