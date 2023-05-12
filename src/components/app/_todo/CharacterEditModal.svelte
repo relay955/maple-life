@@ -119,7 +119,7 @@ const onCloseProxy = () => {
        isOpen={isOpen} onClose={onCloseProxy} onEnter={onClickSubmitButton}>
   <Input title="닉네임" bind:value={character.name} bind:ref={nameRef} />
   {#if ($account ?? []).length > 1}
-    <Select bind:value={character.accountId}>
+    <Select bind:value={character.accountId} title="계정">
       {#each $account as account}
         <option value={account.id}>{account.name}</option>
       {/each}
