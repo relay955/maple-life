@@ -29,15 +29,18 @@ const worldByIconFileName:{[index:string]:string} = {
 
 
 export const requestMapleCharacterInfo = async (characterName: string,proxy:string) => {
-    let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=0`
-    const res = await axios.get(url)
-    try {
-        return parseMapleCharacterInfo(res.data)
-    }catch(e){
-        let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=254`
-        const res = await axios.get(url)
-        return parseMapleCharacterInfo(res.data)
-    }
+    const serviceWorker = await navigator.serviceWorker.getRegistration()
+    serviceWorker?.active?.postMessage("asdffadsf")
+
+    // let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=0`
+    // const res = await axios.get(url)
+    // try {
+    //     return parseMapleCharacterInfo(res.data)
+    // }catch(e){
+    //     let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=254`
+    //     const res = await axios.get(url)
+    //     return parseMapleCharacterInfo(res.data)
+    // }
 }
 
 const parseMapleCharacterInfo = (rankingHtmlData:string):MapleCharacterInfo => {
