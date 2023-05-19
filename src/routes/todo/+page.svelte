@@ -17,8 +17,6 @@
   } from "../../storage/queries/systemQuery";
   import TodoMemo from "../../components/app/_todo/TodoMemo.svelte";
 
-  export const prerender = true;
-  export const ssr = true;
 
   let isEditTodoModalOpen = false;
   let editTodoModalEditMode = false;
