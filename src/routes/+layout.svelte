@@ -6,8 +6,6 @@
   import {runOnInitialize} from "../logic/runOnInitialize";
 
   onMount(runOnInitialize)
-  export const prerender = true;
-  export const ssr = false;
 
 </script>
 

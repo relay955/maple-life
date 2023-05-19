@@ -1,5 +1,6 @@
 import axios from "axios";
 import parse from "node-html-parser";
+import {invoke} from "@tauri-apps/api";
 
 interface MapleCharacterInfo{
     imgUrl:string;
@@ -29,8 +30,8 @@ const worldByIconFileName:{[index:string]:string} = {
 
 
 export const requestMapleCharacterInfo = async (characterName: string,proxy:string) => {
-    const serviceWorker = await navigator.serviceWorker.getRegistration()
-    serviceWorker?.active?.postMessage("asdffadsf")
+    const res = await invoke("say-hello",{name: "World!!!!!"})
+    console.log(res)
 
     // let url = `${proxy}/https://maplestory.nexon.com/Ranking/World/Total?c=${characterName}&w=0`
     // const res = await axios.get(url)
