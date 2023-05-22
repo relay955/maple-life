@@ -46,8 +46,7 @@ export const putCharacter = async (character:Character) => {
 
         //월드가 이동된경우 캐릭터 순서를 해당월드 기준으로 재배치
         if(beforeCharacter.worldId !== character.worldId){
-            character.order = (await idb.character
-                .filter(c => c.worldId === character.worldId).count()) + 1
+            character.order = await getLastOrder(character.worldId) + 1;
         }
 
         await idb.character.put(character)
@@ -57,10 +56,20 @@ export const putCharacter = async (character:Character) => {
             await idb.accountWorld.delete(beforeCharacter.worldId)
         }
     }else{
-        character.order = (await idb.character
-            .filter(c => c.worldId === character.worldId).count()) + 1
+        character.order = await getLastOrder(character.worldId) + 1;
         await idb.character.add(character)
     }
+}
+
+const getLastOrder = async (worldId:number) => {
+    let characters = await idb.character
+        .filter(c => c.worldId === worldId)
+        .toArray();
+    let lastOrder = 0;
+    characters.forEach((item)=>{
+        if(item.order > lastOrder) lastOrder = item.order
+    })
+    return lastOrder;
 }
 
 export const deleteCharacter = async (character:Character) => {
