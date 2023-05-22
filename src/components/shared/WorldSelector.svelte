@@ -46,7 +46,7 @@ const onClickWorld = (worldId:number) => {
       background-color: #f4f4f4;
     }
     .world.selected{
-      background-color: #44aaee;
+      background-color: #70a5e0;
       color:white;
     }
   }
