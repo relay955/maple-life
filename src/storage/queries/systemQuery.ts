@@ -36,6 +36,13 @@ export const updateMemo = async (value: string) => {
     })
 }
 
+export const updateSelectedWorldId = async (value: number) => {
+    await idb.settings.put({
+        name: "selectedWorldId",
+        value: value
+    })
+}
+
 
 
 
@@ -49,4 +56,7 @@ export const lqShowMemo =
 
 export const lqMemo =
     liveQuery(async () => (await idb.settings.get("memo"))?.value ?? "");
+
+export const lqSelectedWorldId =
+    liveQuery(async () => (await idb.settings.get("selectedWorldId"))?.value ?? 1);
 
