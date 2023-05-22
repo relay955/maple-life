@@ -22,6 +22,7 @@
   import TodoHelpModal from "./TodoHeader/TodoHelpModal.svelte";
   import {swapWorldOrder} from "../../../storage/queries/worldQuery";
   import {swapAccountOrder} from "../../../storage/queries/accountQuery";
+  import Title from "../../shared/basicComponent/Title.svelte";
 
   export let onClickCharacter:(character:Character)=>void;
   export let onClickAccountBar:(account:Account)=>void;
@@ -165,9 +166,7 @@
 
 <div class={`${$lqShowCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
   <div class="title">
-    <div class="text">
-    할일
-    </div>
+    <Title text="할일"/>
     <IconButton direction="bottom" onClick={()=>isOpenHelpModal=true} style="margin-right: 5px">
       <MdHelpOutline/>
     </IconButton>
@@ -278,12 +277,6 @@
       left: 50px;
       display: flex;
       align-items: center;
-      .text{
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 3px;
-        margin-right: 5px;
-      }
     }
 
     .progress-bar-list{
