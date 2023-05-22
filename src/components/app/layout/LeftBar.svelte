@@ -1,5 +1,7 @@
 <script lang="ts">
   import MdInbox from 'svelte-icons/md/MdInbox.svelte'
+  import MdCheckBox from 'svelte-icons/md/MdCheckBox.svelte'
+  import MdPerson from 'svelte-icons/md/MdPerson.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/basicComponent/IconButton.svelte";
@@ -10,11 +12,26 @@
   import MdInfoOutline from 'svelte-icons/md/MdInfoOutline.svelte'
   import Space from "../../shared/basicComponent/Space.svelte";
   import WebsiteInfoModal from "./LeftBar/WebsiteInfoModal.svelte";
+  import {goto} from "$app/navigation";
 
   let isOpenInfoPopup = false;
 </script>
 
 <div class="main">
+  <IconButton tooltip="할일"
+              style="margin-bottom: 4px"
+              direction="right"
+              onClick="{()=>goto('/todo')}">
+    <MdCheckBox/>
+  </IconButton>
+
+  <IconButton tooltip="캐릭터"
+              style="margin-bottom: 4px"
+              direction="right"
+              onClick="{()=>goto('/character')}">
+    <MdPerson/>
+  </IconButton>
+
   <div class="link-header">Link</div>
   <IconButton tooltip="메이플 홈페이지"
               style="margin-bottom: 4px"
