@@ -6,9 +6,9 @@
 
 <style>
   .title{
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding-top: 3px;
+    margin-bottom: 5px;
   }
 </style>

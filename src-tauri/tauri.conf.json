@@ -59,7 +59,8 @@
         "height": 900,
         "width": 1600,
         "resizable": true,
-        "title": "MapleLife"
+        "title": "MapleLife",
+        "fileDropEnabled": false
       }
     ]
   }
