@@ -4,8 +4,7 @@ import Title from "../../components/shared/basicComponent/Title.svelte";
 import PageContainer
   from "../../components/shared/basicComponent/PageContainer.svelte";
 import Space from "../../components/shared/basicComponent/Space.svelte";
-import {lqCharacterTree} from "../../storage/queries/characterQuery";
-
+import WorldSelector from "../../components/shared/WorldSelector.svelte";
 </script>
 
 {#if !isOnTauri()}
@@ -16,14 +15,7 @@ import {lqCharacterTree} from "../../storage/queries/characterQuery";
     <div class="header">
       <Title text="캐릭터 관리"/>
       <Space/>
-      <div class="world-selector">
-        {#each ($lqCharacterTree ?? []) as account (account.id)}
-          <div class="account">{account.name}</div>
-          {#each account.worlds as world (world.id)}
-            <div class="world">{world.world}</div>
-          {/each}
-        {/each}
-      </div>
+      <WorldSelector/>
     </div>
   </PageContainer>
 {/if}
@@ -32,29 +24,5 @@ import {lqCharacterTree} from "../../storage/queries/characterQuery";
   .header{
     display: flex;
   }
-  .world-selector{
-    display:flex;
-    align-items: center;
-    .account{
-      color:gray;
-      font-size: 12px;
-      margin-right: 5px;
-    }
-    .world{
-      font-size: 13px;
-      margin-right: 3px;
-      padding: 3px 10px;
-      background-color: white;
-      border:1px solid lightgrey;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: 0.2s all;
-    }
-    .world:hover{
-      background-color: #f4f4f4;
-    }
-    .world.selected{
-      background-color: #44aaee;
-    }
-  }
+
 </style>
