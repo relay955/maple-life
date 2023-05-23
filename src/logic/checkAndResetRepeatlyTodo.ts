@@ -5,11 +5,7 @@ import {updateLastUpdatedTime} from "../storage/queries/systemQuery";
 export const checkAndResetRepeatlyTodo = async () => {
     const today = moment().startOf('day')
     let lastUpdatedinDb = await idb.systemInfo.get("lastUpdated");
-    if (lastUpdatedinDb === undefined) {
-        console.error("lastUpdated field must not be null")
-        return;
-    }
-    const lastUpdated = moment(lastUpdatedinDb.value)
+    const lastUpdated = moment(lastUpdatedinDb?.value ?? "2020-01-01")
 
     if (today.isAfter(lastUpdated)) {
         console.log("date changed. reset repeatly todo")
