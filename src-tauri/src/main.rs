@@ -22,7 +22,15 @@ fn main() {
 #[tauri::command]
 fn request_with_proxy(url: &str,is_xml:Option<bool>) -> Result<String, String> {
   info!("{}",format!("proxy requested. url: {url}"));
-  match reqwest::blocking::get(url.to_string()) {
+
+  let client = reqwest::blocking::Client::new();
+  let mut request_builder = client.get(url);
+
+  if is_xml.unwrap_or(false) == true {
+    request_builder = request_builder.header("X-Requested-With", "XMLHttpRequest");
+  }
+
+  match request_builder.send() {
     Ok(res) => Ok(res.text().unwrap()),
     Err(e) => {
       info!("{}",format!("proxy error: {e}"));
