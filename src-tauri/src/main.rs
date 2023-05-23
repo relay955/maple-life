@@ -20,7 +20,7 @@ fn main() {
 
 
 #[tauri::command]
-fn request_with_proxy(url: &str) -> Result<String, String> {
+fn request_with_proxy(url: &str,is_xml:Option<bool>) -> Result<String, String> {
   info!("{}",format!("proxy requested. url: {url}"));
   match reqwest::blocking::get(url.to_string()) {
     Ok(res) => Ok(res.text().unwrap()),
