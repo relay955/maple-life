@@ -27,6 +27,6 @@ https://maplelife.kr
 - DPM 시뮬레이션(powered by [simaple](https://github.com/simaple-team/simaple))
 - 길드 게시판 확인
 - 인포메이션 정리 - 레벨 별 메소/경험치 효율, 몹체력표 등
-- indexedDB 동기화(하고싶은사람만 할수있도록, 간편 로그인 기반)
+- indexedDB 동기화(하고싶은사람만 할수있도록, 간편 로그인 기반).
 
 
