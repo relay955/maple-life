@@ -10,5 +10,5 @@ export interface Character {
     order:number;//할일 페이지에서의 월드별 캐릭터 순서
     orderInCharacterPage:number;//캐릭터 페이지에서의 캐릭터 순서
     useTodo:boolean;
-    detailInfoUrl?:string;
+    detailInfoKey?:string;
 }

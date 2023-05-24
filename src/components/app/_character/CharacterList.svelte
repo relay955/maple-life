@@ -6,7 +6,7 @@ import type {Character} from "../../../storage/dto/character";
 import {getWorldById} from "../../../storage/queries/worldQuery";
 import {
   requestMapleCharacterDetailInfo
-} from "../../../util/mapleParserRequester";
+} from "../../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
 
 let filteredCharacter = [];
