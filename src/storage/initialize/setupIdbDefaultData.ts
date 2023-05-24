@@ -30,7 +30,9 @@ export const initDefaultData = async (idb: Idb) => {
             level:200,
             classType:"히어로",
             imgUrl:"",
-            order:0
+            order:0,
+            useTodo:true,
+            orderInCharacterPage:0
         },
         {
             name:"부캐릭터",
@@ -39,7 +41,9 @@ export const initDefaultData = async (idb: Idb) => {
             level:200,
             classType:"비숍",
             imgUrl:"",
-            order:1
+            order:1,
+            useTodo:true,
+            orderInCharacterPage:0
         }
     ])
 

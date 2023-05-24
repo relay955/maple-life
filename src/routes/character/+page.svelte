@@ -5,6 +5,8 @@ import PageContainer
   from "../../components/shared/basicComponent/PageContainer.svelte";
 import Space from "../../components/shared/basicComponent/Space.svelte";
 import WorldSelector from "../../components/shared/WorldSelector.svelte";
+import CharacterList
+  from "../../components/app/_character/CharacterList.svelte";
 </script>
 
 {#if !isOnTauri()}
@@ -17,6 +19,7 @@ import WorldSelector from "../../components/shared/WorldSelector.svelte";
       <Space/>
       <WorldSelector/>
     </div>
+    <CharacterList/>
   </PageContainer>
 {/if}
 

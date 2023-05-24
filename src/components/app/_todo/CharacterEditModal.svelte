@@ -3,7 +3,6 @@ import Input from "../../shared/basicComponent/Input.svelte";
 import Modal from "../../shared/Modal.svelte";
 import Button from "../../shared/basicComponent/Button.svelte";
 import type {Character} from "../../../storage/dto/character";
-import {requestMapleCharacterInfo} from "../../../util/mapleParser";
 import {PROXY_URL} from "../../../config";
 import { toast } from '@zerodevx/svelte-toast'
 import NumberInput from "../../shared/basicComponent/NumberInput.svelte";
@@ -19,6 +18,9 @@ import {
   deleteCharacter,
   putCharacter
 } from "../../../storage/queries/characterQuery";
+import {
+  requestMapleCharacterBasicInfo
+} from "../../../util/mapleParserRequester";
 
 export let isOpen = false;
 let account = liveQuery(async () => await idb.account.toArray())
@@ -54,7 +56,9 @@ function reset():Character{
     accountId: ($account)?.[0].id ?? 0,
     imgUrl: "",
     level: 1,
-    order: 0
+    order: 0,
+    useTodo:true,
+    orderInCharacterPage:0,
   };
 }
 
@@ -66,12 +70,13 @@ const onClickSubmitButton = async () => {
   try {
     if (!isManualMode) {
       isParsing = true;
-      const result = await requestMapleCharacterInfo(character.name, PROXY_URL)
+      const result = await requestMapleCharacterBasicInfo(character.name)
       isParsing = false;
       character.name = result.nickname;
       character.classType = result.classType;
       character.imgUrl = result.imgUrl;
       character.level = result.level;
+      character.detailInfoUrl = result.detailInfoUrl;
       character.worldId = await insertWorldOrGetWorldId(character.accountId, result.world as World)
     }else{
       if(character.level < 1 || character.level > 300){

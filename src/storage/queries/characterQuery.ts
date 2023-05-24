@@ -56,7 +56,15 @@ export const putCharacter = async (character:Character) => {
             await idb.accountWorld.delete(beforeCharacter.worldId)
         }
     }else{
+        //순서 해당월드의 가장 마지막으로 추가
         character.order = await getLastOrder(character.worldId) + 1;
+        //캐릭터페이지에서의 순서는 월드상관없음.
+        (await idb.character.toArray()).forEach((item)=>{
+            if(item.orderInCharacterPage > character.orderInCharacterPage)
+                character.orderInCharacterPage = item.orderInCharacterPage
+        })
+        character.orderInCharacterPage ++;
+
         await idb.character.add(character)
     }
 }
@@ -83,3 +91,6 @@ export const deleteCharacter = async (character:Character) => {
 }
 
 export const lqCharacterTree = liveQuery(generateCharacterTree)
+
+export const lqCharacter = liveQuery(() =>
+    idb.character.orderBy("orderInCharacterPage").toArray())
