@@ -20,7 +20,7 @@ import {
 } from "../../../storage/queries/characterQuery";
 import {
   requestMapleCharacterBasicInfo
-} from "../../../util/mapleParserRequester";
+} from "../../../util/mapleParser/mapleParserRequester";
 
 export let isOpen = false;
 let account = liveQuery(async () => await idb.account.toArray())
@@ -76,7 +76,7 @@ const onClickSubmitButton = async () => {
       character.classType = result.classType;
       character.imgUrl = result.imgUrl;
       character.level = result.level;
-      character.detailInfoUrl = result.detailInfoUrl;
+      character.detailInfoKey = result.detailInfoUrl;
       character.worldId = await insertWorldOrGetWorldId(character.accountId, result.world as World)
     }else{
       if(character.level < 1 || character.level > 300){
