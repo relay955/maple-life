@@ -41,3 +41,5 @@ export const insertWorldOrGetWorldId = async (accountId:number, worldName:World)
         return targetWorld.id!
     }
 }
+
+export const getWorldById = async (id:number) => idb.accountWorld.get(id)

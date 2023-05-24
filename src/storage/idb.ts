@@ -27,6 +27,15 @@ export class Idb extends Dexie {
             settings: 'name',
             systemInfo: 'name',
         });
+
+        this.version(2).stores({
+            character: '++id,accountId, worldId, order, orderInCharacterPage',
+        }).upgrade(trans => {
+            trans.table("character").toCollection().modify(character => {
+                character.orderInCharacterPage = character.id;
+                character.useTodo = true;
+            });
+        })
     }
 }
 

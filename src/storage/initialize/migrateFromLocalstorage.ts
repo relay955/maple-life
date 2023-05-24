@@ -32,6 +32,8 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
             level: oldCharacter.level,
             classType: oldCharacter.classType,
             order: i,
+            orderInCharacterPage : i,
+            useTodo: true,
         }
         await idb.character.add(newCharacter)
     }
