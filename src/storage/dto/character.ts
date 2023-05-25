@@ -1,4 +1,5 @@
 import type {
+    CharacterSpec,
     EquipmentInfo,
     SkillInfo,
     StatInfo
@@ -16,8 +17,8 @@ export interface Character {
     orderInCharacterPage:number;//캐릭터 페이지에서의 캐릭터 순서
     useTodo:boolean;
     detailInfoKey?:string;
-    ability?:StatInfo;
-    hyperStat?:StatInfo;
-    equipments?:EquipmentInfo[];
-    skills?:SkillInfo[];
+    spec?:{
+        default?:CharacterSpec;
+        boss?:CharacterSpec;
+    }
 }

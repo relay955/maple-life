@@ -64,9 +64,17 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         throw new Error("캐릭터가 비공개 상태입니다.")
     }
 
+    if(character.spec === undefined) character.spec = {}
+    if(character.spec.default === undefined) character.spec.default = {
+        hyperStat: {},
+        ability:{},
+        equipments:[],
+        skills: []
+    }
+    let defaultSpec = character.spec.default
     //기본정보에서 어빌리티, 하이퍼스텟 파싱
-    character.ability =parseAbility(detailInfoHtml)
-    character.hyperStat = parseHyperStats(detailInfoHtml)
+    defaultSpec.ability =parseAbility(detailInfoHtml)
+    defaultSpec.hyperStat = parseHyperStats(detailInfoHtml)
 
     await sleep(200, 400)
     let equipmentPageHtml = parse(
@@ -74,14 +82,14 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     )
 
     //장비 정보 파싱
-    character.equipments = []
+    defaultSpec.equipments = []
     let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
 
     for (let itemLinkKey of itemLinkKeys) {
         await sleep(200, 400)
         const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKey}`,true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
-        character.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+        defaultSpec.equipments.push(parseSingleEquipment(singleEquipmentHtml))
     }
 
     //아케인심볼 파싱
@@ -90,7 +98,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         await sleep(200, 400)
         const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKey}`, true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
-        character.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+        defaultSpec.equipments.push(parseSingleEquipment(singleEquipmentHtml))
     }
 
     //스킬 파싱
@@ -98,7 +106,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     let skillPageHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${SKILL_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
-    character.skills = parseSkills(skillPageHtml);
+    defaultSpec.skills = parseSkills(skillPageHtml);
     idb.character.put(character)
 
 }
