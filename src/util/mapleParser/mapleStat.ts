@@ -1,5 +1,5 @@
 
-type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" |
+export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" |
     "공격력" | "공격력%" | "레벨당 공격력" |"마력" | "마력%" | "레벨당 마력" |
     "APSTR" | "APDEX" | "APINT" | "APLUK" |
     "STR" | "DEX" | "INT" | "LUK" | "올스텟" |
@@ -11,11 +11,11 @@ type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" |
     "아케인 포스" | "획득경험치" | "버프지속시간" | "점프력" | "이동속도" |
     "패시브 스킬 레벨 증가"
 
-type Equipment = "반지"
+export type Equipment = "반지"
 
-type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
+export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
-interface StatInfo{
+export interface StatInfo{
     HP?:number;
     MP?:number;
     "HP%"?:number;
@@ -68,3 +68,25 @@ interface StatInfo{
     "패시브 스킬 레벨 증가"?:number;
 }
 
+
+export interface EquipmentInfo{
+    name:string;
+    imageUrl?:string;
+    type:Equipment;
+    stats:StatInfo;
+    bonusStats:StatInfo;
+    potential?:{
+        grade:PotentialGrade;
+        stats:StatInfo;
+    }
+    additionalPotential?:{
+        grade:PotentialGrade;
+        stats:StatInfo;
+    }
+    soul?:{
+        name:string;
+        stats:StatInfo;
+    }
+    starForce?:number;
+    skillLevel?:number;
+}

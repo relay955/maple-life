@@ -1,3 +1,4 @@
+import {EquipmentInfo} from "../../util/mapleParser/equipmentParser";
 
 export interface Character {
     id?:number;
@@ -11,4 +12,7 @@ export interface Character {
     orderInCharacterPage:number;//캐릭터 페이지에서의 캐릭터 순서
     useTodo:boolean;
     detailInfoKey?:string;
+    ability?:StatInfo;
+    hyperStat?:StatInfo;
+    equipments?:EquipmentInfo[];
 }

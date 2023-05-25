@@ -1,38 +1,25 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
+import {defaultStatParsingStrategy} from "./equipmentParser/statParser";
+import {potentialParsingStrategy} from "./equipmentParser/potentialParser";
+import type {Equipment, EquipmentInfo} from "./mapleStat";
+import {soulParsingStrategy} from "./equipmentParser/soulParser";
 
-export interface EquipmentInfo{
-    name:string;
-    imageUrl?:string;
-    type:Equipment;
-    stats:StatInfo;
-    bonusStats:StatInfo;
-    potential?:{
-        grade:PotentialGrade;
-        stats:StatInfo;
-    }
-    additionalPotential?:{
-        grade:PotentialGrade;
-        stats:StatInfo;
-    }
-    soul?:{
-        name:string;
-        stats:StatInfo;
-    }
-    starForce?:number;
-    skillLevel?:number;
 
-}
+
 export const parseItemsLinkKey = (equipmentPage:ParsedHtmlElement) => {
     let equipmentTags = equipmentPage.querySelectorAll(".tab01_con_wrap li > span > a")!
 
     return equipmentTags.map((equipmentTag) =>
         equipmentTag.getAttribute("href")!.split("?p=")[1]);
 }
+export const parseSymbolsLinkKey = (equipmentPage:ParsedHtmlElement) => {
+    let equipmentTags = equipmentPage.querySelectorAll(".tab03_con_wrap li > span > a")!
+
+    return equipmentTags.map((equipmentTag) =>
+        equipmentTag.getAttribute("href")!.split("?p=")[1]);
+}
 
 export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):EquipmentInfo => {
-    // console.log(singleEquipmentPage)
-
-
     let nameTag = singleEquipmentPage.querySelector(".item_memo_title > h1")!
     let name = nameTag.innerHTML
         .replace(/<font .*>.*<\/font>/,"")
@@ -62,8 +49,6 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
     return equipmentInfo;
 }
 
-
-
 const parseStatsInEquipment = (equipmentInfo:EquipmentInfo,singleEquipmentPage:ParsedHtmlElement) => {
     let statsTag = singleEquipmentPage.querySelectorAll(".stet_info > ul > li")
     let parsedStatsTag = statsTag.map((statTag) => {
@@ -81,8 +66,6 @@ const parseStatsInEquipment = (equipmentInfo:EquipmentInfo,singleEquipmentPage:P
         }
     })
 }
-
-
 
 let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,name:string,option:string)=>void}[] = [
     {
@@ -160,89 +143,5 @@ let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,
     }
 ]
 
-const defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,option:string):void => {
-    let amountList = option.replace(/([+()])/g,"").split(/\s+/)
-    equipmentInfo.stats[statType] = Number(amountList[0].replace("%",""))
-    if(amountList.length >= 3){
-        let bonusStatAmount = Number(amountList[2].replace("%",""));
-        if(bonusStatAmount > 0) equipmentInfo.bonusStats[statType] = bonusStatAmount
 
-    }
-}
 
-const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
-    {"regex":/보스/, "stat":"보스 데미지"},
-    {"regex":/데미지/, "stat":"데미지"},
-    {"regex":/크리티컬 확률/, "stat":"크리티컬 확률"},
-    {"regex":/크리티컬 데미지/, "stat":"크리티컬 데미지"},
-    {"regex":/방어율 무시/, "stat":"방어율 무시"},
-    {"regex":/공격력.*%/, "stat":"공격력%"},
-    {"regex":/마력.*%/, "stat":"마력%"},
-    {"regex":/공격력/, "stat":"공격력"},
-    {"regex":/마력/, "stat":"마력"},
-    {"regex":/HP.*%/, "stat":"HP%"},
-    {"regex":/MP.*%/, "stat":"MP%"},
-    {"regex":/HP/, "stat":"HP"},
-    {"regex":/MP/, "stat":"MP"},
-    {"regex":/STR.*%/, "stat":"STR%"},
-    {"regex":/DEX.*%/, "stat":"DEX%"},
-    {"regex":/INT.*%/, "stat":"INT%"},
-    {"regex":/LUK.*%/, "stat":"LUK%"},
-    {"regex":/올스텟.*%/, "stat":"올스텟%"},
-    {"regex":/STR/, "stat":"STR"},
-    {"regex":/DEX/, "stat":"DEX"},
-    {"regex":/INT/, "stat":"INT"},
-    {"regex":/LUK/, "stat":"LUK"},
-    {"regex":/올스텟/, "stat":"올스텟"},
-    {"regex":/이동속도/, "stat":"이동속도"},
-    {"regex":/점프력/, "stat":"점프력"},
-    {"regex":/재사용/, "stat":"재사용 대기시간 감소"},
-    {"regex":/아이템 드롭률/, "stat":"아이템 드롭률"},
-    {"regex":/메소 획득량/, "stat":"메소 획득량"},
-]
-const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string,type:"potential"|"additionalPotential"):void => {
-    if(option.includes("없습니다.")) return;
-    equipmentInfo[type] = {
-        grade:getPotentialGradeFromName(name),
-        stats:{}
-    }
-    option.split("\n").forEach((line) => {
-        for (const potentialToStat of potentialOrSoulToStats) {
-            if(potentialToStat.regex.test(line)){
-                if(equipmentInfo[type]!.stats[potentialToStat.stat] === undefined)
-                    equipmentInfo[type]!.stats[potentialToStat.stat] = 0
-                equipmentInfo[type]!.stats[potentialToStat.stat] += Number(line.match(/\d+/)![0])
-                break;
-            }
-        }
-    })
-}
-
-const getPotentialGradeFromName = (name:string):PotentialGrade => {
-    if(name.includes("레전드리")){
-        return "레전드리"
-    }else if(name.includes("에픽")){
-        return "에픽"
-    }else if(name.includes("유니크")){
-        return "유니크"
-    }else if(name.includes("레어")){
-        return "레어"
-    }else{
-        throw new Error("잘못된 잠재옵션 등급입니다.")
-    }
-}
-
-const soulParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string):void => {
-    let lines = option.split("\n")
-    equipmentInfo.soul = {
-        name:lines[0].replace(" 적용",""),
-        stats:{}
-    }
-
-    for (const potentialToStat of potentialOrSoulToStats) {
-        if(potentialToStat.regex.test(lines[1])){
-            equipmentInfo.soul!.stats[potentialToStat.stat] = Number(lines[1].match(/\d+/)![0])
-            break;
-        }
-    }
-}
