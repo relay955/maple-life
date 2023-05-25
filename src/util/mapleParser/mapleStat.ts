@@ -96,3 +96,10 @@ export interface SkillInfo{
     imageUrl?:string;
     skillLevel:string;
 }
+
+export interface CharacterSpec{
+    ability:StatInfo;
+    hyperStat:StatInfo;
+    equipments:EquipmentInfo[];
+    skills:SkillInfo[];
+}
