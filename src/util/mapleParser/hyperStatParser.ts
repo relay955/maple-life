@@ -16,25 +16,21 @@ const hyperStatToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/아케인/, "stat":"아케인 포스"},
     {"regex":/경험치/, "stat":"획득경험치"},
 ]
-export const parseHyperStats = (basicInfoPage:ParsedHtmlElement):StatInfo[] => {
+export const parseHyperStats = (basicInfoPage:ParsedHtmlElement):StatInfo => {
     const hyperStatsSpan = basicInfoPage.querySelector(
         ".tab01_con_wrap > table:nth-child(4) > tbody > tr:nth-child(11) > td > span"
     )!
 
     const text = hyperStatsSpan.structuredText.split("\n")
-    let statInfos:StatInfo[] = []
+    let statInfo:StatInfo = {}
 
     text.forEach((abilityText) => {
         for (const item of hyperStatToStat) {
             if(item.regex.test(abilityText)){
-                statInfos.push({
-                    statType:item.stat,
-                    amount:Number(abilityText.match(/\d+/)![0])
-                })
+                statInfo[item.stat] = Number(abilityText.match(/\d+/)![0])
                 break;
             }
         }
     })
-
-    return statInfos;
+    return statInfo;
 }

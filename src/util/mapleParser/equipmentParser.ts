@@ -4,15 +4,15 @@ export interface EquipmentInfo{
     name:string;
     imageUrl:string;
     type:Equipment;
-    stats:StatInfo[];
-    bonusStats:StatInfo[];
+    stats:StatInfo;
+    bonusStats:StatInfo;
     potential?:{
         grade:PotentialGrade;
-        stats:StatInfo[];
+        stats:StatInfo;
     }
     additionalPotential?:{
         grade:PotentialGrade;
-        stats:StatInfo[];
+        stats:StatInfo;
     }
     soul?:{
         name:string;
@@ -48,8 +48,8 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
         name:name,
         imageUrl: "",
         type:singleEquipmentPage.querySelector(".ablilty02:nth-child(3) > span > em")!.textContent as Equipment,
-        stats:[],
-        bonusStats:[]
+        stats:{},
+        bonusStats:{}
     }
 
     parseStatsInEquipment(equipmentInfo,singleEquipmentPage);
@@ -82,10 +82,7 @@ let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,
     {
         keyword:"공격속도",
         strategy:(equipmentInfo, name, option) => {
-            equipmentInfo.stats.push({
-                statType:"공격속도",
-                amount:Number(option.match(/\d+/)![0])
-            })
+            equipmentInfo.stats["공격속도"] = Number(option.match(/\d+/)![0])
         }
     },
     {
@@ -148,18 +145,11 @@ let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,
 
 let defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,option:string):void => {
     let amountList = option.replace(/([+()])/g,"").split(/\s+/)
-    equipmentInfo.stats.push({
-        statType:statType,
-        amount:Number(amountList[0].replace("%",""))
-    })
+    equipmentInfo.stats[statType] = Number(amountList[0].replace("%",""))
     if(amountList.length >= 3){
         let bonusStatAmount = Number(amountList[2].replace("%",""));
-        if(bonusStatAmount > 0) {
-            equipmentInfo.bonusStats.push({
-                statType: statType,
-                amount: bonusStatAmount
-            })
-        }
+        if(bonusStatAmount > 0) equipmentInfo.bonusStats[statType] = bonusStatAmount
+
     }
 }
 
@@ -195,15 +185,14 @@ let potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:s
     if(option.includes("없습니다.")) return;
     equipmentInfo[type] = {
         grade:getPotentialGradeFromName(name),
-        stats:[]
+        stats:{}
     }
     option.split("\n").forEach((line) => {
         for (const potentialToStat of potentialToStats) {
             if(potentialToStat.regex.test(line)){
-                equipmentInfo[type]!.stats.push({
-                    statType:potentialToStat.stat,
-                    amount:Number(line.match(/\d+/)![0])
-                })
+                if(equipmentInfo[type]!.stats[potentialToStat.stat] === undefined)
+                    equipmentInfo[type]!.stats[potentialToStat.stat] = 0
+                equipmentInfo[type]!.stats[potentialToStat.stat] += Number(line.match(/\d+/)![0])
                 break;
             }
         }
