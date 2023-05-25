@@ -1,4 +1,5 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
+import type {Stat, StatInfo} from "./mapleStat";
 
 const abilityToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/보스/, "stat":"보스 데미지"},
@@ -14,7 +15,7 @@ const abilityToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/INT/, "stat":"INT"},
     {"regex":/LUK/, "stat":"LUK"},
     {"regex":/버프/, "stat":"버프지속시간"},
-    {"regex":/모든 능력치/, "stat":"올스텟"},
+    {"regex":/모든 능력치/, "stat":"올스탯"},
     {"regex":/최대 HP (\d+)%/, "stat":"HP%"},
     {"regex":/최대 HP/, "stat":"HP"},
     {"regex":/최대 MP (\d+)%/, "stat":"MP%"},

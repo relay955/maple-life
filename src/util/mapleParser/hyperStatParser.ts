@@ -1,4 +1,5 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
+import type {Stat, StatInfo} from "./mapleStat";
 
 const hyperStatToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/힘/, "stat":"STR"},

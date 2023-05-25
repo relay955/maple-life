@@ -122,8 +122,8 @@ let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,
         strategy:(equipmentInfo, name, option) => defaultStatParsingStrategy(equipmentInfo,"데미지",option)
     },
     {
-        keyword:"올스텟",
-        strategy:(equipmentInfo, name, option) => defaultStatParsingStrategy(equipmentInfo,"올스텟%",option)
+        keyword:"올스탯",
+        strategy:(equipmentInfo, name, option) => defaultStatParsingStrategy(equipmentInfo,"올스탯%",option)
     },
     {
         keyword:"잠재옵션",
