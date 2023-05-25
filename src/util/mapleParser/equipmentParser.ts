@@ -3,6 +3,7 @@ import {defaultStatParsingStrategy} from "./equipmentParser/statParser";
 import {potentialParsingStrategy} from "./equipmentParser/potentialParser";
 import type {Equipment, EquipmentInfo} from "./mapleStat";
 import {soulParsingStrategy} from "./equipmentParser/soulParser";
+import {parseSingleArcaneSymbol} from "./equipmentParser/symbolParser";
 
 
 
@@ -30,6 +31,8 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
         .replace("&nbsp;","")
         .trim()
 
+    if(name.includes("아케인심볼"))
+        return parseSingleArcaneSymbol(singleEquipmentPage)
 
     let equipmentInfo:EquipmentInfo = {
         name:name,
