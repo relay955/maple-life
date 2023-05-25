@@ -15,6 +15,7 @@ import {
     parseSingleEquipment,
     parseSymbolsLinkKey
 } from "./equipmentParser";
+import {parseSkills} from "./skillParser";
 
 const MAPLE_HOMEPAGE = "https://maplestory.nexon.com"
 const RANKING_PAGE = `${MAPLE_HOMEPAGE}/Ranking/World/Total`
@@ -81,9 +82,16 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     // }
 
     //아케인심볼 파싱
-    let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
-    const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKeys[1]}`,true))
-    const singleEquipmentHtml = parse(singleEquipmentJson.view)
-    console.log(parseSingleEquipment(singleEquipmentHtml))
+    // let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
+    // const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKeys[1]}`,true))
+    // const singleEquipmentHtml = parse(singleEquipmentJson.view)
+    // console.log(parseSingleEquipment(singleEquipmentHtml))
+
+    //스킬 파싱
+    await sleep(200, 400)
+    let skillPageHtml = parse(
+        await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${SKILL_PAGE_KEY}?p=${character.detailInfoKey}`)
+    )
+    console.log(parseSkills(skillPageHtml));
 
 }
