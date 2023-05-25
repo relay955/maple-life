@@ -83,6 +83,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     //아케인심볼 파싱
     let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
     const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKeys[1]}`,true))
-    console.log(singleEquipmentJson.view)
+    const singleEquipmentHtml = parse(singleEquipmentJson.view)
+    console.log(parseSingleEquipment(singleEquipmentHtml))
 
 }

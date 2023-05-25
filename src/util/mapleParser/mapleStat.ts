@@ -11,7 +11,7 @@ export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" |
     "아케인 포스" | "획득경험치" | "버프지속시간" | "점프력" | "이동속도" |
     "패시브 스킬 레벨 증가"
 
-export type Equipment = "반지"
+export type Equipment = "반지"|"아케인 심볼"
 
 export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
