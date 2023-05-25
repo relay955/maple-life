@@ -2,7 +2,7 @@ import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 
 export interface EquipmentInfo{
     name:string;
-    imageUrl:string;
+    imageUrl?:string;
     type:Equipment;
     stats:StatInfo;
     bonusStats:StatInfo;
@@ -16,7 +16,7 @@ export interface EquipmentInfo{
     }
     soul?:{
         name:string;
-        option:string;
+        stats:StatInfo;
     }
     starForce?:number;
     skillLevel?:number;
@@ -46,13 +46,19 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
 
     let equipmentInfo:EquipmentInfo = {
         name:name,
-        imageUrl: "",
+        imageUrl: singleEquipmentPage.querySelector(".item_img > img")?.getAttribute("src"),
         type:singleEquipmentPage.querySelector(".ablilty02:nth-child(3) > span > em")!.textContent as Equipment,
         stats:{},
         bonusStats:{}
     }
 
     parseStatsInEquipment(equipmentInfo,singleEquipmentPage);
+
+    //starforce
+    let starforceTag = nameTag.querySelector("em")
+    if(starforceTag !== null){
+        equipmentInfo.starForce = Number(starforceTag.text.match(/\d+/)![0])
+    }
     return equipmentInfo;
 }
 
@@ -140,10 +146,21 @@ let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,
     {
         keyword:"에디셔널 잠재옵션",
         strategy:(equipmentInfo, name, option) => potentialParsingStrategy(equipmentInfo,name,option,"additionalPotential")
+    },
+    {
+        keyword:"소울옵션",
+        strategy:(equipmentInfo, name, option) => soulParsingStrategy(equipmentInfo,name,option)
+    },
+    {
+        keyword:"기타",
+        strategy:(equipmentInfo, name, option) => {
+            if(!/링 \d레벨/.test(option)) return;
+            equipmentInfo.skillLevel = Number(option.match(/\d+/)![0])
+        }
     }
 ]
 
-let defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,option:string):void => {
+const defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,option:string):void => {
     let amountList = option.replace(/([+()])/g,"").split(/\s+/)
     equipmentInfo.stats[statType] = Number(amountList[0].replace("%",""))
     if(amountList.length >= 3){
@@ -153,7 +170,7 @@ let defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,opti
     }
 }
 
-const potentialToStats:{regex:RegExp, stat:Stat}[] = [
+const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/보스/, "stat":"보스 데미지"},
     {"regex":/데미지/, "stat":"데미지"},
     {"regex":/크리티컬 확률/, "stat":"크리티컬 확률"},
@@ -171,24 +188,26 @@ const potentialToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/DEX.*%/, "stat":"DEX%"},
     {"regex":/INT.*%/, "stat":"INT%"},
     {"regex":/LUK.*%/, "stat":"LUK%"},
+    {"regex":/올스텟.*%/, "stat":"올스텟%"},
     {"regex":/STR/, "stat":"STR"},
     {"regex":/DEX/, "stat":"DEX"},
     {"regex":/INT/, "stat":"INT"},
     {"regex":/LUK/, "stat":"LUK"},
+    {"regex":/올스텟/, "stat":"올스텟"},
     {"regex":/이동속도/, "stat":"이동속도"},
     {"regex":/점프력/, "stat":"점프력"},
     {"regex":/재사용/, "stat":"재사용 대기시간 감소"},
     {"regex":/아이템 드롭률/, "stat":"아이템 드롭률"},
     {"regex":/메소 획득량/, "stat":"메소 획득량"},
 ]
-let potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string,type:"potential"|"additionalPotential"):void => {
+const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string,type:"potential"|"additionalPotential"):void => {
     if(option.includes("없습니다.")) return;
     equipmentInfo[type] = {
         grade:getPotentialGradeFromName(name),
         stats:{}
     }
     option.split("\n").forEach((line) => {
-        for (const potentialToStat of potentialToStats) {
+        for (const potentialToStat of potentialOrSoulToStats) {
             if(potentialToStat.regex.test(line)){
                 if(equipmentInfo[type]!.stats[potentialToStat.stat] === undefined)
                     equipmentInfo[type]!.stats[potentialToStat.stat] = 0
@@ -199,7 +218,7 @@ let potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:s
     })
 }
 
-let getPotentialGradeFromName = (name:string):PotentialGrade => {
+const getPotentialGradeFromName = (name:string):PotentialGrade => {
     if(name.includes("레전드리")){
         return "레전드리"
     }else if(name.includes("에픽")){
@@ -210,5 +229,20 @@ let getPotentialGradeFromName = (name:string):PotentialGrade => {
         return "레어"
     }else{
         throw new Error("잘못된 잠재옵션 등급입니다.")
+    }
+}
+
+const soulParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string):void => {
+    let lines = option.split("\n")
+    equipmentInfo.soul = {
+        name:lines[0].replace(" 적용",""),
+        stats:{}
+    }
+
+    for (const potentialToStat of potentialOrSoulToStats) {
+        if(potentialToStat.regex.test(lines[1])){
+            equipmentInfo.soul!.stats[potentialToStat.stat] = Number(lines[1].match(/\d+/)![0])
+            break;
+        }
     }
 }
