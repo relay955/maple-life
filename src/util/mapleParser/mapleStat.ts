@@ -90,3 +90,9 @@ export interface EquipmentInfo{
     starForce?:number;
     skillLevel?:number;
 }
+
+export interface SkillInfo{
+    name:string;
+    imageUrl?:string;
+    skillLevel:string;
+}
