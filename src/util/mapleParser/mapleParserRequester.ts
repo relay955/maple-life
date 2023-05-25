@@ -10,7 +10,11 @@ import {
 } from "./basicInfoParser";
 import {parseHyperStats} from "./hyperStatParser";
 import {parseAbility} from "./abilityParser";
-import {parseItemsLinkKey, parseSingleEquipment} from "./equipmentParser";
+import {
+    parseItemsLinkKey,
+    parseSingleEquipment,
+    parseSymbolsLinkKey
+} from "./equipmentParser";
 
 const MAPLE_HOMEPAGE = "https://maplestory.nexon.com"
 const RANKING_PAGE = `${MAPLE_HOMEPAGE}/Ranking/World/Total`
@@ -66,13 +70,19 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     let equipmentPageHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${EQUIPMENT_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
-    let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
-
-    // for (let itemLinkKey of ItemLinkKeys) {
-    await sleep(200, 400)
-    const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKeys[13]}`,true))
-    const singleEquipmentHtml = parse(singleEquipmentJson.view)
-    console.log(parseSingleEquipment(singleEquipmentHtml))
+    //장비 정보 파싱
+    // let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
+    //
+    // for (let itemLinkKey of itemLinkKeys) {
+    //     await sleep(200, 400)
+    //     const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKeys[13]}`,true))
+    //     const singleEquipmentHtml = parse(singleEquipmentJson.view)
+    //     console.log(parseSingleEquipment(singleEquipmentHtml))
     // }
+
+    //아케인심볼 파싱
+    let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
+    const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKeys[1]}`,true))
+    console.log(singleEquipmentJson.view)
 
 }
