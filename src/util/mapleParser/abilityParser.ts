@@ -31,25 +31,22 @@ const abilityToStat:{regex:RegExp, stat:Stat}[] = [
  * 기본정보 페이지에 있는 어빌리티 정보를 얻습니다.
  * 사실상 쓸모가 없는 일부 어빌리티는 아예 표시되지 않으며, 레벨당 공/마 증가량은 파라미터로 받은 레벨에 기초해 실제 증가량을 계산합니다.
  */
-export const parseAbility = (basicInfoPage:ParsedHtmlElement):StatInfo[] => {
+export const parseAbility = (basicInfoPage:ParsedHtmlElement):StatInfo => {
     const abilitySpan = basicInfoPage.querySelector(
 ".tab01_con_wrap > table:nth-child(4) > tbody > tr:nth-child(10) > td > span"
     )!
 
     const abilitiesText = abilitySpan.structuredText.split(/[\n,]/)
-    let statInfos:StatInfo[] = []
+    let statInfo:StatInfo = {}
 
     abilitiesText.forEach((abilityText) => {
         for (const item of abilityToStat) {
             if(item.regex.test(abilityText)){
-                statInfos.push({
-                    statType:item.stat,
-                    amount:Number(abilityText.match(/\d+/)![0])
-                })
+                statInfo[item.stat] = Number(abilityText.match(/\d+/)![0])
                 break;
             }
         }
     })
 
-    return statInfos;
+    return statInfo;
 }
