@@ -10,8 +10,7 @@ export const isOnTauri = () => {
 
 export const requestWithProxy = async (url: string,is_xml:boolean = false):Promise<string> => {
     if (isOnTauri()) {
-        console.log("tauri detected.")
-        return await invoke<string>("request_with_proxy", {url: url})
+        return await invoke<string>("request_with_proxy", {url: url, isXml: is_xml})
     } else {
         if(is_xml) throw new Error("xml request is not supported in browser");
         const urlWithProxy = `${PROXY_URL}/${url}`
