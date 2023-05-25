@@ -13,12 +13,12 @@ const soulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/MP.*%/, "stat":"MP%"},
     {"regex":/HP/, "stat":"HP"},
     {"regex":/MP/, "stat":"MP"},
-    {"regex":/올스텟.*%/, "stat":"올스텟%"},
+    {"regex":/올스탯.*%/, "stat":"올스탯%"},
     {"regex":/STR/, "stat":"STR"},
     {"regex":/DEX/, "stat":"DEX"},
     {"regex":/INT/, "stat":"INT"},
     {"regex":/LUK/, "stat":"LUK"},
-    {"regex":/올스텟/, "stat":"올스텟"},
+    {"regex":/올스탯/, "stat":"올스탯"},
 ]
 
 

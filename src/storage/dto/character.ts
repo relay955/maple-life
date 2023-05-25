@@ -1,4 +1,8 @@
-import {EquipmentInfo} from "../../util/mapleParser/equipmentParser";
+import type {
+    EquipmentInfo,
+    SkillInfo,
+    StatInfo
+} from "../../util/mapleParser/mapleStat";
 
 export interface Character {
     id?:number;
@@ -15,4 +19,5 @@ export interface Character {
     ability?:StatInfo;
     hyperStat?:StatInfo;
     equipments?:EquipmentInfo[];
+    skills?:SkillInfo[];
 }

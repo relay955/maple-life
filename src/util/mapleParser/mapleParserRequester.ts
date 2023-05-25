@@ -64,34 +64,41 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         throw new Error("캐릭터가 비공개 상태입니다.")
     }
 
-    console.log(parseAbility(detailInfoHtml))
-    console.log(parseHyperStats(detailInfoHtml))
+    //기본정보에서 어빌리티, 하이퍼스텟 파싱
+    character.ability =parseAbility(detailInfoHtml)
+    character.hyperStat = parseHyperStats(detailInfoHtml)
 
     await sleep(200, 400)
     let equipmentPageHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${EQUIPMENT_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
+
     //장비 정보 파싱
-    // let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
-    //
-    // for (let itemLinkKey of itemLinkKeys) {
-    //     await sleep(200, 400)
-    //     const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKeys[13]}`,true))
-    //     const singleEquipmentHtml = parse(singleEquipmentJson.view)
-    //     console.log(parseSingleEquipment(singleEquipmentHtml))
-    // }
+    character.equipments = []
+    let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
+
+    for (let itemLinkKey of itemLinkKeys) {
+        await sleep(200, 400)
+        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKey}`,true))
+        const singleEquipmentHtml = parse(singleEquipmentJson.view)
+        character.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+    }
 
     //아케인심볼 파싱
-    // let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
-    // const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKeys[1]}`,true))
-    // const singleEquipmentHtml = parse(singleEquipmentJson.view)
-    // console.log(parseSingleEquipment(singleEquipmentHtml))
+    let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
+    for(let symbolLinkKey of symbolLinkKeys) {
+        await sleep(200, 400)
+        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKey}`, true))
+        const singleEquipmentHtml = parse(singleEquipmentJson.view)
+        character.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+    }
 
     //스킬 파싱
     await sleep(200, 400)
     let skillPageHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${SKILL_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
-    console.log(parseSkills(skillPageHtml));
+    character.skills = parseSkills(skillPageHtml);
+    idb.character.put(character)
 
 }
