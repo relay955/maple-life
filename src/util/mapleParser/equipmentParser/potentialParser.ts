@@ -11,7 +11,7 @@ const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/공격력/, "stat":"공격력"},
     {"regex":/마력/, "stat":"마력"},
     {"regex":/HP[^회]*%/, "stat":"HP%"},
-    {"regex":/MP[^회]*%/, "stat":"MP%"},
+    {"regex":/MP[^회소]*%/, "stat":"MP%"},
     {"regex":/HP/, "stat":"HP"},
     {"regex":/MP/, "stat":"MP"},
     {"regex":/STR.*%/, "stat":"STR%"},
