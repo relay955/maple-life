@@ -8,10 +8,12 @@ import {
     equipmentSetOptions,
     equipmentToSetDict
 } from "../infoDictionary/EquipmentDict";
+import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
+import {buffDict} from "../infoDictionary/BuffDict";
 
 export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
     const spec = character.spec![preset]!
-    let statDetails:StatDetails = {statList:{},sets:{}};
+    let statDetails:StatDetails = {statList:{},sets:{},starforce:0};
     let statList = statDetails.statList;
     //캐릭터 직업정보 획득
     let classInfo = classesDict[character.classType]!
@@ -56,6 +58,9 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
             if(statList[stat] === undefined) statList[stat] = {}
             statList[stat]["[장비] "+equipment.name] = equipment.stats[stat];
         })
+        if(equipment.starForce !== undefined){
+            statDetails.starforce += equipment.starForce;
+        }
         if(equipment.potential !== undefined) {
             Object.keys(equipment.potential.stats).forEach((stat) => {
                 if (statList[stat] === undefined) statList[stat] = {}
@@ -98,9 +103,31 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
             }
         }
     })
+
+    //활성화된 링크스킬 계산
+    Object.keys(spec.linkSkill).forEach((skillName)=> {
+        let skillLevel = spec.linkSkill[skillName];
+        let skillBonusStats = linkSkillDict[skillName][skillLevel]
+        Object.keys(skillBonusStats).forEach((stat)=>{
+            if(statList[stat] === undefined) statList[stat] = {}
+            statList[stat]["[링크] "+skillName] = skillBonusStats[stat];
+        });
+    })
+
+    //활성화된 버프 계산
+    Object.keys(spec.buff).forEach((buffName)=> {
+        Object.keys(buffDict[buffName]).forEach((stat)=>{
+            if(statList[stat] === undefined) statList[stat] = {}
+            statList[stat]["[버프] "+buffName] = buffDict[buffName][stat];
+        });
+    })
+
+
+    //TODO 캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
+    //TODO 프리셋 사용 -> 공격대원 스텟 및 점령효과 계산
     return statDetails;
 }
 
+//스텟별 총합, 스텟공격력 및 점수 계산
 export const calculateDmgAndScore = (statDetails:StatDetails) => {
-    //점수 계산
 }

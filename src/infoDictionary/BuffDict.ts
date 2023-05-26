@@ -5,7 +5,12 @@ export interface Buff{
     stat:StatInfo;
 }
 
-export const buffDict:{[index:string]:Buff} = {
+export type BuffName = "길드의 축복" | "길드스킬 - 방어율 무시" | "길드스킬 - 보스 데미지" |
+    "길드스킬 - 크리티컬 데미지" | "길드스킬 - 데미지" | "전설 영웅의 비약" | "영웅의 메아리" |
+    "우르스" | "MVP 슈퍼파워" | "스텟 물약" | "유니온의 힘" | "고급 보스킬러의 물약" |
+    "마약칭호/월드스텟" | "킹 오브 루타비스 칭호" | "파왕 파멸자 칭호" | "핑아일체 칭호"
+
+export const buffDict:{[key in BuffName]:Buff} = {
     "길드의 축복":{
         stat:{
             "공격력":30,
@@ -107,5 +112,3 @@ export const buffDict:{[index:string]:Buff} = {
         }
     }
 }
-
-// export matrixBuffDict =

@@ -1,3 +1,5 @@
+import type {BuffName} from "../../infoDictionary/BuffDict";
+import type {LinkSkillName} from "../../infoDictionary/LinkSkillDict";
 
 export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |"고정MP" |
     "공격력" | "공격력%" | "레벨당 공격력" |"마력" | "마력%" | "레벨당 마력" |
@@ -18,8 +20,9 @@ export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 export type StatInfo = {[key in Stat]?:number}
 
 export interface StatDetails{
-    statList:{[key in Stat]?:{[index:string]:number}},
-    sets:{[index:string]:number}
+    statList:{[key in Stat]?:{[index:string]:number}};
+    sets:{[index:string]:number};
+    starforce:number;
 }
 
 
@@ -57,4 +60,6 @@ export interface CharacterSpec{
     equipments:EquipmentInfo[];
     skills:SkillInfo[];
     tendency:StatInfo;
+    linkSkill:{[key in LinkSkillName]?:number};
+    buff:{[key in BuffName]?:boolean};
 }

@@ -10,7 +10,7 @@ import CharacterList
 import {idb} from "../../storage/idb";
 import {summarizeSpec} from "../../logic/specCalculator.js";
 const onClickDebug = async () => {
-  console.log(summarizeSpec((await idb.character.get(1))!,"default"))
+  console.log(summarizeSpec((await idb.character.get(6))!,"default"))
 }
 </script>
 
