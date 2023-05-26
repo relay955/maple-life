@@ -10,7 +10,7 @@ export interface Classes{
     unionStat?:StatInfo[]
 }
 
-export const ClassesDict:{[index:string]:Classes} = {
+export const classesDict:{[index:string]:Classes} = {
     "히어로":{
         mainStat:"STR",
         subStat:"DEX",
@@ -46,7 +46,7 @@ export const ClassesDict:{[index:string]:Classes} = {
         subStat:"STR",
         passiveStats:{
             "무기 상수":1.3,
-            "공격속도":7,
+            "공격속도":3,
             "숙련도":0.85,
             "DEX":130,
             "STR":30,
@@ -278,5 +278,5 @@ export const ClassesDict:{[index:string]:Classes} = {
 }
 
 export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes) => {
-    return (statInfo[classes.mainStat] * 4) + statInfo[classes.subStat]
+    return (statInfo[classes.mainStat]! * 4) + statInfo[classes.subStat]!
 }

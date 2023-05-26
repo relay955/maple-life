@@ -2,10 +2,10 @@ import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 import type {Stat, StatInfo} from "./mapleStat";
 
 const hyperStatToStat:{regex:RegExp, stat:Stat}[] = [
-    {"regex":/힘/, "stat":"STR"},
-    {"regex":/민첩성/, "stat":"DEX"},
-    {"regex":/지력/, "stat":"INT"},
-    {"regex":/운/, "stat":"LUK"},
+    {"regex":/힘/, "stat":"고정STR"},
+    {"regex":/민첩성/, "stat":"고정DEX"},
+    {"regex":/지력/, "stat":"고정INT"},
+    {"regex":/운/, "stat":"고정LUK"},
     {"regex":/최대 HP/, "stat":"HP%"},
     {"regex":/크리티컬 확률/, "stat":"크리티컬 확률"},
     {"regex":/크리티컬 데미지/, "stat":"크리티컬 데미지"},
