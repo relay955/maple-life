@@ -5,8 +5,6 @@ import PageContainer
   from "../../components/shared/basicComponent/PageContainer.svelte";
 import Space from "../../components/shared/basicComponent/Space.svelte";
 import WorldSelector from "../../components/shared/WorldSelector.svelte";
-import CharacterList
-  from "../../components/app/_character/CharacterList.svelte";
 import {idb} from "../../storage/idb";
 import {summarizeSpec} from "../../logic/specCalculator.js";
 import MdDehaze from 'svelte-icons/md/MdDehaze.svelte'
@@ -17,6 +15,10 @@ import {
   lqCharacterTabViewMode,
   updateCharacterTabViewMode
 } from "../../storage/queries/systemQuery";
+import CharacterLineList
+  from "../../components/app/_character/CharacterLineList.svelte";
+import CharacterCardList
+  from "../../components/app/_character/CharacterCardList.svelte";
 
 const onClickDebug = async () => {
   console.log(summarizeSpec((await idb.character.get(6))!,"default"))
@@ -43,7 +45,11 @@ const onClickDebug = async () => {
         <MdDehaze/>
       </IconButton>
     </div>
-    <CharacterList/>
+    {#if $lqCharacterTabViewMode === "card"}
+      <CharacterCardList/>
+    {:else }
+      <CharacterLineList/>
+    {/if}
     <button on:click={onClickDebug}>디버그</button>
   </PageContainer>
 {/if}
