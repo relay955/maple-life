@@ -10,8 +10,8 @@ const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/마력.*%/, "stat":"마력%"},
     {"regex":/공격력/, "stat":"공격력"},
     {"regex":/마력/, "stat":"마력"},
-    {"regex":/HP.*%/, "stat":"HP%"},
-    {"regex":/MP.*%/, "stat":"MP%"},
+    {"regex":/HP[^회]*%/, "stat":"HP%"},
+    {"regex":/MP[^회]*%/, "stat":"MP%"},
     {"regex":/HP/, "stat":"HP"},
     {"regex":/MP/, "stat":"MP"},
     {"regex":/STR.*%/, "stat":"STR%"},
@@ -42,7 +42,7 @@ export const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string
             if(potentialToStat.regex.test(line)){
                 if(equipmentInfo[type]!.stats[potentialToStat.stat] === undefined)
                     equipmentInfo[type]!.stats[potentialToStat.stat] = 0
-                equipmentInfo[type]!.stats[potentialToStat.stat] += Number(line.match(/\d+/)![0])
+                equipmentInfo[type]!.stats[potentialToStat.stat]! += Number(line.match(/\d+/)![0])
                 break;
             }
         }

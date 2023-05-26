@@ -17,16 +17,16 @@ export const parseSingleArcaneSymbol = (singleEquipmentPage:ParsedHtmlElement):E
     let amount = Number(optionText.replace(/([+()])/g,"").split(/\s+/)[0])
     if(statText.includes("STR")){
         equipmentInfo.stats["고정STR"] = amount
-        equipmentInfo.stats["아케인 포스"] = (amount-200)/10
+        equipmentInfo.stats["아케인 포스"] = (amount)/10
     }else if(statText.includes("DEX")){
         equipmentInfo.stats["고정DEX"] = Number(amount)
-        equipmentInfo.stats["아케인 포스"] = (amount-200)/10
+        equipmentInfo.stats["아케인 포스"] = (amount)/10
     }else if(statText.includes("INT")){
         equipmentInfo.stats["고정INT"] = Number(amount)
-        equipmentInfo.stats["아케인 포스"] = (amount-200)/10
+        equipmentInfo.stats["아케인 포스"] = (amount)/10
     }else if(statText.includes("LUK")){
         equipmentInfo.stats["고정LUK"] = Number(amount)
-        equipmentInfo.stats["아케인 포스"] = (amount-200)/10
+        equipmentInfo.stats["아케인 포스"] = (amount)/10
     }
     //TODO 데몬어벤져,제논 추후 반영 필요
     return equipmentInfo;
