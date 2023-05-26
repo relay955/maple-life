@@ -6,12 +6,13 @@
   export let onClick = () => {};
   export let style:string = "";
   export let activated=false;
+  export let selected=false;
   export let size:"small"|"medium" = "medium"
   export let direction:"top"|"bottom"|"left"|"right" = "top"
 </script>
 <div class="main">
   <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"} bottom={direction==="bottom"}>
-    <div class={`icon-button ${size}`} on:click={onClick} style={style}>
+    <div class={`icon-button ${size} ${selected ? "selected":""}`} on:click={onClick} style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>
       </span>
@@ -43,6 +44,12 @@
   }
   .icon-button:hover{
     background-color: lightgray;
+  }
+  .icon-button.selected{
+    background-color: #44aaee;
+    .icon{
+      color: white;
+    }
   }
   .icon{
     color: #aeaeae;

@@ -9,6 +9,15 @@ import CharacterList
   from "../../components/app/_character/CharacterList.svelte";
 import {idb} from "../../storage/idb";
 import {summarizeSpec} from "../../logic/specCalculator.js";
+import MdDehaze from 'svelte-icons/md/MdDehaze.svelte'
+import MdViewModule from 'svelte-icons/md/MdViewModule.svelte'
+import IconButton
+  from "../../components/shared/basicComponent/IconButton.svelte";
+import {
+  lqCharacterTabViewMode,
+  updateCharacterTabViewMode
+} from "../../storage/queries/systemQuery";
+
 const onClickDebug = async () => {
   console.log(summarizeSpec((await idb.character.get(6))!,"default"))
 }
@@ -24,6 +33,16 @@ const onClickDebug = async () => {
       <Space/>
       <WorldSelector/>
     </div>
+    <div class="view-mode-container">
+      <IconButton selected={$lqCharacterTabViewMode === "card"}
+                  onClick={()=>updateCharacterTabViewMode("card")}>
+        <MdViewModule/>
+      </IconButton>
+      <IconButton selected={$lqCharacterTabViewMode === "list"}
+                  onClick={()=>updateCharacterTabViewMode("list")}>
+        <MdDehaze/>
+      </IconButton>
+    </div>
     <CharacterList/>
     <button on:click={onClickDebug}>디버그</button>
   </PageContainer>
@@ -32,6 +51,9 @@ const onClickDebug = async () => {
 <style lang="scss">
   .header{
     display: flex;
+  }
+  .view-mode-container{
+    margin-bottom: 10px;
   }
 
 </style>
