@@ -1,4 +1,5 @@
 import type {
+    Stat,
     StatDetails,
 } from "../util/mapleParser/mapleStat";
 import type {Character} from "../storage/dto/character";
@@ -18,7 +19,11 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
     //스텟별 합산
     //캐릭터 AP
     statList["AP"+classInfo.mainStat] = {};
-    statList["AP"+classInfo.mainStat]["캐릭터 스텟"] = 18 + character.level*5;
+    let characterAP = 18 + character.level*5;
+    statList["AP"+classInfo.mainStat]["캐릭터 스텟"] = characterAP;
+    //메용
+    statList[classInfo.mainStat] = {};
+    statList[classInfo.mainStat]!["메이플 용사"] = Math.floor(characterAP*0.15);
 
     //캐릭터 기본스텟
     let passiveStats = classesDict[character.classType].passiveStats ?? {}
@@ -93,13 +98,9 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
             }
         }
     })
-
-
-
-    //메이플용사
-
-    //점수 계산
-
-
     return statDetails;
+}
+
+export const calculateDmgAndScore = (statDetails:StatDetails) => {
+    //점수 계산
 }
