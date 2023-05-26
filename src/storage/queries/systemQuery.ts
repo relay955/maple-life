@@ -43,6 +43,13 @@ export const updateSelectedWorldId = async (value: number) => {
     })
 }
 
+export const updateCharacterTabViewMode = async (value: string) => {
+    await idb.settings.put({
+        name: "characterTabViewMode",
+        value: value
+    })
+}
+
 
 
 
@@ -59,4 +66,7 @@ export const lqMemo =
 
 export const lqSelectedWorldId =
     liveQuery(async () => (await idb.settings.get("selectedWorldId"))?.value ?? 1);
+
+export const lqCharacterTabViewMode =
+    liveQuery(async () => (await idb.settings.get("characterTabViewMode"))?.value ?? "card");
 
