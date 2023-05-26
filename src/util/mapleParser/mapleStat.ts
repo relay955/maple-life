@@ -17,7 +17,10 @@ export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
 export type StatInfo = {[key in Stat]?:number}
 
-export type StatDetails = {[key in Stat]?:{[index:string]:number}}
+export interface StatDetails{
+    statList:{[key in Stat]?:{[index:string]:number}},
+    sets:{[index:string]:number}
+}
 
 
 export interface EquipmentInfo{

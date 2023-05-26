@@ -7,6 +7,11 @@ import Space from "../../components/shared/basicComponent/Space.svelte";
 import WorldSelector from "../../components/shared/WorldSelector.svelte";
 import CharacterList
   from "../../components/app/_character/CharacterList.svelte";
+import {idb} from "../../storage/idb";
+import {summarizeSpec} from "../../logic/specCalculator.js";
+const onClickDebug = async () => {
+  console.log(summarizeSpec((await idb.character.get(1))!,"default"))
+}
 </script>
 
 {#if !isOnTauri()}
@@ -20,6 +25,7 @@ import CharacterList
       <WorldSelector/>
     </div>
     <CharacterList/>
+    <button on:click={onClickDebug}>디버그</button>
   </PageContainer>
 {/if}
 

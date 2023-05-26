@@ -2,7 +2,7 @@ import type {StatInfo} from "../util/mapleParser/mapleStat";
 
 export type EquipmentSetoptionDict = {[index:number]:StatInfo}
 
-export const EquipmentSetoptions:{[index:string]:EquipmentSetoptionDict} = {
+export const equipmentSetOptions:{[index:string]:EquipmentSetoptionDict} = {
     "마이스터 세트":{
         2:{
             "HP%":10,
@@ -325,7 +325,7 @@ export const EquipmentSetoptions:{[index:string]:EquipmentSetoptionDict} = {
     }
 }
 
-export const EquipmentToSetDict:{[index:string]:string} = {
+export const equipmentToSetDict:{[index:string]:string} = {
     "마이스터 이어링":"마이스터 세트",
     "마이스터링":"마이스터 세트",
     "마이스터 숄더":"마이스터 세트",
