@@ -55,6 +55,8 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         let res = await requestMapleCharacterBasicInfo(character.name)
         character.detailInfoKey = res.detailInfoKey;
         await idb.character.put(character);
+        detailInfoHtml = parse(
+            await requestWithProxy(`${DETAIL_PAGE}/${character.name}?p=${character.detailInfoKey}`))
         result = checkCharacterStatAvailable(detailInfoHtml)
     }
 
@@ -92,6 +94,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
 
     for (let itemLinkKey of itemLinkKeys) {
         await sleep(200, 400)
+        if(itemLinkKey === undefined) continue;
         const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKey}`,true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
         defaultSpec.equipments.push(parseSingleEquipment(singleEquipmentHtml))
@@ -100,6 +103,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     //아케인심볼 파싱
     let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
     for(let symbolLinkKey of symbolLinkKeys) {
+        if(symbolLinkKey === undefined) continue;
         await sleep(200, 400)
         const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKey}`, true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
