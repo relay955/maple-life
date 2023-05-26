@@ -108,4 +108,5 @@ export interface CharacterSpec{
     hyperStat:StatInfo;
     equipments:EquipmentInfo[];
     skills:SkillInfo[];
+    tendency:StatInfo;
 }

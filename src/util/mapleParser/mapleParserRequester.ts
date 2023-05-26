@@ -16,6 +16,7 @@ import {
     parseSymbolsLinkKey
 } from "./equipmentParser";
 import {parseSkills} from "./skillParser";
+import {parseTendency} from "./tendencyParser";
 
 const MAPLE_HOMEPAGE = "https://maplestory.nexon.com"
 const RANKING_PAGE = `${MAPLE_HOMEPAGE}/Ranking/World/Total`
@@ -69,12 +70,14 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         hyperStat: {},
         ability:{},
         equipments:[],
-        skills: []
+        skills: [],
+        tendency : {}
     }
     let defaultSpec = character.spec.default
     //기본정보에서 어빌리티, 하이퍼스텟 파싱
     defaultSpec.ability =parseAbility(detailInfoHtml)
     defaultSpec.hyperStat = parseHyperStats(detailInfoHtml)
+    defaultSpec.tendency = parseTendency(detailInfoHtml)
 
     await sleep(200, 400)
     let equipmentPageHtml = parse(
