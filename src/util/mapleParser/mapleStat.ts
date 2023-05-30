@@ -26,6 +26,7 @@ export type StatInfo = {[key in Stat]?:number}
 
 export interface StatDetails{
     statList:{[key in Stat]?:{[index:string]:number}};
+    statTotal:StatInfo;
     sets:{[index:string]:number};
     starforce:number;
 }
