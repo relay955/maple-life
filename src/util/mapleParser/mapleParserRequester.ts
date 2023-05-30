@@ -71,7 +71,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     if(character.spec.default === undefined) character.spec.default = {
         hyperStat: {},
         ability:{},
-        equipments:[],
+        equipments:{},
         skills: [],
         tendency : {},
         buff:{},
@@ -89,25 +89,23 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     )
 
     //장비 정보 파싱
-    defaultSpec.equipments = []
+    defaultSpec.equipments = {}
     let itemLinkKeys = parseItemsLinkKey(equipmentPageHtml)
 
     for (let itemLinkKey of itemLinkKeys) {
         await sleep(200, 400)
-        if(itemLinkKey === undefined) continue;
-        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKey}`,true))
+        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${itemLinkKey.key}`,true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
-        defaultSpec.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+        defaultSpec.equipments[itemLinkKey.type] = (parseSingleEquipment(singleEquipmentHtml))
     }
 
     //아케인심볼 파싱
     let symbolLinkKeys = parseSymbolsLinkKey(equipmentPageHtml)
     for(let symbolLinkKey of symbolLinkKeys) {
-        if(symbolLinkKey === undefined) continue;
         await sleep(200, 400)
-        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKey}`, true))
+        const singleEquipmentJson = JSON.parse(await requestWithProxy(`${ITEM_PAGE}?p=${symbolLinkKey.key}`, true))
         const singleEquipmentHtml = parse(singleEquipmentJson.view)
-        defaultSpec.equipments.push(parseSingleEquipment(singleEquipmentHtml))
+        defaultSpec.equipments[symbolLinkKey.type] = (parseSingleEquipment(singleEquipmentHtml))
     }
 
     //스킬 파싱

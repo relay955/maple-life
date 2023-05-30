@@ -15,7 +15,6 @@ const tendencyToStat:{regex:RegExp, stat:Stat}[] = [
  */
 export const parseTendency = (basicInfoPage:ParsedHtmlElement):StatInfo => {
     const abilityStatTagList = basicInfoPage.querySelectorAll(".dispo_list .total_effect_wrap li")!
-    console.log(abilityStatTagList)
     let statInfo:StatInfo = {}
 
     abilityStatTagList.forEach((abilityStatTag) => {

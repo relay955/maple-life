@@ -13,7 +13,12 @@ export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |
     "아케인 포스" | "획득경험치" | "버프지속시간" | "점프력" | "이동속도" |
     "패시브 스킬 레벨 증가" | "무기 상수" | "숙련도" | "소환수 지속시간"
 
-export type Equipment = "반지"|"아케인 심볼"
+export type EquipmentType = "반지1"|"반지2"|"반지3"|"반지4"|"펜던트1"|"펜던트2"|
+    "얼굴장식"|"눈장식"|"귀고리"|"벨트"|"포켓아이템"|"뱃지"|"안드로이드"|"기계심장"|
+    "망토"|"어깨장식"|"모자"|"상의"|"하의"|"신발"|"장갑"|
+    "무기"|"보조무기"|"엠블렘"|"훈장"|
+    "아케인심볼1"|"아케인심볼2"|"아케인심볼3"|"아케인심볼4"|"아케인심볼5"|"아케인심볼6"|
+    "어센틱심볼1"|"어센틱심볼2"|"어센틱심볼3"
 
 export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
@@ -25,11 +30,15 @@ export interface StatDetails{
     starforce:number;
 }
 
+export interface EquipmentLinkKey{
+    type:EquipmentType;
+    key:string;
+}
 
 export interface EquipmentInfo{
     name:string;
     imageUrl?:string;
-    type:Equipment;
+    type:EquipmentType;
     stats:StatInfo;
     bonusStats:StatInfo;
     potential?:{
@@ -48,16 +57,17 @@ export interface EquipmentInfo{
     skillLevel?:number;
 }
 
+export type EquipmentList = {[key in EquipmentType]?:EquipmentInfo;}
+
 export interface SkillInfo{
     name:string;
     imageUrl?:string;
     skillLevel:string;
 }
-
 export interface CharacterSpec{
     ability:StatInfo;
     hyperStat:StatInfo;
-    equipments:EquipmentInfo[];
+    equipments:EquipmentList;
     skills:SkillInfo[];
     tendency:StatInfo;
     linkSkill:{[key in LinkSkillName]?:number};

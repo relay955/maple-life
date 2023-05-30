@@ -21,7 +21,7 @@ import CharacterCardList
   from "../../components/app/_character/CharacterCardList.svelte";
 
 const onClickDebug = async () => {
-  console.log(summarizeSpec((await idb.character.get(6))!,"default"))
+  console.log(summarizeSpec((await idb.character.get(2))!,"default"))
 }
 </script>
 
