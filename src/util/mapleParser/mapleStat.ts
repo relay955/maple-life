@@ -44,10 +44,12 @@ export interface EquipmentInfo{
     potential?:{
         grade:PotentialGrade;
         stats:StatInfo;
+        options:Stat[];
     }
     additionalPotential?:{
         grade:PotentialGrade;
         stats:StatInfo;
+        options:Stat[];
     }
     soul?:{
         name:string;
