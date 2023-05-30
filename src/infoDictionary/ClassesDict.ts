@@ -70,6 +70,7 @@ export const classesDict:{[index:string]:Classes} = {
             "크리티컬 데미지":31,
             "이동속도":130,
             "점프력":100,
+            "보정계수":1.2
         },
         activeStats: {
             "공격력": 50,
@@ -339,12 +340,12 @@ export const classesDict:{[index:string]:Classes} = {
 }
 
 export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes) => {
-    let mainStatTotal = statInfo[classes.mainStat!]! + statInfo["AP"+classes.mainStat!]! + statInfo["올스탯"]!
-    let subStatTotal = statInfo[classes.subStat!]! + statInfo["AP"+classes.subStat!]! + statInfo["올스탯"]!
-    let mainStatPercentTotal = (statInfo[classes.mainStat+"%"] + statInfo["올스탯%"])/100
-    let subStatPercentTotal = (statInfo[classes.subStat+"%"] + statInfo["올스탯%"])/100
-    let mainStat = mainStatTotal * (1+mainStatPercentTotal)
-    let subStat = subStatTotal * (1+subStatPercentTotal)
+    let mainStatTotal = (statInfo[classes.mainStat!] ?? 0) + (statInfo["AP"+classes.mainStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
+    let subStatTotal = (statInfo[classes.subStat!] ?? 0) + (statInfo["AP"+classes.subStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
+    let mainStatPercentTotal = ((statInfo[classes.mainStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
+    let subStatPercentTotal = ((statInfo[classes.subStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
+    let mainStat = Math.floor(mainStatTotal * (1+mainStatPercentTotal) + (statInfo["고정"+classes.mainStat] ?? 0))
+    let subStat = Math.floor(subStatTotal * (1+subStatPercentTotal) + (statInfo["고정"+classes.subStat] ?? 0))
     return ((mainStat * 4) + subStat) * statInfo[classes.atkType]! * 0.01!
 }
 

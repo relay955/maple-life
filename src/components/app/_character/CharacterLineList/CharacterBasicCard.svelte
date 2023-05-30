@@ -1,8 +1,11 @@
 <script lang="ts">
 import type {Character} from "../../../../storage/dto/character";
 import CharacterImage from "../../../shared/CharacterImage.svelte";
+//@ts-ignore
+import SvelteTooltip from "svelte-tooltip";
 
 export let character:Character;
+export let totalScore:number;
 </script>
 
 <div class="main">
@@ -11,6 +14,13 @@ export let character:Character;
   </div>
   <div class="name">{character.name}</div>
   <div class="level-class">Lv.{character.level}, {character.classType}</div>
+  <div style="color:white; margin-top: -5px;">
+    <SvelteTooltip tip="종합점수 : 캐릭터의 딜관련 모든 지표를 반영한 값입니다. 자세한 계산 방식은 스텟 상세보기에서 확인해주세요.">
+      <span class="universal-score">
+        {totalScore}
+      </span>
+    </SvelteTooltip>
+  </div>
 </div>
 
 <style lang="scss">
@@ -33,6 +43,11 @@ export let character:Character;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .universal-score{
+      font-size: 13px;
+      font-weight: bold;
+      color: #000000;
     }
   }
 </style>

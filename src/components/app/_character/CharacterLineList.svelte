@@ -13,6 +13,11 @@ import CharacterBasicCard from "./CharacterLineList/CharacterBasicCard.svelte";
 import SummaryCard from "./CharacterLineList/SummaryCard.svelte";
 import IconButton from "../../shared/basicComponent/IconButton.svelte";
 import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
+import {
+  calculateDmgAndScore,
+  summarizeSpec
+} from "../../../logic/specCalculator";
+import {classesDict} from "../../../infoDictionary/ClassesDict";
 
 let filteredCharacter = [];
 
@@ -52,13 +57,16 @@ const onMoveCharacter = (event) => {
   <DragDropList data={filteredCharacter} let:slotProps={character}
                 onMove={onMoveCharacter} dataIdField="id">
     <div class="character-item">
-      <CharacterBasicCard character={character}/>
       {#if character.spec.default || character.spec.boss}
-        <SummaryCard character={character}/>
+        {@const spec = character.spec.boss ? character.spec.boss : character.spec.default}
+        {@const summarizedSpec = summarizeSpec(character,character.spec.boss ? "boss":"default")}
+        <CharacterBasicCard character={character} totalScore={calculateDmgAndScore(summarizedSpec,classesDict[character.classType])}/>
+        <SummaryCard character={character} spec={spec} summarizedSpec={summarizedSpec}/>
         {#each equipmentTypeOrder as equipmentType}
           <EquipmentCard character={character} equipmentType={equipmentType}/>
         {/each}
       {:else}
+        <CharacterBasicCard character={character} totalScore={0}/>
         <div>
           스텟정보 갱신 필요
         </div>
