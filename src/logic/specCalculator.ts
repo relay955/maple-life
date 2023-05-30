@@ -1,9 +1,14 @@
 import type {
     Stat,
-    StatDetails,
+    StatDetails, StatInfo,
 } from "../util/mapleParser/mapleStat";
 import type {Character} from "../storage/dto/character";
-import {classesDict} from "../infoDictionary/ClassesDict";
+import type {Classes} from "../infoDictionary/ClassesDict"
+import {
+    classesDict,
+    defaultCalcBonusStatGradeFomula,
+    defaultCalcDmgFomula
+} from "../infoDictionary/ClassesDict";
 import {
     equipmentSetOptions,
     equipmentToSetDict
@@ -19,13 +24,15 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
     let classInfo = classesDict[character.classType]!
 
     //스텟별 합산
-    //캐릭터 AP
-    statList["AP"+classInfo.mainStat] = {};
-    let characterAP = 18 + character.level*5;
-    statList["AP"+classInfo.mainStat]["캐릭터 스텟"] = characterAP;
     //메용
-    statList[classInfo.mainStat] = {};
-    statList[classInfo.mainStat]!["메이플 용사"] = Math.floor(characterAP*0.15);
+    if(classInfo.mainStat) {
+        //캐릭터 AP
+        statList["AP"+classInfo.mainStat] = {};
+        let characterAP = 18 + character.level*5;
+        statList["AP"+classInfo.mainStat]["캐릭터 스텟"] = characterAP;
+        statList[classInfo.mainStat] = {};
+        statList[classInfo.mainStat]!["메이플 용사"] = Math.floor(characterAP * 0.15);
+    }
 
     //캐릭터 기본스텟
     let passiveStats = classesDict[character.classType].passiveStats ?? {}
@@ -131,4 +138,19 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
 
 //스텟별 총합, 스텟공격력 및 점수 계산
 export const calculateDmgAndScore = (statDetails:StatDetails) => {
+}
+
+
+//추가옵션 급수계산
+export const calculateBonusOptionGrade = (bonusStats:StatInfo,classInfo:Classes):number => {
+    try {
+        if(classInfo.calcBonusStatGrade === undefined) {
+            return defaultCalcBonusStatGradeFomula(bonusStats,classInfo)
+        }else{
+            return classInfo.calcBonusStatGrade(bonusStats,classInfo)
+        }
+    }catch(e:any){
+        console.error(e)
+        return 0;
+    }
 }
