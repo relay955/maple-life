@@ -1,10 +1,14 @@
-import type {Stat, StatInfo} from "../util/mapleParser/mapleStat";
+import type {
+    Stat,
+    StatIndicators,
+    StatInfo
+} from "../util/mapleParser/mapleStat";
 
 export interface Classes{
     mainStat?:Stat;
     subStat?:Stat;
     atkType:"공격력"|"마력";
-    calcDmg?:(statInfo:StatInfo,classes:Classes)=>number;
+    calcDmg?:(statInfo:StatInfo,classes:Classes)=>StatIndicators;
     calcBonusStatGrade?:(statInfo:StatInfo,classes:Classes)=>number;
     passiveStats?:StatInfo;
     activeStats?:StatInfo;
@@ -204,7 +208,8 @@ export const classesDict:{[index:string]:Classes} = {
     "제논":{
         atkType:"공격력",
         calcDmg:(statInfo,classes)=>{
-            return ((statInfo["STR"] ?? 0) + (statInfo["DEX"] ?? 0) + (statInfo["LUK"] ?? 0))*4
+            // return ((statInfo["STR"] ?? 0) + (statInfo["DEX"] ?? 0) + (statInfo["LUK"] ?? 0))*4
+            return {}
         },
         unionStat:[
             {"고정STR":5, "고정DEX":5, "고정LUK":5},
@@ -224,7 +229,8 @@ export const classesDict:{[index:string]:Classes} = {
         subStat:"STR",
         atkType:"공격력",
         calcDmg:(statInfo,classes)=>{
-            return (statInfo["APHP"] ?? 0) * 17.5 + ((statInfo["HP"] ?? 0) * 14) + (statInfo["STR"] ?? 0)
+            // return (statInfo["APHP"] ?? 0) * 17.5 + ((statInfo["HP"] ?? 0) * 14) + (statInfo["STR"] ?? 0)
+            return {}
         },
         unionStat:[{"보스 데미지":1}, {"보스 데미지":2}, {"보스 데미지":3}, {"보스 데미지":5}, {"보스 데미지":6}]
     },
@@ -339,14 +345,20 @@ export const classesDict:{[index:string]:Classes} = {
     }
 }
 
-export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes) => {
+export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes):StatIndicators => {
     let mainStatTotal = (statInfo[classes.mainStat!] ?? 0) + (statInfo["AP"+classes.mainStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let subStatTotal = (statInfo[classes.subStat!] ?? 0) + (statInfo["AP"+classes.subStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let mainStatPercentTotal = ((statInfo[classes.mainStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
     let subStatPercentTotal = ((statInfo[classes.subStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
     let mainStat = Math.floor(mainStatTotal * (1+mainStatPercentTotal) + (statInfo["고정"+classes.mainStat] ?? 0))
     let subStat = Math.floor(subStatTotal * (1+subStatPercentTotal) + (statInfo["고정"+classes.subStat] ?? 0))
-    return ((mainStat * 4) + subStat) * statInfo[classes.atkType]! * 0.01!
+    let atk = statInfo[classes.atkType]! * (1+(statInfo[classes.atkType+"%"] ?? 0)/100)
+    return {
+        [classes.mainStat!]:mainStat,
+        [classes.subStat!]:subStat,
+        [classes.atkType!]:atk,
+        "스탯공격력":(mainStat * 4 + subStat) * atk * 0.01!
+    }
 }
 
 export const defaultCalcBonusStatGradeFomula = (statInfo:StatInfo,classes:Classes) => {

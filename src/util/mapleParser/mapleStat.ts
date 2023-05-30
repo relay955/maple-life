@@ -13,6 +13,8 @@ export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |
     "아케인 포스" | "획득경험치" | "버프지속시간" | "점프력" | "이동속도" |
     "패시브 스킬 레벨 증가" | "무기 상수" | "숙련도" | "소환수 지속시간" | "보정계수"
 
+export type StatIndicator = "공격력"|"총데미지"|"STR"|"DEX"|"INT"|"LUK"|"스탯공격력"|"종합점수"
+
 export type EquipmentType = "반지1"|"반지2"|"반지3"|"반지4"|"펜던트1"|"펜던트2"|
     "얼굴장식"|"눈장식"|"귀고리"|"벨트"|"포켓아이템"|"뱃지"|"안드로이드"|"기계심장"|
     "망토"|"어깨장식"|"모자"|"상의"|"하의"|"신발"|"장갑"|
@@ -23,9 +25,11 @@ export type EquipmentType = "반지1"|"반지2"|"반지3"|"반지4"|"펜던트1"
 export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
 export type StatInfo = {[key in Stat]?:number}
+export type StatIndicators = {[key in StatIndicator]?:number}
 
 export interface StatDetails{
     statList:{[key in Stat]?:{[index:string]:number}};
+    statIndicators:StatIndicators;
     statTotal:StatInfo;
     sets:{[index:string]:number};
     starforce:number;
