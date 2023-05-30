@@ -48,6 +48,7 @@ let classInfo = classesDict[character.classType]
   </div>
 {:else}
   <div class="main">
+    <div class="equipment-type-on-unequip">{equipmentType}</div>
     미착용
   </div>
 {/if}
@@ -103,5 +104,10 @@ let classInfo = classesDict[character.classType]
     height: 10px;
     margin-bottom: 3px;
     margin-right: 2px;
+  }
+
+  .equipment-type-on-unequip{
+    font-size: 13px;
+    font-weight: bold;
   }
 </style>
