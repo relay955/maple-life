@@ -72,7 +72,7 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
         if(equipment.potential !== undefined) {
             Object.keys(equipment.potential.stats).forEach((stat) => {
                 if (statList[stat] === undefined) statList[stat] = {}
-                statList[stat]["[잠재]" + equipment.name] = equipment.potential!.stats[stat];
+                statList[stat]["[잠재] " + equipment.name] = equipment.potential!.stats[stat];
             })
         }
         if(equipment.additionalPotential !== undefined){
@@ -140,16 +140,26 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
         let stats:{[index:string]:number} = statDetails.statList[statName]!
 
         if(statName === "최종 데미지"){
+            statDetails.statTotal[statName] = 100;
             Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! *= 1+(stats[key]/100));
-        }else if(statName === "방어율 무시"){
-            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! =
-                statDetails.statTotal[statName]! + stats[key] - statDetails.statTotal[statName]! * stats[key]);
+            statDetails.statTotal[statName]! = Math.round((statDetails.statTotal[statName]! - 100)*100)/100;
+        }else if(statName === "방어율 무시" || statName === "속성내성 무시"){
+            Object.keys(stats).forEach((key)=> {
+                if(statDetails.statTotal[statName] === 0){
+                    statDetails.statTotal[statName] = stats[key];
+                    return;
+                }
+                statDetails.statTotal[statName]! = (
+                    (statDetails.statTotal[statName]!/100) + (stats[key]/100) -
+                    (statDetails.statTotal[statName]!/100) * (stats[key]/100)
+                )*100;
+            });
+            statDetails.statTotal[statName]! = Math.round(statDetails.statTotal[statName]! *100)/100;
         }else{
             Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! += stats[key]);
         }
 
     })
-    console.log(statDetails)
     return statDetails;
 }
 
@@ -157,11 +167,43 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
 export const calculateDmgAndScore = (statDetails:StatDetails,classInfo:Classes) => {
     try {
         //스텟*공격력 계산
-        let baseDmg = classInfo.calcDmg === undefined ?
+        let totalScore = classInfo.calcDmg === undefined ?
             defaultCalcDmgFomula(statDetails.statTotal, classInfo) :
             classInfo.calcDmg(statDetails.statTotal, classInfo)
-        //데미지, 보공 계산
-        let dmgPercent = (statDetails.statTotal["데미지"]??0)+(statDetails.statTotal["보스 데미지"]??0)
+
+        //데미지, 보공 합계 계산
+        let dmgFactor = 1+((statDetails.statTotal["데미지"] ?? 0) / 100)
+                        +((statDetails.statTotal["보스 데미지"] ?? 0) /100)
+        totalScore *= dmgFactor;
+
+        //방어율 무시. 공격대상 방어율은 380%로 가정
+        let targetArmor = 3.8*(1-(statDetails.statTotal["방어율 무시"] ?? 0)/100)
+        totalScore *= 1-targetArmor;
+
+        //크리티컬 계수 계산
+        let critcalFactor = 1+((statDetails.statTotal["크리티컬 확률"] ?? 0)/100)
+                             *(((statDetails.statTotal["크리티컬 데미지"] ?? 0)+35)/100)
+        totalScore *= critcalFactor;
+
+        //숙련도 계수(예 : 숙련도가 85%라면 실제 데미지는 85~100% 사이로 들어가므로, 평균값은 92.5%임)
+        let masteryFactor = (1+(statDetails.statTotal["숙련도"] ?? 0))/2
+        totalScore *= masteryFactor
+
+        //속성내성 무시
+        let targetElementalResistance = 0.5*(1-(statDetails.statTotal["속성내성 무시"] ?? 0)/100)
+        totalScore *= 1-targetElementalResistance
+
+        //최종데미지
+        let finalDamageFactor = 1 + ((statDetails.statTotal["최종 데미지"] ?? 0)/100)
+        totalScore *= finalDamageFactor
+        //무기 상수
+        let weaponConstFactor = statDetails.statTotal["무기 상수"] ?? 1
+        totalScore *= weaponConstFactor
+
+        //보정계수 - 돌스공직업(스공이 낮고 스킬 퍼뎀이 평균적으로 높은경우)등 변수를 고려하여 직업별로 적용하는 계수
+        let jobConstFactor = statDetails.statTotal["보정계수"] ?? 1
+        totalScore *= jobConstFactor
+        return Math.floor(totalScore/1000);
 
     }catch(e:any){
         console.error(e.message)

@@ -4,15 +4,19 @@ import {equipmentSetOptions} from "../../../../infoDictionary/EquipmentDict";
 import {summarizeSpec} from "../../../../logic/specCalculator";
 import {calculateBonusOptionGrade} from "../../../../logic/specCalculator.js";
 import {classesDict} from "../../../../infoDictionary/ClassesDict.js";
-import type {EquipmentInfo, Stat} from "../../../../util/mapleParser/mapleStat";
+import type {
+  CharacterSpec,
+  EquipmentInfo,
+  Stat, StatDetails
+} from "../../../../util/mapleParser/mapleStat";
 import MdStar from 'svelte-icons/md/MdStar.svelte'
 import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 
 export let character:Character;
+export let spec:CharacterSpec;
+export let summarizedSpec:StatDetails;
 const classInfo = classesDict[character.classType];
-let spec = character.spec.boss ? character.spec.boss : character.spec.default!;
-let summarizedSpec = summarizeSpec(character,character.spec.boss ? "boss":"default");
 
 let bonusStatTotal = 0;
 let potentialTotal = 0;
@@ -33,9 +37,6 @@ Object.keys(spec.equipments).map(equipmentName=>{
     if(option==="방어율 무시") armorPiercingLines++;
   })
 })
-
-console.log(spec.equipments)
-
 </script>
 
 <div class="main">
