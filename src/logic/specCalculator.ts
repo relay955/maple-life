@@ -22,7 +22,6 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
     let statDetails = calcTotalPerStat(character,character.spec![preset]!,classInfo);
     statDetails.statIndicators = calcStatIndicators(statDetails,classInfo);
 
-    console.log(statDetails)
     return statDetails;
 }
 
