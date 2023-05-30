@@ -35,7 +35,8 @@ export const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string
     if(option.includes("없습니다.")) return;
     equipmentInfo[type] = {
         grade:getPotentialGradeFromName(name),
-        stats:{}
+        stats:{},
+        options:[]
     }
     option.split("\n").forEach((line) => {
         for (const potentialToStat of potentialOrSoulToStats) {
@@ -43,6 +44,7 @@ export const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string
                 if(equipmentInfo[type]!.stats[potentialToStat.stat] === undefined)
                     equipmentInfo[type]!.stats[potentialToStat.stat] = 0
                 equipmentInfo[type]!.stats[potentialToStat.stat]! += Number(line.match(/\d+/)![0])
+                equipmentInfo[type]!.options.push(potentialToStat.stat)
                 break;
             }
         }
