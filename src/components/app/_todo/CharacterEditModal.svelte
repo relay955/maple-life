@@ -59,6 +59,7 @@ function reset():Character{
     order: 0,
     useTodo:true,
     orderInCharacterPage:0,
+    spec:{}
   };
 }
 
@@ -76,7 +77,7 @@ const onClickSubmitButton = async () => {
       character.classType = result.classType;
       character.imgUrl = result.imgUrl;
       character.level = result.level;
-      character.detailInfoKey = result.detailInfoUrl;
+      character.detailInfoKey = result.detailInfoKey;
       character.worldId = await insertWorldOrGetWorldId(character.accountId, result.world as World)
     }else{
       if(character.level < 1 || character.level > 300){
