@@ -18,7 +18,7 @@ import {buffDict} from "../infoDictionary/BuffDict";
 
 export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
     const spec = character.spec![preset]!
-    let statDetails:StatDetails = {statList:{},sets:{},starforce:0};
+    let statDetails:StatDetails = {statList:{},sets:{},starforce:0,statTotal:{}};
     let statList = statDetails.statList;
     //캐릭터 직업정보 획득
     let classInfo = classesDict[character.classType]!
@@ -133,11 +133,40 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
 
     //TODO 캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
     //TODO 프리셋 사용 -> 공격대원 스텟 및 점령효과 계산
+
+    //스텟합계 계산
+    Object.keys(statDetails.statList).forEach((statName)=>{
+        statDetails.statTotal[statName] = 0;
+        let stats:{[index:string]:number} = statDetails.statList[statName]!
+
+        if(statName === "최종 데미지"){
+            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! *= 1+(stats[key]/100));
+        }else if(statName === "방어율 무시"){
+            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! =
+                statDetails.statTotal[statName]! + stats[key] - statDetails.statTotal[statName]! * stats[key]);
+        }else{
+            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! += stats[key]);
+        }
+
+    })
+    console.log(statDetails)
     return statDetails;
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calculateDmgAndScore = (statDetails:StatDetails) => {
+export const calculateDmgAndScore = (statDetails:StatDetails,classInfo:Classes) => {
+    try {
+        //스텟*공격력 계산
+        let baseDmg = classInfo.calcDmg === undefined ?
+            defaultCalcDmgFomula(statDetails.statTotal, classInfo) :
+            classInfo.calcDmg(statDetails.statTotal, classInfo)
+        //데미지, 보공 계산
+        let dmgPercent = (statDetails.statTotal["데미지"]??0)+(statDetails.statTotal["보스 데미지"]??0)
+
+    }catch(e:any){
+        console.error(e.message)
+        return 0;
+    }
 }
 
 

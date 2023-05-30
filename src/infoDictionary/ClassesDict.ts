@@ -9,6 +9,10 @@ export interface Classes{
     passiveStats?:StatInfo;
     activeStats?:StatInfo;
     unionStat?:StatInfo[]
+    matrixSkill?:{[index:string]:{
+        damageRate:number;
+        maxLevel:number;
+    }}
 }
 
 export const classesDict:{[index:string]:Classes} = {
@@ -72,6 +76,19 @@ export const classesDict:{[index:string]:Classes} = {
             "공격력%": 20,
             "데미지": 75,
             "보스 데미지": 20,
+        },
+        matrixSkill:{
+            "폭풍의 시 강화":{damageRate:0.2634, maxLevel:60},
+            "퀴버 카트리지 강화":{damageRate:0.0904, maxLevel:60},
+            "애로우 플래터/플레시 미라주 강화":{damageRate:0.15, maxLevel:60},
+            "파이널 어택 : 활 강화":{damageRate:0.06, maxLevel:60},
+            "피닉스 강화":{damageRate:0.015, maxLevel:60},
+            "애로우 레인":{damageRate:0.15, maxLevel:30,},
+            "퀴버 풀버스트":{damageRate:0.12, maxLevel:30},
+            "잔영의 시":{damageRate:0.08, maxLevel:30},
+            "이볼브":{damageRate:0.06, maxLevel:30},
+            "실루엣 미라주":{damageRate:0.04, maxLevel:30},
+            "가이디드 애로우":{damageRate:0.038, maxLevel:30},
         },
         unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}]
     },
@@ -322,7 +339,13 @@ export const classesDict:{[index:string]:Classes} = {
 }
 
 export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes) => {
-    return (statInfo[classes.mainStat!]! * 4) + statInfo[classes.subStat!]!
+    let mainStatTotal = statInfo[classes.mainStat!]! + statInfo["AP"+classes.mainStat!]! + statInfo["올스탯"]!
+    let subStatTotal = statInfo[classes.subStat!]! + statInfo["AP"+classes.subStat!]! + statInfo["올스탯"]!
+    let mainStatPercentTotal = (statInfo[classes.mainStat+"%"] + statInfo["올스탯%"])/100
+    let subStatPercentTotal = (statInfo[classes.subStat+"%"] + statInfo["올스탯%"])/100
+    let mainStat = mainStatTotal * (1+mainStatPercentTotal)
+    let subStat = subStatTotal * (1+subStatPercentTotal)
+    return ((mainStat * 4) + subStat) * statInfo[classes.atkType]! * 0.01!
 }
 
 export const defaultCalcBonusStatGradeFomula = (statInfo:StatInfo,classes:Classes) => {
