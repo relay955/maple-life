@@ -1,6 +1,7 @@
 import type {
+    CharacterSpec,
     Stat,
-    StatDetails, StatInfo,
+    StatDetails, StatIndicator, StatIndicators, StatInfo,
 } from "../util/mapleParser/mapleStat";
 import type {Character} from "../storage/dto/character";
 import type {Classes} from "../infoDictionary/ClassesDict"
@@ -17,12 +18,17 @@ import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
 import {buffDict} from "../infoDictionary/BuffDict";
 
 export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
-    const spec = character.spec![preset]!
-    let statDetails:StatDetails = {statList:{},sets:{},starforce:0,statTotal:{}};
-    let statList = statDetails.statList;
-    //캐릭터 직업정보 획득
     let classInfo = classesDict[character.classType]!
+    let statDetails = calcTotalPerStat(character,character.spec![preset]!,classInfo);
+    statDetails.statIndicators = calcStatIndicators(statDetails,classInfo);
 
+    console.log(statDetails)
+    return statDetails;
+}
+
+export const calcTotalPerStat = (character:Character,spec:CharacterSpec,classInfo:Classes):StatDetails => {
+    let statDetails:StatDetails = {statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
+    let statList = statDetails.statList;
     //스텟별 합산
     //메용
     if(classInfo.mainStat) {
@@ -164,12 +170,13 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calculateDmgAndScore = (statDetails:StatDetails,classInfo:Classes) => {
+export const calcStatIndicators = (statDetails:StatDetails,classInfo:Classes):StatIndicators => {
     try {
         //스텟*공격력 계산
-        let totalScore = classInfo.calcDmg === undefined ?
+        let statIndicatorList = classInfo.calcDmg === undefined ?
             defaultCalcDmgFomula(statDetails.statTotal, classInfo) :
             classInfo.calcDmg(statDetails.statTotal, classInfo)
+        let totalScore = statIndicatorList["스탯공격력"]!
 
         //데미지, 보공 합계 계산
         let dmgFactor = 1+((statDetails.statTotal["데미지"] ?? 0) / 100)
@@ -203,11 +210,12 @@ export const calculateDmgAndScore = (statDetails:StatDetails,classInfo:Classes) 
         //보정계수 - 돌스공직업(스공이 낮고 스킬 퍼뎀이 평균적으로 높은경우)등 변수를 고려하여 직업별로 적용하는 계수
         let jobConstFactor = statDetails.statTotal["보정계수"] ?? 1
         totalScore *= jobConstFactor
-        return Math.floor(totalScore/1000);
+        statIndicatorList["종합점수"] = Math.floor(totalScore/1000);
+        return statIndicatorList;
 
     }catch(e:any){
         console.error(e.message)
-        return 0;
+        return {};
     }
 }
 

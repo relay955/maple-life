@@ -14,10 +14,8 @@ import SummaryCard from "./CharacterLineList/SummaryCard.svelte";
 import IconButton from "../../shared/basicComponent/IconButton.svelte";
 import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
 import {
-  calculateDmgAndScore,
   summarizeSpec
 } from "../../../logic/specCalculator";
-import {classesDict} from "../../../infoDictionary/ClassesDict";
 
 let filteredCharacter = [];
 
@@ -60,7 +58,7 @@ const onMoveCharacter = (event) => {
       {#if character.spec.default || character.spec.boss}
         {@const spec = character.spec.boss ? character.spec.boss : character.spec.default}
         {@const summarizedSpec = summarizeSpec(character,character.spec.boss ? "boss":"default")}
-        <CharacterBasicCard character={character} totalScore={calculateDmgAndScore(summarizedSpec,classesDict[character.classType])}/>
+        <CharacterBasicCard character={character} totalScore={summarizedSpec.statIndicators["종합점수"]}/>
         <SummaryCard character={character} spec={spec} summarizedSpec={summarizedSpec}/>
         {#each equipmentTypeOrder as equipmentType}
           <EquipmentCard character={character} equipmentType={equipmentType}/>
