@@ -98,7 +98,7 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
             else statDetails.sets[setName] += 1
 
             let setEquipmentcount = statDetails.sets[setName];
-            let setOptions = equipmentSetOptions[setName][setEquipmentcount]
+            let setOptions = equipmentSetOptions[setName].setOptions[setEquipmentcount]
             if(setOptions !== undefined) {
                 Object.keys(setOptions).forEach((stat) => {
                     if (statList[stat] === undefined) statList[stat] = {}
