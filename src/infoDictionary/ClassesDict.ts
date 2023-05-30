@@ -15,9 +15,11 @@ export interface Classes{
     unionStat?:StatInfo[]
     matrixSkill?:{[index:string]:{
         damageRate:number;
-        maxLevel:number;
+        type:SkillType;
     }}
 }
+
+export type SkillType = "skill" | "enhance"
 
 export const classesDict:{[index:string]:Classes} = {
     "히어로":{
@@ -83,17 +85,17 @@ export const classesDict:{[index:string]:Classes} = {
             "보스 데미지": 20,
         },
         matrixSkill:{
-            "폭풍의 시 강화":{damageRate:0.2634, maxLevel:60},
-            "퀴버 카트리지 강화":{damageRate:0.0904, maxLevel:60},
-            "애로우 플래터/플레시 미라주 강화":{damageRate:0.15, maxLevel:60},
-            "파이널 어택 : 활 강화":{damageRate:0.06, maxLevel:60},
-            "피닉스 강화":{damageRate:0.015, maxLevel:60},
-            "애로우 레인":{damageRate:0.15, maxLevel:30,},
-            "퀴버 풀버스트":{damageRate:0.12, maxLevel:30},
-            "잔영의 시":{damageRate:0.08, maxLevel:30},
-            "이볼브":{damageRate:0.06, maxLevel:30},
-            "실루엣 미라주":{damageRate:0.04, maxLevel:30},
-            "가이디드 애로우":{damageRate:0.038, maxLevel:30},
+            "폭풍의 시 강화":{damageRate:0.2634, type:"enhance"},
+            "퀴버 카트리지 강화":{damageRate:0.0904,type:"enhance"},
+            "애로우 플래터/플레시 미라주 강화":{damageRate:0.15,type:"enhance"},
+            "파이널 어택 : 활 강화":{damageRate:0.06,type:"enhance"},
+            "피닉스 강화":{damageRate:0.015,type:"enhance"},
+            "애로우 레인":{damageRate:0.15,type:"skill"},
+            "퀴버 풀버스트":{damageRate:0.12,type:"skill"},
+            "잔영의 시":{damageRate:0.08,type:"skill"},
+            "이볼브":{damageRate:0.06,type:"skill"},
+            "실루엣 미라주":{damageRate:0.04,type:"skill"},
+            "가이디드 애로우":{damageRate:0.038,type:"skill"},
         },
         unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}]
     },
