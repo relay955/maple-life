@@ -53,7 +53,8 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
     })
 
     //장비
-    spec.equipments.forEach((equipment)=>{
+    Object.keys(spec.equipments).forEach((equipmentType)=>{
+        const equipment = spec.equipments[equipmentType]
         Object.keys(equipment.stats).forEach((stat)=>{
             if(statList[stat] === undefined) statList[stat] = {}
             statList[stat]["[장비] "+equipment.name] = equipment.stats[stat];

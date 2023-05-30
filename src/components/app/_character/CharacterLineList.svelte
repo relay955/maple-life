@@ -44,16 +44,17 @@ const onMoveCharacter = (event) => {
         <div class="name">{character.name}</div>
         <div class="level-class">Lv.{character.level}, {character.classType}</div>
       </div>
-      {#if character.spec.default || character.spec.boss}
+      <!--{#if character.spec.default || character.spec.boss}-->
+      <!--  {#each character.spec.default?.equipments ?? character.spec.boss?.equipments ?? [] as equipment (equipment.name)}-->
 
-        <div class="item">
+      <!--  <div class="item">-->
 
-        </div>
-      {:else}
-        <div>
-          스텟정보 갱신 필요
-        </div>
-      {/if}
+      <!--  </div>-->
+      <!--{:else}-->
+      <!--  <div>-->
+      <!--    스텟정보 갱신 필요-->
+      <!--  </div>-->
+      <!--{/if}-->
     </div>
   </DragDropList>
 </div>

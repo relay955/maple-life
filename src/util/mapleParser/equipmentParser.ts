@@ -1,23 +1,49 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 import {defaultStatParsingStrategy} from "./equipmentParser/statParser";
 import {potentialParsingStrategy} from "./equipmentParser/potentialParser";
-import type {Equipment, EquipmentInfo} from "./mapleStat";
+import type {EquipmentType, EquipmentInfo, EquipmentLinkKey} from "./mapleStat";
 import {soulParsingStrategy} from "./equipmentParser/soulParser";
 import {parseSingleArcaneSymbol} from "./equipmentParser/symbolParser";
 
 
+const orderOfEquipmentType:EquipmentType[] = [
+    "반지1","모자","엠블렘","반지2","펜던트1","얼굴장식","뱃지","반지3","펜던트2","눈장식",
+    "귀고리","훈장","반지4","무기","상의","어깨장식","보조무기","포켓아이템","벨트","하의",
+    "장갑","망토","신발","안드로이드","기계심장"
+]
 
-export const parseItemsLinkKey = (equipmentPage:ParsedHtmlElement) => {
+const orderOfSymbolType:EquipmentType[] = [
+    "아케인심볼1", "아케인심볼2", "아케인심볼3", "아케인심볼4", "아케인심볼5", "아케인심볼6"
+]
+
+export const parseItemsLinkKey = (equipmentPage:ParsedHtmlElement):EquipmentLinkKey[] => {
     let equipmentTags = equipmentPage.querySelectorAll(".tab01_con_wrap li > span > a")!
+    let equipmentLinkKeys:EquipmentLinkKey[] = []
 
-    return equipmentTags.map((equipmentTag) =>
-        equipmentTag.getAttribute("href")!.split("?p=")[1]);
+    equipmentTags.forEach((equipmentTag,i) => {
+        let link = equipmentTag.getAttribute("href")!
+        if(link === "") return;
+        equipmentLinkKeys.push({
+            key:link.split("?p=")[1],
+            type:orderOfEquipmentType[i]
+        })
+    })
+
+    return equipmentLinkKeys;
 }
-export const parseSymbolsLinkKey = (equipmentPage:ParsedHtmlElement) => {
+export const parseSymbolsLinkKey = (equipmentPage:ParsedHtmlElement):EquipmentLinkKey[] => {
     let equipmentTags = equipmentPage.querySelectorAll(".tab03_con_wrap li > span > a")!
+    let equipmentLinkKeys:EquipmentLinkKey[] = []
 
-    return equipmentTags.map((equipmentTag) =>
-        equipmentTag.getAttribute("href")!.split("?p=")[1]);
+    equipmentTags.forEach((equipmentTag,i) => {
+        let link = equipmentTag.getAttribute("href")!
+        if(link === "") return;
+        equipmentLinkKeys.push({
+            key:link.split("?p=")[1],
+            type:orderOfSymbolType[i]
+        })
+    });
+    return equipmentLinkKeys;
 }
 
 export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):EquipmentInfo => {
@@ -37,7 +63,7 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
     let equipmentInfo:EquipmentInfo = {
         name:name,
         imageUrl: singleEquipmentPage.querySelector(".item_img > img")?.getAttribute("src"),
-        type:singleEquipmentPage.querySelector(".ablilty02:nth-child(3) > span > em")!.textContent as Equipment,
+        type:singleEquipmentPage.querySelector(".ablilty02:nth-child(3) > span > em")!.textContent as EquipmentType,
         stats:{},
         bonusStats:{}
     }
