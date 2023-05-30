@@ -34,6 +34,7 @@ export const migrateFromLocalstorage = async (idb: Idb) => {
             order: i,
             orderInCharacterPage : i,
             useTodo: true,
+            spec:{}
         }
         await idb.character.add(newCharacter)
     }

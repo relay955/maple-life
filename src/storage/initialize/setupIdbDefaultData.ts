@@ -32,7 +32,8 @@ export const initDefaultData = async (idb: Idb) => {
             imgUrl:"",
             order:0,
             useTodo:true,
-            orderInCharacterPage:0
+            orderInCharacterPage:0,
+            spec:{}
         },
         {
             name:"부캐릭터",
@@ -43,7 +44,8 @@ export const initDefaultData = async (idb: Idb) => {
             imgUrl:"",
             order:1,
             useTodo:true,
-            orderInCharacterPage:0
+            orderInCharacterPage:0,
+            spec:{}
         }
     ])
 

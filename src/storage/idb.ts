@@ -34,6 +34,7 @@ export class Idb extends Dexie {
             trans.table("character").toCollection().modify(character => {
                 character.orderInCharacterPage = character.id;
                 character.useTodo = true;
+                character.spec = {};
             });
         })
     }

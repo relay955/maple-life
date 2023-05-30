@@ -23,6 +23,7 @@
   import {swapWorldOrder} from "../../../storage/queries/worldQuery";
   import {swapAccountOrder} from "../../../storage/queries/accountQuery";
   import Title from "../../shared/basicComponent/Title.svelte";
+  import CharacterImage from "../../shared/CharacterImage.svelte";
 
   export let onClickCharacter:(character:Character)=>void;
   export let onClickAccountBar:(account:Account)=>void;
@@ -219,15 +220,7 @@
                on:dragstart={(e)=>onDragStartCharacter(e,character)}
                on:dragover={(e)=>e.preventDefault()}
                on:drop={(e)=>onDragEndCharacter(e,character)}>
-            {#if character.imgUrl !== ""}
-              <div class='img' style={`background:url(${character.imgUrl})`}>
-              </div>
-            {/if}
-            {#if character.imgUrl === ""}
-              <div class='default-img'>
-                <MdFavoriteBorder/>
-              </div>
-            {/if}
+            <CharacterImage character={character}/>
             <div class="name">
               {character.name}
             </div>
@@ -360,19 +353,6 @@
         white-space: nowrap;
         text-overflow: ellipsis;
       }
-
-      .img {
-        width: 50px;
-        height: 50px;
-        background-position: 52% 61% !important;
-        background-size: 218% !important;
-      }
-
-      .default-img {
-        width: 40px;
-        height: 40px;
-        padding: 5px;
-      }
     }
 
     .character:hover {
@@ -414,21 +394,7 @@
           font-size: 10px;
           color: gray;
         }
-
-        .img {
-          width: 36px;
-          height: 36px;
-          background-position: 52% 61% !important;
-          background-size: 218% !important;
-        }
-
-        .default-img {
-          width: 30px;
-          height: 30px;
-          padding: 3px;
-        }
       }
-
     }
   }
 </style>

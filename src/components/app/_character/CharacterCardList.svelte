@@ -8,6 +8,7 @@ import {
   requestMapleCharacterDetailInfo
 } from "../../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
+import CharacterImage from "../../shared/CharacterImage.svelte";
 
 let filteredCharacter = [];
 
@@ -29,15 +30,7 @@ const onClickCharacterCard = async (character: Character) => {
 <div class="character-list">
   {#each filteredCharacter as character (character.id)}
     <div class="character-card" on:click={()=>onClickCharacterCard(character)}>
-      {#if character.imgUrl !== ""}
-        <div class='img' style={`background:url(${character.imgUrl})`}>
-        </div>
-      {/if}
-      {#if character.imgUrl === ""}
-        <div class='default-img'>
-          <MdFavoriteBorder/>
-        </div>
-      {/if}
+      <CharacterImage character={character}/>
       <div class="name">{character.name}</div>
       <div class="subtitle">
         Lv.{character.level}, {character.classType}

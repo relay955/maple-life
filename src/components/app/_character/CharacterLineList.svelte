@@ -10,6 +10,7 @@ import {
 import {toast} from "@zerodevx/svelte-toast";
 import DragDropList from "../../shared/DragDropList.svelte";
 import TodoEditModal from "../_todo/TodoEditModal.svelte";
+import CharacterImage from "../../shared/CharacterImage.svelte";
 
 let filteredCharacter = [];
 
@@ -26,6 +27,7 @@ const onClickCharacterCard = async (character: Character) => {
     toast?.push(e.message)
   }
 }
+
 const onMoveCharacter = (event) => {
   console.log(event.detail)
 }
@@ -36,11 +38,22 @@ const onMoveCharacter = (event) => {
                 onMove={onMoveCharacter} dataIdField="id">
     <div class="character-item">
       <div class="left-field">
+        <CharacterImage character={character}/>
         <div class='img' style={`background:url(${character.imgUrl})`}>
         </div>
         <div class="name">{character.name}</div>
-        <div class="level-class">Lv.{character.level}, {character.classType}
+        <div class="level-class">Lv.{character.level}, {character.classType}</div>
       </div>
+      {#if character.spec.default || character.spec.boss}
+
+        <div class="item">
+
+        </div>
+      {:else}
+        <div>
+          스텟정보 갱신 필요
+        </div>
+      {/if}
     </div>
   </DragDropList>
 </div>
@@ -55,12 +68,7 @@ const onMoveCharacter = (event) => {
       display: flex;
       flex-direction: column;
       align-items: center;
-      .img {
-        width: 50px;
-        height: 50px;
-        background-position: 52% 61% !important;
-        background-size: 218% !important;
-      }
+
       .name{
         font-size: 10px;
         white-space: nowrap;
