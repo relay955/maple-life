@@ -3,10 +3,11 @@
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
 
   export let character:Character;
+  export let style:string = "";
 </script>
 
 {#if character.imgUrl !== ""}
-  <div class='img' style={`background:url(${character.imgUrl})`}>
+  <div class='img' style={`background:url(${character.imgUrl}); ${style}`}>
   </div>
 {:else}
   <div class='default-img'>
