@@ -2,6 +2,7 @@
   import MdInbox from 'svelte-icons/md/MdInbox.svelte'
   import MdCheckBox from 'svelte-icons/md/MdCheckBox.svelte'
   import MdPerson from 'svelte-icons/md/MdPerson.svelte'
+  import IoMdMegaphone from 'svelte-icons/io/IoMdMegaphone.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
   import IconButton from "../../shared/basicComponent/IconButton.svelte";
@@ -35,33 +36,45 @@
   <div class="link-header">Link</div>
   <IconButton tooltip="메이플 홈페이지"
               style="margin-bottom: 4px"
-              direction="right"
-              onClick={()=>window.open("https://maplestory.nexon.com/Home/Main")}>
-    <MdHome/>
+              direction="right">
+    <a href="https://maplestory.nexon.com/Home/Main" target="_blank" style="color:gray;">
+      <MdHome/>
+    </a>
   </IconButton>
   <IconButton tooltip="메이플 인벤"
               style="margin-bottom: 4px"
-              direction="right"
-              onClick={()=>window.open("https://maple.inven.co.kr/")}>
-    <MdInsertComment/>
+              direction="right">
+    <a href="https://maple.inven.co.kr" target="_blank" style="color:gray;">
+      <MdInsertComment/>
+    </a>
   </IconButton>
   <IconButton tooltip="메이플 유틸 - 시드/몬라 유틸리티"
               direction="right"
-              style="margin-bottom: 4px"
-              onClick={()=>window.open("https://mapleutils.com/")}>
-    <MdBuild/>
+              style="margin-bottom: 4px">
+    <a href="https://mapleutils.com" target="_blank" style="color:gray;">
+      <MdBuild/>
+    </a>
   </IconButton>
   <IconButton tooltip="큐브매수통 - 큐브 기댓값 계산기"
               style="margin-bottom: 4px"
-              direction="right"
-              onClick={()=>window.open("https://cubemesu.co/")}>
-    <MdInbox/>
+              direction="right">
+    <a href="https://cubemesu.co" target="_blank" style="color:gray;">
+      <MdInbox/>
+    </a>
   </IconButton>
   <IconButton tooltip="쓸만한 분배금 계산기"
               style="margin-bottom: 4px"
-              direction="right"
-              onClick={()=>window.open("https://141.kr")}>
-    <MdMonetizationOn/>
+              direction="right">
+    <a href="https://141.kr" target="_blank" style="color:gray;">
+      <MdMonetizationOn/>
+    </a>
+  </IconButton>
+  <IconButton tooltip="메소리 - 고확 확인 및 경뿌 알림"
+              style="margin-bottom: 4px"
+              direction="right">
+    <a href="https://maplesori.com/sori" target="_blank" style="color:gray;">
+      <IoMdMegaphone/>
+    </a>
   </IconButton>
   <Space/>
   <IconButton tooltip="웹사이트 정보"
@@ -91,6 +104,10 @@
   .link-header{
     font-weight: bold;
     margin-bottom: 10px;
+  }
+
+  a{
+    color: #aeaeae !important;
   }
 
 
