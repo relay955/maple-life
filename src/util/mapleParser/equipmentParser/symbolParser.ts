@@ -6,7 +6,7 @@ export const parseSingleArcaneSymbol = (singleEquipmentPage:ParsedHtmlElement):E
     let equipmentInfo:EquipmentInfo = {
         name:nameTag.structuredText,
         imageUrl: singleEquipmentPage.querySelector(".item_img > img")?.getAttribute("src"),
-        type:"아케인 심볼",
+        type:"아케인심볼1",
         stats:{},
         bonusStats:{}
     }
