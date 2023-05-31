@@ -74,7 +74,10 @@ Object.keys(spec.equipments).map(equipmentName=>{
         Arc {arcaneForceTotal}
       </div>
       <div class="core">
-        코어 0
+        스킬코어 {summarizedSpec.statIndicators["스킬코어"]}
+      </div>
+      <div class="core">
+        강화코어 {summarizedSpec.statIndicators["강화코어"]}
       </div>
     </div>
   </div>

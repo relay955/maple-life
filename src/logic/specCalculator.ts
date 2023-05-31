@@ -19,8 +19,9 @@ import {buffDict} from "../infoDictionary/BuffDict";
 
 export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
     let classInfo = classesDict[character.classType]!
-    let statDetails = calcTotalPerStat(character,character.spec![preset]!,classInfo);
-    statDetails.statIndicators = calcStatIndicators(statDetails,classInfo);
+    let spec = character.spec![preset]!
+    let statDetails = calcTotalPerStat(character,spec,classInfo);
+    statDetails.statIndicators = calcStatIndicators(spec,statDetails,classInfo);
 
     return statDetails;
 }
@@ -169,7 +170,7 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec,classInf
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calcStatIndicators = (statDetails:StatDetails,classInfo:Classes):StatIndicators => {
+export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails,classInfo:Classes):StatIndicators => {
     try {
         //스텟*공격력 계산
         let statIndicatorList = classInfo.calcDmg === undefined ?
@@ -202,6 +203,7 @@ export const calcStatIndicators = (statDetails:StatDetails,classInfo:Classes):St
         //최종데미지
         let finalDamageFactor = 1 + ((statDetails.statTotal["최종 데미지"] ?? 0)/100)
         totalScore *= finalDamageFactor
+
         //무기 상수
         let weaponConstFactor = statDetails.statTotal["무기 상수"] ?? 1
         totalScore *= weaponConstFactor
@@ -209,6 +211,36 @@ export const calcStatIndicators = (statDetails:StatDetails,classInfo:Classes):St
         //보정계수 - 돌스공직업(스공이 낮고 스킬 퍼뎀이 평균적으로 높은경우)등 변수를 고려하여 직업별로 적용하는 계수
         let jobConstFactor = statDetails.statTotal["보정계수"] ?? 1
         totalScore *= jobConstFactor
+
+        //스킬코어 계산
+        let vmatrixFactor = 1
+        let skillCoreNum = 0
+        let skillCoreLevelTotal = 0
+        let enhanceCoreNum = 0
+        let enhanceCoreLevelTotal = 0
+
+        spec.skills.forEach((skill)=>{
+            const skillInfo = classInfo.matrixSkill?.[skill.name]
+            if(skillInfo === undefined) return;
+            //스킬코어는 1레벨당 최종뎀 4%, 강화코어는 1레벨당 최종뎀 2%의 가치를 가짐
+            let finalDamagePerLevel = 0;
+            if(skillInfo.type === "skill"){
+                finalDamagePerLevel = 0.04
+                skillCoreNum += 1
+                skillCoreLevelTotal += skill.skillLevel
+            }else{
+                skillInfo.type === "enhance"
+                enhanceCoreNum += 1
+                enhanceCoreLevelTotal += skill.skillLevel
+            }
+            vmatrixFactor += skillInfo.damageRate+finalDamagePerLevel
+        })
+        statIndicatorList["스킬코어"] = skillCoreNum > 0 ?
+            Math.round(skillCoreLevelTotal / skillCoreNum):0
+        statIndicatorList["강화코어"] = enhanceCoreNum > 0 ?
+            Math.round(enhanceCoreLevelTotal / enhanceCoreNum):0
+        totalScore *= vmatrixFactor
+
         statIndicatorList["종합점수"] = Math.floor(totalScore/1000);
         return statIndicatorList;
 

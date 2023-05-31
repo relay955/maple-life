@@ -8,7 +8,7 @@ export const parseSkills = (skillPageHtml:ParsedHtmlElement):SkillInfo[] => {
         skillInfoList.push({
             name:skillTag.querySelector("h2")!.structuredText,
             imageUrl:skillTag.querySelector("h2 > img")?.getAttribute("src"),
-            skillLevel:skillTag.querySelector("thead > tr > th:nth-child(2)")!.structuredText.match(/\d+/)![0],
+            skillLevel:Number(skillTag.querySelector("thead > tr > th:nth-child(2)")!.structuredText.match(/\d+/)![0]),
         })
     })
     return skillInfoList;
