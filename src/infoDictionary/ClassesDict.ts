@@ -16,7 +16,11 @@ export interface Classes{
     matrixSkill?:{[index:string]:{
         damageRate:number;
         type:SkillType;
-    }}
+    }},
+    seedRingFactor?:{
+        "리스트레인트 링":number[];
+        "웨폰퍼프 링":number[];
+    };
 }
 
 export type SkillType = "skill" | "enhance"
@@ -97,7 +101,11 @@ export const classesDict:{[index:string]:Classes} = {
             "실루엣 미라주":{damageRate:0.04,type:"skill"},
             "가이디드 애로우":{damageRate:0.038,type:"skill"},
         },
-        unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}]
+        unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}],
+        seedRingFactor:{
+            "리스트레인트 링":[1.02,1.04,1.06,1.08],
+            "웨폰퍼프 링":[1.005,1.001,1.0015,1.02]
+        }
     },
     "신궁":{
         mainStat:"DEX",
