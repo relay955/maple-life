@@ -25,7 +25,7 @@
       라이선스 문서를 참고하세요.</div>
     <div>MapleLife는
       <a href="https://maplestory.nexon.com/" target="_blank">메이플스토리</a>
-      의 리소스(이미지,사운드 등)을 사용합니다.</div>
+      의 리소스(이미지,사운드,스텟정보 등)을 사용합니다.</div>
     <div>MapleLife는
       <a href="https://nexon.com" target="_blank">NEXON</a>
         의 공식 컨텐츠가 아니며, NEXON과 관련이 없습니다.
