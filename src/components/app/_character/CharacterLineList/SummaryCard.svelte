@@ -14,8 +14,7 @@ import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 
 export let character:Character;
-export let spec:CharacterSpec;
-export let summarizedSpec:StatDetails;
+let statDetails = character.spec.default?.statDetails
 const classInfo = classesDict[character.classType];
 
 let bonusStatTotal = 0;
@@ -25,8 +24,8 @@ let atkpercentLines = 0;
 let bossdmgLines = 0;
 let armorPiercingLines = 0;
 
-Object.keys(spec.equipments).map(equipmentName=>{
-  let equipment:EquipmentInfo = spec.equipments[equipmentName];
+Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
+  let equipment:EquipmentInfo = character.spec.default!.equipments[equipmentName];
   bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,classInfo);
   potentialTotal += (equipment.potential?.stats[classInfo.mainStat+"%"] ?? 0) +
     (equipment.potential?.stats["올스탯%"] ?? 0);
@@ -42,8 +41,8 @@ Object.keys(spec.equipments).map(equipmentName=>{
 <div class="main">
   <div class="subtitle">세트옵션</div>
   <div class="set-option">
-    {Object.keys(summarizedSpec.sets)
-      .map(setName=>`${summarizedSpec.sets[setName]}${equipmentSetOptions[setName].nickName}`)
+    {Object.keys(statDetails.sets)
+      .map(setName=>`${statDetails.sets[setName]}${equipmentSetOptions[setName].nickName}`)
       .join("/")}
   </div>
   <div class="total-container">
@@ -51,7 +50,7 @@ Object.keys(spec.equipments).map(equipmentName=>{
       <div class="subtitle">아이템합계</div>
       <div class="starforce">
         <div class="small-icon" style="color:#d8b625"><MdStar/></div>
-        {summarizedSpec.starforce}
+        {statDetails.starforce}
       </div>
       <div class="bonusStats">
         <div class="small-icon" style="color:red"><GiFire/></div>
@@ -74,10 +73,10 @@ Object.keys(spec.equipments).map(equipmentName=>{
         Arc {arcaneForceTotal}
       </div>
       <div class="core">
-        스킬코어 {summarizedSpec.statIndicators["스킬코어"]}
+        스킬코어 {statDetails.statIndicators["스킬코어"]}
       </div>
       <div class="core">
-        강화코어 {summarizedSpec.statIndicators["강화코어"]}
+        강화코어 {statDetails.statIndicators["강화코어"]}
       </div>
     </div>
   </div>
