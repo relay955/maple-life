@@ -9,6 +9,7 @@ import {
 } from "../../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
 import CharacterImage from "../../shared/CharacterImage.svelte";
+import {summarizeSpec} from "../../../logic/specCalculator";
 
 let filteredCharacter = [];
 
@@ -34,6 +35,9 @@ const onClickCharacterCard = async (character: Character) => {
       <div class="name">{character.name}</div>
       <div class="subtitle">
         Lv.{character.level}, {character.classType}
+      </div>
+      <div class="score">
+        {summarizeSpec(character,character.spec.boss ? "boss":"default").statIndicators["종합점수"]}
       </div>
     </div>
   {/each}
@@ -86,5 +90,8 @@ const onClickCharacterCard = async (character: Character) => {
   }
   .character-card:hover{
     background-color: #f1f1f1;
+  }
+  .score{
+    font-size: 14px;
   }
 </style>
