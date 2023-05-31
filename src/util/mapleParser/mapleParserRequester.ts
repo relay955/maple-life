@@ -42,7 +42,6 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     if(character.detailInfoKey === undefined){
        let res = await requestMapleCharacterBasicInfo(character.name)
        character.detailInfoKey = res.detailInfoKey;
-     await idb.character.put(character);
     }
     let detailInfoHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}?p=${character.detailInfoKey}`))
@@ -75,7 +74,14 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         skills: [],
         tendency : {},
         buff:{},
-        linkSkill:{}
+        linkSkill:{},
+        statDetails:{
+            statIndicators:{},
+            statTotal:{},
+            starforce:0,
+            statList:{},
+            sets:{}
+        }
     }
     let defaultSpec = character.spec.default
     //기본정보에서 어빌리티, 하이퍼스텟 파싱
@@ -114,6 +120,5 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${SKILL_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
     defaultSpec.skills = parseSkills(skillPageHtml);
-    idb.character.put(character)
-
+    return character;
 }

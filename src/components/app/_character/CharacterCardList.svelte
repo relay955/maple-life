@@ -10,6 +10,7 @@ import {
 import {toast} from "@zerodevx/svelte-toast";
 import CharacterImage from "../../shared/CharacterImage.svelte";
 import {summarizeSpec} from "../../../logic/specCalculator";
+import {goto} from "$app/navigation";
 
 let filteredCharacter = [];
 
@@ -21,7 +22,7 @@ $:{
 
 const onClickCharacterCard = async (character: Character) => {
   try {
-    await requestMapleCharacterDetailInfo(character);
+    await goto(`/character/${character.id}/stat`)
   }catch(e){
     toast?.push(e.message)
   }
@@ -37,7 +38,7 @@ const onClickCharacterCard = async (character: Character) => {
         Lv.{character.level}, {character.classType}
       </div>
       <div class="score">
-        {summarizeSpec(character,character.spec.boss ? "boss":"default").statIndicators["종합점수"]}
+        {character.spec.default.statDetails.statIndicators["종합점수"]}
       </div>
     </div>
   {/each}

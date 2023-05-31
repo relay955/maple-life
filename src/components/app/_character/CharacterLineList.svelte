@@ -16,6 +16,7 @@ import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
 import {
   summarizeSpec
 } from "../../../logic/specCalculator";
+import {idb} from "../../../storage/idb";
 
 let filteredCharacter = [];
 
@@ -30,17 +31,12 @@ $:{
   filteredCharacter = characters.filter((character) => character.worldId === $lqSelectedWorldId);
 }
 
-const onClickCharacterCard = async (character: Character) => {
-  try {
-    await requestMapleCharacterDetailInfo(character);
-  }catch(e){
-    toast?.push(e.message)
-  }
-}
-
 const onClickRefreshCharacter = async (character: Character) => {
   try {
     await requestMapleCharacterDetailInfo(character);
+    character.spec.default!.statDetails = await summarizeSpec(character, "default");
+    idb.character.put(character);
+
   }catch(e){
     toast?.push(e.message)
   }
@@ -56,10 +52,8 @@ const onMoveCharacter = (event) => {
                 onMove={onMoveCharacter} dataIdField="id">
     <div class="character-item">
       {#if character.spec.default || character.spec.boss}
-        {@const spec = character.spec.boss ? character.spec.boss : character.spec.default}
-        {@const summarizedSpec = summarizeSpec(character,character.spec.boss ? "boss":"default")}
-        <CharacterBasicCard character={character} totalScore={summarizedSpec.statIndicators["종합점수"]}/>
-        <SummaryCard character={character} spec={spec} summarizedSpec={summarizedSpec}/>
+        <CharacterBasicCard character={character}/>
+        <SummaryCard character={character}/>
         {#each equipmentTypeOrder as equipmentType}
           <EquipmentCard character={character} equipmentType={equipmentType}/>
         {/each}

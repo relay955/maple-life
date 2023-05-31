@@ -20,9 +20,6 @@ import CharacterLineList
 import CharacterCardList
   from "../../components/app/_character/CharacterCardList.svelte";
 
-const onClickDebug = async () => {
-  console.log(summarizeSpec((await idb.character.get(2))!,"default"))
-}
 </script>
 
 {#if !isOnTauri()}
@@ -50,7 +47,6 @@ const onClickDebug = async () => {
     {:else }
       <CharacterLineList/>
     {/if}
-    <button on:click={onClickDebug}>디버그</button>
   </PageContainer>
 {/if}
 

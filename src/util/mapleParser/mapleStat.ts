@@ -26,15 +26,6 @@ export type EquipmentType = "반지1"|"반지2"|"반지3"|"반지4"|"펜던트1"
 export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
 export type StatInfo = {[key in Stat]?:number}
-export type StatIndicators = {[key in StatIndicator]?:number}
-
-export interface StatDetails{
-    statList:{[key in Stat]?:{[index:string]:number}};
-    statIndicators:StatIndicators;
-    statTotal:StatInfo;
-    sets:{[index:string]:number};
-    starforce:number;
-}
 
 export interface EquipmentLinkKey{
     type:EquipmentType;
@@ -80,4 +71,15 @@ export interface CharacterSpec{
     tendency:StatInfo;
     linkSkill:{[key in LinkSkillName]?:number};
     buff:{[key in BuffName]?:boolean};
+    statDetails:StatDetails;
 }
+export interface StatDetails{
+    statList:{[key in Stat]?:{[index:string]:number}};
+    statIndicators:StatIndicators;
+    statTotal:StatInfo;
+    sets:{[index:string]:number};
+    starforce:number;
+}
+
+export type StatIndicators = {[key in StatIndicator]?:number}
+
