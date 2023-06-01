@@ -5,6 +5,7 @@ import CharacterImage from "../../../shared/CharacterImage.svelte";
 import SvelteTooltip from "svelte-tooltip";
 
 export let character:Character;
+export let universalScore:number;
 </script>
 
 <div class="main">
@@ -16,7 +17,7 @@ export let character:Character;
   <div style="color:white; margin-top: -5px;">
     <SvelteTooltip tip="종합점수 : 캐릭터의 딜관련 모든 지표를 반영한 값입니다. 자세한 계산 방식은 스텟 상세보기에서 확인해주세요.">
       <span class="universal-score">
-        {character.spec.default.statDetails.statIndicators["종합점수"]}
+        {universalScore}
       </span>
     </SvelteTooltip>
   </div>

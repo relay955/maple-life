@@ -37,9 +37,11 @@ const onClickCharacterCard = async (character: Character) => {
       <div class="subtitle">
         Lv.{character.level}, {character.classType}
       </div>
+      {#if character.spec.default}
       <div class="score">
-        {character.spec.default.statDetails.statIndicators["종합점수"]}
+        {summarizeSpec(character,"default").statIndicators["종합점수"]}
       </div>
+      {/if}
     </div>
   {/each}
 </div>

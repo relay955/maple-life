@@ -18,16 +18,16 @@ import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
 import {buffDict} from "../infoDictionary/BuffDict";
 
 export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
-    let classInfo = classesDict[character.classType]!
     let spec = character.spec![preset]!
-    let statDetails = calcTotalPerStat(character,spec,classInfo);
-    statDetails.statIndicators = calcStatIndicators(spec,statDetails,classInfo);
+    let statDetails = calcTotalPerStat(character,spec);
+    statDetails.statIndicators = calcStatIndicators(spec,statDetails);
 
     return statDetails;
 }
 
-export const calcTotalPerStat = (character:Character,spec:CharacterSpec,classInfo:Classes):StatDetails => {
-    let statDetails:StatDetails = {statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
+export const calcTotalPerStat = (character:Character,spec:CharacterSpec):StatDetails => {
+    let classInfo = classesDict[character.classType]!
+    let statDetails:StatDetails = {classInfo:classInfo,statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
     let statList = statDetails.statList;
     //스텟별 합산
     //메용
@@ -170,8 +170,9 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec,classInf
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails,classInfo:Classes):StatIndicators => {
+export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails):StatIndicators => {
     try {
+        const classInfo = statDetails.classInfo;
         //스텟*공격력 계산
         let statIndicatorList = classInfo.calcDmg === undefined ?
             defaultCalcDmgFomula(statDetails.statTotal, classInfo) :
@@ -237,7 +238,7 @@ export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails,cl
             Math.round(enhanceCoreLevelTotal / enhanceCoreNum):0
         totalScore *= vmatrixFactor
 
-        statIndicatorList["종합점수"] = Math.floor(totalScore/1000);
+        statIndicatorList["종합점수"] = Math.floor(totalScore/10000);
         return statIndicatorList;
 
     }catch(e:any){

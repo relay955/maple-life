@@ -14,8 +14,7 @@ import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 
 export let character:Character;
-let statDetails = character.spec.default?.statDetails
-const classInfo = classesDict[character.classType];
+export let statDetails:StatDetails;
 
 let bonusStatTotal = 0;
 let potentialTotal = 0;
@@ -26,8 +25,8 @@ let armorPiercingLines = 0;
 
 Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
   let equipment:EquipmentInfo = character.spec.default!.equipments[equipmentName];
-  bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,classInfo);
-  potentialTotal += (equipment.potential?.stats[classInfo.mainStat+"%"] ?? 0) +
+  bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,statDetails.classInfo);
+  potentialTotal += (equipment.potential?.stats[statDetails.classInfo.mainStat+"%"] ?? 0) +
     (equipment.potential?.stats["올스탯%"] ?? 0);
   arcaneForceTotal += equipment.stats["아케인 포스"] ?? 0;
   equipment.potential?.options?.forEach((option:Stat)=>{
