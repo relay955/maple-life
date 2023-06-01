@@ -4,8 +4,10 @@
   import {page} from "$app/stores";
   import {isOnTauri} from "../../../../backendAdapter/backendAdapter";
   import {buffDict} from "../../../../infoDictionary/BuffDict";
+  import {CharacterSpec} from "../../../../util/mapleParser/mapleStat";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
+  let a:CharacterSpec;
 
 </script>
 {#if isOnTauri() && $character}
@@ -15,18 +17,9 @@
     <div class="bufflink-list">
       {#each Object.keys(buffDict) as buffName}
         {@const buff = buffDict[buffName]}
-        <img src={buff.imgUrl}/>
+        <img src={buff.imgUrl}
+             class:active={$character.spec.default.buff[buffName] !== undefined} />
       {/each}
-<!--      <img src={buffDict["길드스킬 - 길드의 매운 맛"].imgUrl}/>-->
-      <!--{#each Object.keys(buffDict) as buff}-->
-      <!--<div class="buff">-->
-      <!--  <div class="buff-icon">-->
-      <!--    <img src={buff.icon} alt={buff.name}/>-->
-      <!--  </div>-->
-      <!--  <div class="buff-name">{buff.name}</div>-->
-      <!--  <div class="buff-duration">{buff.duration}</div>-->
-      <!--</div>-->
-      <!--{/each}-->
     </div>
     <div class="bufflink-list">
 
@@ -40,9 +33,17 @@
     font-size: 14px;
     font-weight: bold;
     color: #949494;
+    margin-bottom: 3px;
   }
 
   .bufflink-list{
     display: flex;
+    img{
+      margin-right: 3px;
+      filter:grayscale(1); opacity: (0.5);
+    }
+    img.active{
+      filter: brightness(0.5);
+    }
   }
 </style>
