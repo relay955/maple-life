@@ -183,10 +183,6 @@ export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails,cl
                         +((statDetails.statTotal["보스 데미지"] ?? 0) /100)
         totalScore *= dmgFactor;
 
-        //방어율 무시. 공격대상 방어율은 380%로 가정
-        let targetArmor = 3.8*(1-(statDetails.statTotal["방어율 무시"] ?? 0)/100)
-        totalScore *= 1-targetArmor;
-
         //크리티컬 계수 계산
         let critcalFactor = 1+((statDetails.statTotal["크리티컬 확률"] ?? 0)/100)
                              *(((statDetails.statTotal["크리티컬 데미지"] ?? 0)+35)/100)

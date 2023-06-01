@@ -37,7 +37,7 @@ export let data;
          class:selected={$page.url.pathname.includes('stat')}>스탯</a>
       <!--      장비 확인 및 장비 변경, 시뮬레이션-->
       <a on:click={goto(`/character/${$character.id}/equipment`)}>장비</a>
-<!--      보스 점수컷-->
+<!--      보스 점수컷, 계산과정 표시-->
       <a on:click={goto(`/character/${$character.id}/cutline`)}>보스/사냥</a>
       <!--      점수계산 과정 표시-->
       <a on:click={goto(`/character/${$character.id}/universal-score`)}>종합점수</a>
