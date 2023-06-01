@@ -1,5 +1,6 @@
 import type {BuffName} from "../../infoDictionary/BuffDict";
 import type {LinkSkillName} from "../../infoDictionary/LinkSkillDict";
+import type {Classes} from "../../infoDictionary/ClassesDict";
 
 export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |"고정MP" |
     "공격력" | "공격력%" | "레벨당 공격력" |"마력" | "마력%" | "레벨당 마력" |
@@ -71,9 +72,9 @@ export interface CharacterSpec{
     tendency:StatInfo;
     linkSkill:{[key in LinkSkillName]?:number};
     buff:{[key in BuffName]?:boolean};
-    statDetails:StatDetails;
 }
 export interface StatDetails{
+    classInfo:Classes;
     statList:{[key in Stat]?:{[index:string]:number}};
     statIndicators:StatIndicators;
     statTotal:StatInfo;

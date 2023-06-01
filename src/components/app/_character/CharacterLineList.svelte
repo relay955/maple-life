@@ -51,14 +51,15 @@ const onMoveCharacter = (event) => {
   <DragDropList data={filteredCharacter} let:slotProps={character}
                 onMove={onMoveCharacter} dataIdField="id">
     <div class="character-item">
-      {#if character.spec.default || character.spec.boss}
-        <CharacterBasicCard character={character}/>
-        <SummaryCard character={character}/>
+      {#if character.spec.default}
+        {@const statDetails = summarizeSpec(character, "default")}
+        <CharacterBasicCard character={character} universalScore={statDetails.statIndicators["종합점수"]}/>
+        <SummaryCard character={character} statDetails={statDetails}/>
         {#each equipmentTypeOrder as equipmentType}
           <EquipmentCard character={character} equipmentType={equipmentType}/>
         {/each}
       {:else}
-        <CharacterBasicCard character={character} totalScore={0}/>
+        <CharacterBasicCard character={character} universalScore={0}/>
         <div>
           스텟정보 갱신 필요
         </div>
