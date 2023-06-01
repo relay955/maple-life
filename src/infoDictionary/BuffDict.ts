@@ -1,4 +1,6 @@
 import type {Stat, StatInfo} from "../util/mapleParser/mapleStat";
+import iconBasic1 from "$lib/images/icon/buff/정령의 축복.png"
+import iconBasic2 from "$lib/images/icon/buff/연합의 의지.png"
 import iconGuild1 from "$lib/images/icon/buff/길드의 축복.png"
 import iconGuild2 from "$lib/images/icon/buff/길드의 매운 맛.png"
 import iconGuild3 from "$lib/images/icon/buff/방어력은 숫자일 뿐.png"
@@ -38,14 +40,14 @@ export type BuffName = "정령의 축복" | "연합의 의지" | "길드의 축�
 
 export const buffDict:{[key in BuffName]:Buff} = {
     "정령의 축복":{
-        imgUrl:iconGuild1,
+        imgUrl:iconBasic1,
         stat:{
             "공격력":30,
             "마력":30
         }
     },
     "연합의 의지":{
-        imgUrl:iconGuild1,
+        imgUrl:iconBasic2,
         stat:{
             "올스탯":5,
             "공격력":5,

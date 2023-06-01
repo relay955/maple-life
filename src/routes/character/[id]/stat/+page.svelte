@@ -13,7 +13,11 @@
   <div class="bufflink-list-container">
     <div class="subtitle">버프/링크</div>
     <div class="bufflink-list">
-      <img src={buffDict["길드스킬 - 길드의 매운 맛"].imgUrl}/>
+      {#each Object.keys(buffDict) as buffName}
+        {@const buff = buffDict[buffName]}
+        <img src={buff.imgUrl}/>
+      {/each}
+<!--      <img src={buffDict["길드스킬 - 길드의 매운 맛"].imgUrl}/>-->
       <!--{#each Object.keys(buffDict) as buff}-->
       <!--<div class="buff">-->
       <!--  <div class="buff-icon">-->
