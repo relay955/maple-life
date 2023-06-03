@@ -8,6 +8,7 @@
   import {simulate, summarizeSpec} from "../../../../logic/specCalculator";
   import HoverPanel from "../../../../components/HoverPanel.svelte";
   import type {LinkSkill} from "../../../../infoDictionary/LinkSkillDict";
+  import {linkSkillDict} from "../../../../infoDictionary/LinkSkillDict";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
@@ -38,7 +39,7 @@
 {#if isOnTauri() && $character}
 <div>
   <div class="bufflink-list-container">
-    <div class="subtitle">버프/링크</div>
+    <div class="subtitle">버프</div>
     <div class="bufflink-list">
       {#each Object.keys(buffDict) as buffName}
         {@const buff = buffDict[buffName]}
@@ -48,8 +49,15 @@
              class:active={$character.spec.default.buff[buffName] !== undefined} />
       {/each}
     </div>
+    <div class="subtitle">링크스킬</div>
     <div class="bufflink-list">
-
+      {#each Object.keys(linkSkillDict) as linkSkillName}
+        {@const linkSkill = linkSkillDict[linkSkillName]}
+        <img src={linkSkill.imgUrl}
+             on:mousemove={(e)=>onMouseMove(e,linkSkillName,linkSkill)}
+             on:mouseleave={onMouseLeave}
+             class:active={$character.spec.default.linkSkill[linkSkillName] !== undefined} />
+      {/each}
     </div>
     <button on:click={debug}>디버그</button>
   </div>
@@ -71,6 +79,7 @@
 
   .bufflink-list{
     display: flex;
+    margin-bottom: 5px;
     img{
       margin-right: 3px;
       filter:grayscale(1); opacity: (0.5);
