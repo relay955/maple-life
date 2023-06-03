@@ -1,9 +1,9 @@
 <script lang="ts">
-  import DragDropList from "../../shared/DragDropList.svelte";
-  import TodoItems from "./TodoList/TodoItems.svelte";
-  import {idb} from "../../../storage/idb.js";
-  import type {Todo} from "../../../storage/dto/todo";
-  import {lqTodos} from "../../../storage/queries/todoQuery";
+  import DragDropList from "../../components/DragDropList.svelte";
+  import TodoItems from "./_TodoList/TodoItems.svelte";
+  import {idb} from "../../storage/idb.js";
+  import type {Todo} from "../../storage/dto/todo";
+  import {lqTodos} from "../../storage/queries/todoQuery";
 
   export let onClickEditTodoButton: (todo: Todo) => void;
 

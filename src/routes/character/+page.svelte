@@ -1,22 +1,22 @@
 <script lang="ts">
 import {isOnTauri} from "../../backendAdapter/backendAdapter";
-import Title from "../../components/shared/basicComponent/Title.svelte";
+import Title from "../../components/basicComponent/Title.svelte";
 import PageContainer
-  from "../../components/shared/basicComponent/PageContainer.svelte";
-import Space from "../../components/shared/basicComponent/Space.svelte";
-import WorldSelector from "../../components/shared/WorldSelector.svelte";
+  from "../../components/basicComponent/PageContainer.svelte";
+import Space from "../../components/basicComponent/Space.svelte";
+import WorldSelector from "../../components/WorldSelector.svelte";
 import MdDehaze from 'svelte-icons/md/MdDehaze.svelte'
 import MdViewModule from 'svelte-icons/md/MdViewModule.svelte'
 import IconButton
-  from "../../components/shared/basicComponent/IconButton.svelte";
+  from "../../components/basicComponent/IconButton.svelte";
 import {
   lqCharacterTabViewMode,
   updateCharacterTabViewMode
 } from "../../storage/queries/systemQuery";
 import CharacterLineList
-  from "../../components/app/_character/CharacterLineList.svelte";
+  from "./CharacterLineList.svelte";
 import CharacterCardList
-  from "../../components/app/_character/CharacterCardList.svelte";
+  from "./CharacterCardList.svelte";
 
 </script>
 

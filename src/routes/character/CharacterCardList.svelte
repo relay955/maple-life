@@ -1,17 +1,17 @@
 <script lang="ts">
-import {lqCharacter} from "../../../storage/queries/characterQuery";
+import {lqCharacter} from "../../storage/queries/characterQuery";
 import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
-import {lqSelectedWorldId} from "../../../storage/queries/systemQuery.js";
-import type {Character} from "../../../storage/dto/character";
-import {getWorldById} from "../../../storage/queries/worldQuery";
+import {lqSelectedWorldId} from "../../storage/queries/systemQuery.js";
+import type {Character} from "../../storage/dto/character";
+import {getWorldById} from "../../storage/queries/worldQuery";
 import {
   requestMapleCharacterDetailInfo
-} from "../../../util/mapleParser/mapleParserRequester";
+} from "../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
-import CharacterImage from "../../shared/CharacterImage.svelte";
+import CharacterImage from "../../components/CharacterImage.svelte";
 import {goto} from "$app/navigation";
-import {summarizeSpec} from "../../../logic/specCalculator";
-import {calcDamage} from "../../../logic/specCalculator.js";
+import {summarizeSpec} from "../../logic/specCalculator";
+import {calcDamage} from "../../logic/specCalculator.js";
 
 let filteredCharacter = [];
 

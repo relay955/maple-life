@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type {Character} from "../../storage/dto/character";
+  import type {Character} from "../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
 
   export let character:Character;

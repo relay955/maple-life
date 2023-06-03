@@ -1,11 +1,11 @@
 <script lang="ts">
-import {calculateBonusOptionGrade} from "../../../../logic/specCalculator";
-import type {EquipmentType} from "../../../../util/mapleParser/mapleStat";
+import {calculateBonusOptionGrade} from "../../../logic/specCalculator";
+import type {EquipmentType} from "../../../util/mapleParser/mapleStat";
 import MdStar from 'svelte-icons/md/MdStar.svelte'
 import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
-import type {Character} from "../../../../storage/dto/character";
-import {jobDict} from "../../../../infoDictionary/JobDict";
+import type {Character} from "../../../storage/dto/character";
+import {jobDict} from "../../../infoDictionary/JobDict";
 
 export let character:Character;
 export let equipmentType:EquipmentType;

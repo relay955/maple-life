@@ -1,6 +1,6 @@
 <script>
-import Logo from "../../../shared/Logo.svelte";
-import Modal from "../../../shared/Modal.svelte";
+import Logo from "../../components/Logo.svelte";
+import Modal from "../../components/Modal.svelte";
 export let isOpen = false
 </script>
 

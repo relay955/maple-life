@@ -1,9 +1,9 @@
 <script lang="ts">
-import {lqCharacterTree} from "../../storage/queries/characterQuery";
+import {lqCharacterTree} from "../storage/queries/characterQuery";
 import {
   lqSelectedWorldId,
   updateSelectedWorldId
-} from "../../storage/queries/systemQuery";
+} from "../storage/queries/systemQuery";
 
 const onClickWorld = (worldId:number) => {
   updateSelectedWorldId(worldId);

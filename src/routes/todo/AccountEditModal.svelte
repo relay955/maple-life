@@ -1,14 +1,14 @@
 <script lang="ts">
-import Select from "../../shared/basicComponent/Select.svelte";
-import Modal from "../../shared/Modal.svelte";
-import Button from "../../shared/basicComponent/Button.svelte";
+import Select from "../../components/basicComponent/Select.svelte";
+import Modal from "../../components/Modal.svelte";
+import Button from "../../components/basicComponent/Button.svelte";
 import {toast} from "@zerodevx/svelte-toast";
-import {idb} from "../../../storage/idb";
-import type {Account} from "../../../storage/dto/account";
-import IconButton from "../../shared/basicComponent/IconButton.svelte";
+import {idb} from "../../storage/idb";
+import type {Account} from "../../storage/dto/account";
+import IconButton from "../../components/basicComponent/IconButton.svelte";
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
-import Input from "../../shared/basicComponent/Input.svelte";
-import {deleteAccount, putAccount} from "../../../storage/queries/accountQuery";
+import Input from "../../components/basicComponent/Input.svelte";
+import {deleteAccount, putAccount} from "../../storage/queries/accountQuery";
 
 
 

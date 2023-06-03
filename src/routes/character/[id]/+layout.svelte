@@ -1,13 +1,13 @@
 <script lang="ts">
 import {isOnTauri} from "../../../backendAdapter/backendAdapter";
 import PageContainer
-  from "../../../components/shared/basicComponent/PageContainer.svelte";
+  from "../../../components/basicComponent/PageContainer.svelte";
 import {idb} from "../../../storage/idb";
 import CharacterImage
-  from "../../../components/shared/CharacterImage.svelte";
+  from "../../../components/CharacterImage.svelte";
 import {page} from "$app/stores";
 import {liveQuery} from "dexie";
-import Title from "../../../components/shared/basicComponent/Title.svelte";
+import Title from "../../../components/basicComponent/Title.svelte";
 import {goto} from "$app/navigation";
 import {calcDamage, summarizeSpec} from "../../../logic/specCalculator.js";
 

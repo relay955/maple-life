@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type {TodoCheckType} from "../../../../storage/dto/todo";
+  import type {TodoCheckType} from "../../../storage/dto/todo";
   import MdRadioButtonUnchecked from 'svelte-icons/md/MdRadioButtonUnchecked.svelte'
   import MdCheckCircle from 'svelte-icons/md/MdCheckCircle.svelte'
   export let checked:TodoCheckType;

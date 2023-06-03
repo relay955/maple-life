@@ -5,14 +5,14 @@
   import IoMdMegaphone from 'svelte-icons/io/IoMdMegaphone.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
-  import IconButton from "../../shared/basicComponent/IconButton.svelte";
+  import IconButton from "../components/basicComponent/IconButton.svelte";
   import MdHome from 'svelte-icons/md/MdHome.svelte'
   import MdInsertComment from 'svelte-icons/md/MdInsertComment.svelte'
   import MdBuild from 'svelte-icons/md/MdBuild.svelte'
   import MdMonetizationOn from 'svelte-icons/md/MdMonetizationOn.svelte'
   import MdInfoOutline from 'svelte-icons/md/MdInfoOutline.svelte'
-  import Space from "../../shared/basicComponent/Space.svelte";
-  import WebsiteInfoModal from "./LeftBar/WebsiteInfoModal.svelte";
+  import Space from "../components/basicComponent/Space.svelte";
+  import WebsiteInfoModal from "./_LeftBar/WebsiteInfoModal.svelte";
   import {goto} from "$app/navigation";
 
   let isOpenInfoPopup = false;
