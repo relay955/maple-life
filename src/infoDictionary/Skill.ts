@@ -2,6 +2,7 @@ import type {CharacterSpecSummary, Stats} from "../util/mapleParser/mapleStat";
 
 export interface Skill{
   imgUrl?:string;
+  description?:string;//설명
   actionDelay?:number;//스킬 사용 후딜. ms단위로 표기. 자동발동이거나 즉발형 스킬이면 undefined
   affectAttackSpeed?:boolean;//공속영향
   startupCooldown?:number;//초기 발동대기시간.
@@ -21,6 +22,8 @@ export interface Skill{
 
   buffStat?:(specSummary:CharacterSpecSummary)=>Stats;//스킬 사용시 버프형태로 일정시간동안 제공되는 스텟
   buffDuration?:(specSummary:CharacterSpecSummary)=>number;//버프 지속시간. 지속시간동안 버프 적용
+
+  passiveStat?:(specSummary:CharacterSpecSummary)=>Stats;//패시브 스킬일경우 상시 제공되는 스텟
 }
 
 //어떻게 할것인가?
