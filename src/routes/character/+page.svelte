@@ -5,8 +5,6 @@ import PageContainer
   from "../../components/shared/basicComponent/PageContainer.svelte";
 import Space from "../../components/shared/basicComponent/Space.svelte";
 import WorldSelector from "../../components/shared/WorldSelector.svelte";
-import {idb} from "../../storage/idb";
-import {summarizeSpec} from "../../logic/specCalculator.js";
 import MdDehaze from 'svelte-icons/md/MdDehaze.svelte'
 import MdViewModule from 'svelte-icons/md/MdViewModule.svelte'
 import IconButton

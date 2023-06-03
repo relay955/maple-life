@@ -71,7 +71,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         hyperStat: {},
         ability:{},
         equipments:{},
-        skills: [],
+        skills: {},
         tendency : {},
         buff:{},
         linkSkill:{},

@@ -9,8 +9,9 @@ import {
 } from "../../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
 import CharacterImage from "../../shared/CharacterImage.svelte";
-import {summarizeSpec} from "../../../logic/specCalculator";
 import {goto} from "$app/navigation";
+import {summarizeSpec} from "../../../logic/specCalculator";
+import {calcDamage} from "../../../logic/specCalculator.js";
 
 let filteredCharacter = [];
 
@@ -39,7 +40,7 @@ const onClickCharacterCard = async (character: Character) => {
       </div>
       {#if character.spec.default}
       <div class="score">
-        {summarizeSpec(character,"default").statIndicators["종합점수"]}
+        {calcDamage(summarizeSpec(character,character.spec.default))}
       </div>
       {/if}
     </div>

@@ -1,9 +1,7 @@
 <script lang="ts">
 import type {Character} from "../../../../storage/dto/character";
 import {equipmentSetOptions} from "../../../../infoDictionary/EquipmentDict";
-import {summarizeSpec} from "../../../../logic/specCalculator";
 import {calculateBonusOptionGrade} from "../../../../logic/specCalculator.js";
-import {jobDict} from "../../../../infoDictionary/JobDict.js";
 import type {
   CharacterSpec,
   EquipmentStat,
@@ -14,7 +12,7 @@ import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 
 export let character:Character;
-export let statDetails:CharacterSpecSummary;
+export let specSummary:CharacterSpecSummary;
 
 let bonusStatTotal = 0;
 let potentialTotal = 0;
@@ -25,8 +23,8 @@ let armorPiercingLines = 0;
 
 Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
   let equipment:EquipmentStat = character.spec.default!.equipments[equipmentName];
-  bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,statDetails.classInfo);
-  potentialTotal += (equipment.potential?.stats[statDetails.classInfo.mainStat+"%"] ?? 0) +
+  bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,specSummary.job);
+  potentialTotal += (equipment.potential?.stats[specSummary.job.mainStat+"%"] ?? 0) +
     (equipment.potential?.stats["올스탯%"] ?? 0);
   arcaneForceTotal += equipment.stats["아케인 포스"] ?? 0;
   equipment.potential?.options?.forEach((option:Stat)=>{
@@ -40,8 +38,8 @@ Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
 <div class="main">
   <div class="subtitle">세트옵션</div>
   <div class="set-option">
-    {Object.keys(statDetails.sets)
-      .map(setName=>`${statDetails.sets[setName]}${equipmentSetOptions[setName].nickName}`)
+    {Object.keys(specSummary.sets)
+      .map(setName=>`${specSummary.sets[setName]}${equipmentSetOptions[setName].nickName}`)
       .join("/")}
   </div>
   <div class="total-container">
@@ -49,7 +47,7 @@ Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
       <div class="subtitle">아이템합계</div>
       <div class="starforce">
         <div class="small-icon" style="color:#d8b625"><MdStar/></div>
-        {statDetails.starforce}
+        {specSummary.starforce}
       </div>
       <div class="bonusStats">
         <div class="small-icon" style="color:red"><GiFire/></div>
@@ -72,10 +70,10 @@ Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
         Arc {arcaneForceTotal}
       </div>
       <div class="core">
-        스킬코어 {statDetails.statIndicators["스킬코어"]}
+        스킬코어 {specSummary.skillsAvgLevel.skillCore}
       </div>
       <div class="core">
-        강화코어 {statDetails.statIndicators["강화코어"]}
+        강화코어 {specSummary.skillsAvgLevel.enhanceCore}
       </div>
     </div>
   </div>
