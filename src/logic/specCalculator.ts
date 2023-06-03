@@ -113,13 +113,17 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
         }
     })
 
-    //활성화된 링크스킬 계산
-    Object.keys(spec.linkSkill).forEach((skillName)=> {
-        let skillLevel = spec.linkSkill[skillName];
-        let skillBonusStats = linkSkillDict[skillName][skillLevel]
-        Object.keys(skillBonusStats).forEach((stat)=>{
+    //링크스킬 저장
+    specSummary.skills = Object.assign({},specSummary.skills,spec.linkSkills)
+
+    //활성화된 링크스킬 스텟 계산
+    Object.keys(spec.linkSkills).forEach((skillName)=> {
+        let skillInfo:Skill = linkSkillDict[skillName];
+        let stats = skillInfo.passiveStat?.(specSummary) ?? {}
+
+        Object.keys(stats).forEach((stat)=>{
             if(statList[stat] === undefined) statList[stat] = {}
-            statList[stat]["[링크] "+skillName] = skillBonusStats[stat];
+            statList[stat]["[링크] "+skillName] = stats[stat];
         });
     })
 
