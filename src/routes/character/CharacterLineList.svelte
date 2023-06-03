@@ -16,7 +16,7 @@ import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
 import {idb} from "../../storage/idb";
 import {calcDamage, summarizeSpec} from "../../logic/specCalculator";
 
-let filteredCharacter = [];
+let filteredCharacter:Character[] = [];
 
 const equipmentTypeOrder:EquipmentType[] = [
   "반지1","반지2","반지3","반지4","포켓아이템","펜던트1","펜던트2","벨트","얼굴장식", "눈장식","귀고리",
@@ -24,7 +24,6 @@ const equipmentTypeOrder:EquipmentType[] = [
 ]
 
 $:{
-  //@ts-ignore
   let characters:Character[] = $lqCharacter ?? []
   filteredCharacter = characters.filter((character) => character.worldId === $lqSelectedWorldId);
 }
@@ -34,7 +33,7 @@ const onClickRefreshCharacter = async (character: Character) => {
     await requestMapleCharacterDetailInfo(character);
     idb.character.put(character);
 
-  }catch(e){
+  }catch(e:any){
     toast?.push(e.message)
   }
 }

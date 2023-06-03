@@ -74,7 +74,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
         skills: {},
         tendency : {},
         buff:{},
-        linkSkill:{},
+        linkSkills:{},
     }
     let defaultSpec = character.spec.default
     //기본정보에서 어빌리티, 하이퍼스텟 파싱
