@@ -1,15 +1,15 @@
 import type {
     CharacterSpec,
     Stat,
-    StatDetails, StatIndicator, StatIndicators, StatInfo,
+    CharacterSpecSummary, StatIndicator, StatIndicators, Stats,
 } from "../util/mapleParser/mapleStat";
 import type {Character} from "../storage/dto/character";
-import type {Classes} from "../infoDictionary/ClassesDict"
+import type {Job} from "../infoDictionary/JobDict"
 import {
-    classesDict,
+    jobDict,
     defaultCalcBonusStatGradeFomula,
     defaultCalcDmgFomula
-} from "../infoDictionary/ClassesDict";
+} from "../infoDictionary/JobDict";
 import {
     equipmentSetOptions,
     equipmentToSetDict
@@ -17,7 +17,7 @@ import {
 import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
 import {buffDict} from "../infoDictionary/BuffDict";
 
-export const summarizeSpec = (character:Character, preset:"default"|"boss"):StatDetails => {
+export const summarizeSpec = (character:Character, preset:"default"|"boss"):CharacterSpecSummary => {
     let spec = character.spec![preset]!
     let statDetails = calcTotalPerStat(character,spec);
     statDetails.statIndicators = calcStatIndicators(spec,statDetails);
@@ -25,9 +25,9 @@ export const summarizeSpec = (character:Character, preset:"default"|"boss"):Stat
     return statDetails;
 }
 
-export const calcTotalPerStat = (character:Character,spec:CharacterSpec):StatDetails => {
-    let classInfo = classesDict[character.classType]!
-    let statDetails:StatDetails = {classInfo:classInfo,statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
+export const calcTotalPerStat = (character:Character,spec:CharacterSpec):CharacterSpecSummary => {
+    let classInfo = jobDict[character.classType]!
+    let statDetails:CharacterSpecSummary = {classInfo:classInfo,statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
     let statList = statDetails.statList;
     //스텟별 합산
     //메용
@@ -41,7 +41,7 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec):StatDet
     }
 
     //캐릭터 기본스텟
-    let passiveStats = classesDict[character.classType].passiveStats ?? {}
+    let passiveStats = jobDict[character.classType].passiveStats ?? {}
     Object.keys(passiveStats).forEach((stat)=> {
         if(statList[stat] === undefined) statList[stat] = {}
         statList[stat]["캐릭터 기초/스킬"] = passiveStats[stat];
@@ -170,7 +170,7 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec):StatDet
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails):StatIndicators => {
+export const calcStatIndicators = (spec:CharacterSpec,statDetails:CharacterSpecSummary):StatIndicators => {
     try {
         const classInfo = statDetails.classInfo;
         //스텟*공격력 계산
@@ -249,7 +249,7 @@ export const calcStatIndicators = (spec:CharacterSpec,statDetails:StatDetails):S
 
 
 //추가옵션 급수계산
-export const calculateBonusOptionGrade = (bonusStats:StatInfo,classInfo:Classes):number => {
+export const calculateBonusOptionGrade = (bonusStats:Stats, classInfo:Job):number => {
     try {
         if(classInfo.calcBonusStatGrade === undefined) {
             return defaultCalcBonusStatGradeFomula(bonusStats,classInfo)

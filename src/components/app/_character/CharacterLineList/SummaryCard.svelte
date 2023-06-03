@@ -3,18 +3,18 @@ import type {Character} from "../../../../storage/dto/character";
 import {equipmentSetOptions} from "../../../../infoDictionary/EquipmentDict";
 import {summarizeSpec} from "../../../../logic/specCalculator";
 import {calculateBonusOptionGrade} from "../../../../logic/specCalculator.js";
-import {classesDict} from "../../../../infoDictionary/ClassesDict.js";
+import {jobDict} from "../../../../infoDictionary/JobDict.js";
 import type {
   CharacterSpec,
-  EquipmentInfo,
-  Stat, StatDetails
+  EquipmentStat,
+  Stat, CharacterSpecSummary
 } from "../../../../util/mapleParser/mapleStat";
 import MdStar from 'svelte-icons/md/MdStar.svelte'
 import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 
 export let character:Character;
-export let statDetails:StatDetails;
+export let statDetails:CharacterSpecSummary;
 
 let bonusStatTotal = 0;
 let potentialTotal = 0;
@@ -24,7 +24,7 @@ let bossdmgLines = 0;
 let armorPiercingLines = 0;
 
 Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
-  let equipment:EquipmentInfo = character.spec.default!.equipments[equipmentName];
+  let equipment:EquipmentStat = character.spec.default!.equipments[equipmentName];
   bonusStatTotal += calculateBonusOptionGrade(equipment.bonusStats,statDetails.classInfo);
   potentialTotal += (equipment.potential?.stats[statDetails.classInfo.mainStat+"%"] ?? 0) +
     (equipment.potential?.stats["올스탯%"] ?? 0);

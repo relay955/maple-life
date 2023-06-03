@@ -1,8 +1,8 @@
 import type {
     CharacterSpec,
-    EquipmentInfo,
-    SkillInfo,
-    StatInfo
+    EquipmentStat,
+    SkillStat,
+    Stats
 } from "../../util/mapleParser/mapleStat";
 
 export interface Character {

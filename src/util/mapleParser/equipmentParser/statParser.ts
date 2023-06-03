@@ -1,6 +1,6 @@
-import type {EquipmentInfo, Stat} from "../mapleStat";
+import type {EquipmentStat, Stat} from "../mapleStat";
 
-export const defaultStatParsingStrategy = (equipmentInfo:EquipmentInfo,statType:Stat,option:string):void => {
+export const defaultStatParsingStrategy = (equipmentInfo:EquipmentStat, statType:Stat, option:string):void => {
     let amountList = option.replace(/([+()])/g,"").split(/\s+/)
     equipmentInfo.stats[statType] = Number(amountList[0].replace("%",""))
     if(amountList.length >= 3){

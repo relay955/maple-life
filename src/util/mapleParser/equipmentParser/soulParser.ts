@@ -1,4 +1,4 @@
-import type {EquipmentInfo, Stat} from "../mapleStat";
+import type {EquipmentStat, Stat} from "../mapleStat";
 
 const soulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/보스/, "stat":"보스 데미지"},
@@ -22,7 +22,7 @@ const soulToStats:{regex:RegExp, stat:Stat}[] = [
 ]
 
 
-export const soulParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string):void => {
+export const soulParsingStrategy = (equipmentInfo:EquipmentStat, name:string, option:string):void => {
     let lines = option.split("\n")
     equipmentInfo.soul = {
         name:lines[0].replace(" 적용",""),

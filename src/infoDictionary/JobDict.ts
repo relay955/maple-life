@@ -1,18 +1,21 @@
 import type {
     Stat,
     StatIndicators,
-    StatInfo
+    Stats
 } from "../util/mapleParser/mapleStat";
+import {bowmaster} from "./Job/bowmaster";
+import type {Skill} from "./Skill";
 
-export interface Classes{
+export interface Job {
     mainStat?:Stat;
     subStat?:Stat;
     atkType:"공격력"|"마력";
-    calcDmg?:(statInfo:StatInfo,classes:Classes)=>StatIndicators;
-    calcBonusStatGrade?:(statInfo:StatInfo,classes:Classes)=>number;
-    passiveStats?:StatInfo;
-    activeStats?:StatInfo;
-    unionStat?:StatInfo[]
+    calcDmg?:(statInfo:Stats, classes:Job)=>StatIndicators;
+    calcBonusStatGrade?:(statInfo:Stats, classes:Job)=>number;
+    passiveStats?:Stats;
+    activeStats?:Stats;
+    unionStat?:Stats[]
+    skills?:{[index:string]:Skill};
     matrixSkill?:{[index:string]:{
         damageRate:number;
         type:SkillType;
@@ -25,7 +28,7 @@ export interface Classes{
 
 export type SkillType = "skill" | "enhance"
 
-export const classesDict:{[index:string]:Classes} = {
+export const jobDict:{[index:string]:Job} = {
     "히어로":{
         mainStat:"STR",
         subStat:"DEX",
@@ -62,51 +65,7 @@ export const classesDict:{[index:string]:Classes} = {
         atkType:"마력",
         unionStat:[{"고정INT":10}, {"고정INT":20}, {"고정INT":40}, {"고정INT":80}, {"고정INT":100}]
     },
-    "보우마스터":{
-        mainStat:"DEX",
-        subStat:"STR",
-        atkType:"공격력",
-        passiveStats:{
-            "무기 상수":1.3,
-            "공격속도":3,
-            "숙련도":0.85,
-            "DEX":130,
-            "STR":30,
-            "공격력":150,
-            "공격력%":25,
-            "최종 데미지":37.8,
-            "방어율 무시":55,
-            "크리티컬 확률":69,
-            "크리티컬 데미지":31,
-            "이동속도":130,
-            "점프력":100,
-            "보정계수":1.2
-        },
-        activeStats: {
-            "공격력": 50,
-            "공격력%": 20,
-            "데미지": 75,
-            "보스 데미지": 20,
-        },
-        matrixSkill:{
-            "폭풍의 시 강화":{damageRate:0.2634, type:"enhance"},
-            "퀴버 카트리지 강화":{damageRate:0.0904,type:"enhance"},
-            "애로우 플래터/플레시 미라주 강화":{damageRate:0.15,type:"enhance"},
-            "파이널 어택 : 활 강화":{damageRate:0.06,type:"enhance"},
-            "피닉스 강화":{damageRate:0.015,type:"enhance"},
-            "애로우 레인":{damageRate:0.15,type:"skill"},
-            "퀴버 풀버스트":{damageRate:0.12,type:"skill"},
-            "잔영의 시":{damageRate:0.08,type:"skill"},
-            "이볼브":{damageRate:0.06,type:"skill"},
-            "실루엣 미라주":{damageRate:0.04,type:"skill"},
-            "가이디드 애로우":{damageRate:0.038,type:"skill"},
-        },
-        unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}],
-        seedRingFactor:{
-            "리스트레인트 링":[1.02,1.04,1.06,1.08],
-            "웨폰퍼프 링":[1.005,1.001,1.0015,1.02]
-        }
-    },
+    "보우마스터":bowmaster,
     "신궁":{
         mainStat:"DEX",
         subStat:"STR",
@@ -355,7 +314,9 @@ export const classesDict:{[index:string]:Classes} = {
     }
 }
 
-export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes):StatIndicators => {
+
+
+export const defaultCalcDmgFomula = (statInfo:Stats, classes:Job):StatIndicators => {
     let mainStatTotal = (statInfo[classes.mainStat!] ?? 0) + (statInfo["AP"+classes.mainStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let subStatTotal = (statInfo[classes.subStat!] ?? 0) + (statInfo["AP"+classes.subStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let mainStatPercentTotal = ((statInfo[classes.mainStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
@@ -371,8 +332,9 @@ export const defaultCalcDmgFomula = (statInfo:StatInfo,classes:Classes):StatIndi
     }
 }
 
-export const defaultCalcBonusStatGradeFomula = (statInfo:StatInfo,classes:Classes) => {
+export const defaultCalcBonusStatGradeFomula = (statInfo:Stats, classes:Job) => {
     return (statInfo[classes.mainStat!] ?? 0) +
         (statInfo[classes.atkType!] ?? 0) * 4 +
         (statInfo["올스탯%"] ?? 0) * 10
 }
+
