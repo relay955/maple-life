@@ -13,7 +13,7 @@ import {goto} from "$app/navigation";
 import {summarizeSpec} from "../../logic/specCalculator";
 import {calcDamage} from "../../logic/specCalculator.js";
 
-let filteredCharacter = [];
+let filteredCharacter:Character[] = [];
 
 $:{
   //@ts-ignore
@@ -24,7 +24,7 @@ $:{
 const onClickCharacterCard = async (character: Character) => {
   try {
     await goto(`/character/${character.id}/stat`)
-  }catch(e){
+  }catch(e:any){
     toast?.push(e.message)
   }
 }
@@ -32,7 +32,7 @@ const onClickCharacterCard = async (character: Character) => {
 
 <div class="character-list">
   {#each filteredCharacter as character (character.id)}
-    <div class="character-card" on:click={()=>onClickCharacterCard(character)}>
+    <button class="character-card" on:click={()=>onClickCharacterCard(character)}>
       <CharacterImage character={character}/>
       <div class="name">{character.name}</div>
       <div class="subtitle">
@@ -43,7 +43,7 @@ const onClickCharacterCard = async (character: Character) => {
         {calcDamage(summarizeSpec(character,character.spec.default))}
       </div>
       {/if}
-    </div>
+    </button>
   {/each}
 </div>
 
@@ -55,6 +55,7 @@ const onClickCharacterCard = async (character: Character) => {
   }
   .character-card{
     margin-right:8px;
+    background-color: transparent;
 
     display: flex;
     flex-direction: column;
@@ -78,18 +79,6 @@ const onClickCharacterCard = async (character: Character) => {
     .subtitle {
       font-size: 12px;
       color: gray;
-    }
-
-    .img {
-      width: 50px;
-      height: 50px;
-      background-position: 52% 61% !important;
-      background-size: 218% !important;
-    }
-    .default-img {
-      width: 40px;
-      height: 40px;
-      padding: 5px;
     }
   }
   .character-card:hover{

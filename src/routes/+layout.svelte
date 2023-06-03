@@ -4,8 +4,6 @@
   import {SvelteToast} from "@zerodevx/svelte-toast";
   import {onMount} from "svelte";
   import {runOnInitialize} from "../logic/runOnInitialize";
-  import Title from "../components/basicComponent/Title.svelte";
-  import BottomInfo from "./BottomInfo.svelte";
 
   onMount(runOnInitialize)
 

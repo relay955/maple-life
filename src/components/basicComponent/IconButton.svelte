@@ -2,7 +2,7 @@
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
 
-  export let tooltip = undefined;
+  export let tooltip:string|undefined = undefined;
   export let onClick = () => {};
   export let style:string = "";
   export let activated=false;
@@ -12,11 +12,11 @@
 </script>
 <div class="main">
   <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"} bottom={direction==="bottom"}>
-    <div class={`icon-button ${size} ${selected ? "selected":""}`} on:click={onClick} style={style}>
+    <button class={`icon-button ${size} ${selected ? "selected":""}`} on:click={onClick} style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>
       </span>
-    </div>
+    </button>
   </SvelteTooltip>
 </div>
 
@@ -36,6 +36,8 @@
     color:white;
     cursor: pointer;
     transition: 0.2s all;
+    border:none;
+    background-color: transparent;
   }
   .icon-button.small{
     width:24px;

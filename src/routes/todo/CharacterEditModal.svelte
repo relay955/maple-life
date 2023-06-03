@@ -32,7 +32,7 @@ let isParsing = false;
 export let onClose = () => {};
 export let isEditMode = false;
 export let editCharacter:Character|undefined = undefined;
-export let nameRef;
+ let nameRef;
 
 $: {
   if(editCharacter !== undefined && isEditMode){
@@ -45,7 +45,8 @@ $: if(isOpen){
 }
 
 account.subscribe((accounts)=>{
-  character.accountId = accounts[0].id
+  if(accounts.length === 0) return;
+  character.accountId = accounts[0].id!
 })
 
 function reset():Character{
@@ -104,7 +105,7 @@ const onClickDeleteButton = async () => {
   try{
     await deleteCharacter(character)
     onCloseProxy()
-  }catch (e){
+  }catch (e:any){
     toast.push(e.message)
   }
 }
@@ -171,8 +172,5 @@ const onCloseProxy = () => {
   }
   .submit-button{
     flex-grow: 1;
-  }
-  .delete-button{
-    margin-left: 10px;
   }
 </style>

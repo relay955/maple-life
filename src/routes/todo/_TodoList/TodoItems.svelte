@@ -65,15 +65,15 @@ const onClickCheckbox = (type:"right"|"left",item:Todo,checkId:string) =>{
 <div class="checkbox-lists">
 {#if todo.type === "perCharacter"}
   {#each ($lqCharacterTree ?? []) as account (account.id)}
-    {#each account.worlds as world (world.id)}
-      {#each world.characters as character (character.id)}
+    {#each account.worlds ?? [] as world (world.id)}
+      {#each world.characters ?? [] as character (character.id)}
       <div class="checkbox-item" style={`min-width:80px;`}>
         <LargeCheckBox
           isShortHeight={$lqShortHeightMode}
           style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}`}
           onClick={()=>onClickCheckbox("left",todo, `${character.id}`)}
           onRightClick={()=>onClickCheckbox("right",todo,`${character.id}`)}
-          checked={todo.isChecked[character.id] ?? "unchecked"}/>
+          checked={todo.isChecked[character.id ?? 0] ?? "unchecked"}/>
       </div>
       {/each}
     {/each}
@@ -81,8 +81,8 @@ const onClickCheckbox = (type:"right"|"left",item:Todo,checkId:string) =>{
 {/if}
 {#if todo.type === "perWorld"}
   {#each ($lqCharacterTree ?? []) as account (account.id)}
-    {#each account.worlds as world (world.id)}
-      <div class="checkbox-item" style={`min-width:80px; flex-grow:${world.characters.length}`}>
+    {#each account.worlds ?? [] as world (world.id)}
+      <div class="checkbox-item" style={`min-width:80px; flex-grow:${world.characters?.length}`}>
         <LargeCheckBox
           isShortHeight={$lqShortHeightMode}
           style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}`}
@@ -95,14 +95,14 @@ const onClickCheckbox = (type:"right"|"left",item:Todo,checkId:string) =>{
 {/if}
 {#if todo.type === "perAccount"}
   {#each ($lqCharacterTree ?? []) as account (account.id)}
-  {#if account.worlds.length > 0}
+  {#if (account.worlds?.length ?? 0) > 0}
     <div class="checkbox-item" style={`min-width:80px; flex-grow:${calcAccountCharacterCount(account)}`}>
       <LargeCheckBox
         isShortHeight={$lqShortHeightMode}
         style={`${todo.color !== "default"?`background-color:${todo.color}22;`:""}`}
         onClick={()=>onClickCheckbox("left",todo,`${account.id}`)}
         onRightClick={()=>onClickCheckbox("right",todo,`${account.id}`)}
-        checked={todo.isChecked[account.id] ?? "unchecked"}/>
+        checked={todo.isChecked[account?.id ?? 0] ?? "unchecked"}/>
     </div>
   {/if}
   {/each}

@@ -54,7 +54,7 @@ const onClickDeleteButton = async () => {
   try {
     await deleteAccount(account)
     onCloseProxy()
-  }catch (e) {
+  }catch (e:any) {
     toast.push(e.message)
   }
 }

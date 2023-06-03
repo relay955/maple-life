@@ -1,7 +1,7 @@
 <script>
   export let placeholder = '';
   export let value = '';
-  export let onUpdate = (e) => {};
+  export let onUpdate = () => {};
 
   let maxRows = 20;
   let maxHeight;

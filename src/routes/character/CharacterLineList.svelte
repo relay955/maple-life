@@ -74,9 +74,5 @@ const onMoveCharacter = (event) => {
     display: flex;
     height: 100px;
     align-items: center;
-
-    .main{
-      width: 150px;
-    }
   }
 </style>

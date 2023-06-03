@@ -16,7 +16,7 @@ let classInfo = jobDict[character.classType]
 {#if equipment !== undefined}
   <div class="main">
     <div class="img-container">
-      <img src={equipment.imageUrl}/>
+      <img src={equipment.imageUrl} alt={equipment.name}/>
     </div>
     <div class="name">{equipment.name}</div>
     <div class="starforce">
@@ -69,9 +69,6 @@ let classInfo = jobDict[character.classType]
       display: flex;
       align-items: center;
       justify-content: center;
-      .img {
-        height: 30px;
-      }
     }
     .name{
       text-align: center;

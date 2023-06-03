@@ -27,9 +27,9 @@
     <div style="display:flex; margin-bottom:10px; height:25px">
       <div class="title">{title}</div>
       <Space/>
-      <div class="close-button" on:click={onClose}>
+      <button class="close-button" on:click={onClose}>
         X
-      </div>
+      </button>
     </div>
     <div class="content">
       <slot></slot>
@@ -38,10 +38,6 @@
 </div>
 
 <style lang="scss">
-  .close-icon{
-    width:25px;
-    height:25px;
-  }
   .Popup {
     visibility: hidden;
     position: fixed;
@@ -84,11 +80,8 @@
     }
 
     .close-button{
+      border:none;
       cursor:pointer;
-      .close-icon{
-        width:25px;
-        height:25px;
-      }
     }
     .content{
       text-align: left;

@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let title:string = "";
-  export let value:string = "";
+  export let title:string|number = "";
+  export let value:string|number = "";
 </script>
 
 <div>

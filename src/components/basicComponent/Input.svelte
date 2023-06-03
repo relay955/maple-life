@@ -1,10 +1,9 @@
 <script lang="ts">
   export let title:string = "";
-  export let value:string = "";
-  export let type:string = "text";
+  export let value:any = "";
   export let listId:string = "";
   export let onSelect:(e:Event)=>void = ()=>{};
-  export let ref;
+  export let ref:HTMLInputElement|undefined = undefined;
 </script>
 
 <div>
