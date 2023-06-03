@@ -1,15 +1,15 @@
 <script lang="ts">
-import Input from "../../shared/basicComponent/Input.svelte";
-import Select from "../../shared/basicComponent/Select.svelte";
-import Modal from "../../shared/Modal.svelte";
-import Button from "../../shared/basicComponent/Button.svelte";
-import type {Todo} from "../../../storage/dto/todo";
+import Input from "../../components/basicComponent/Input.svelte";
+import Select from "../../components/basicComponent/Select.svelte";
+import Modal from "../../components/Modal.svelte";
+import Button from "../../components/basicComponent/Button.svelte";
+import type {Todo} from "../../storage/dto/todo";
 import {v4 as uuidv4} from 'uuid'
 import {toast} from "@zerodevx/svelte-toast";
 import {getTodoPresets} from "$lib/preset/todoPresets";
 import {onMount} from "svelte";
-import {idb} from "../../../storage/idb";
-import {putTodo} from "../../../storage/queries/todoQuery";
+import {idb} from "../../storage/idb";
+import {putTodo} from "../../storage/queries/todoQuery";
 
 
 

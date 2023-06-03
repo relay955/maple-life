@@ -1,15 +1,15 @@
 <script lang="ts">
 import LargeCheckBox from "./LargeCheckBox.svelte";
-import Label from "../../../shared/basicComponent/Label.svelte";
-import type {Todo} from "../../../../storage/dto/todo";
-import IconButton from "../../../shared/basicComponent/IconButton.svelte";
+import Label from "../../../components/basicComponent/Label.svelte";
+import type {Todo} from "../../../storage/dto/todo";
+import IconButton from "../../../components/basicComponent/IconButton.svelte";
 import MdEdit from 'svelte-icons/md/MdEdit.svelte'
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
-import {idb} from "../../../../storage/idb";
-import {calcAccountCharacterCount} from "../../../../storage/dto/account.js";
-import {lqCharacterTree} from "../../../../storage/queries/characterQuery";
-import {lqShortHeightMode} from "../../../../storage/queries/systemQuery";
-import {deleteTodo} from "../../../../storage/queries/todoQuery";
+import {idb} from "../../../storage/idb";
+import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
+import {lqCharacterTree} from "../../../storage/queries/characterQuery";
+import {lqShortHeightMode} from "../../../storage/queries/systemQuery";
+import {deleteTodo} from "../../../storage/queries/todoQuery";
 
 export let todo:Todo;
 export let onClickEdit:(todo:Todo)=>void;

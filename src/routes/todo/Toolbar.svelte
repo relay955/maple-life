@@ -7,13 +7,13 @@
   import MdDescription from 'svelte-icons/md/MdDescription.svelte'
   //@ts-ignore
   import SvelteTooltip from "svelte-tooltip";
-  import IconButton from "../../shared/basicComponent/IconButton.svelte";
+  import IconButton from "../../components/basicComponent/IconButton.svelte";
   import {
     lqShortHeightMode,
     lqShowCharacterPreview, lqShowMemo,
     updateShortHeightMode,
     updateShowCharacterPreview, updateShowMemo
-  } from "../../../storage/queries/systemQuery";
+  } from "../../storage/queries/systemQuery";
 
   export let onClickAccountAddButton:()=>void;
   export let onClickCharacterAddButton:()=>void;

@@ -1,20 +1,20 @@
 <script lang="ts">
-import {lqCharacter} from "../../../storage/queries/characterQuery";
-import {lqSelectedWorldId} from "../../../storage/queries/systemQuery.js";
-import type {Character} from "../../../storage/dto/character";
+import {lqCharacter} from "../../storage/queries/characterQuery";
+import {lqSelectedWorldId} from "../../storage/queries/systemQuery.js";
+import type {Character} from "../../storage/dto/character";
 import {
   requestMapleCharacterDetailInfo
-} from "../../../util/mapleParser/mapleParserRequester";
+} from "../../util/mapleParser/mapleParserRequester";
 import {toast} from "@zerodevx/svelte-toast";
-import DragDropList from "../../shared/DragDropList.svelte";
-import type {EquipmentType} from "../../../util/mapleParser/mapleStat";
-import EquipmentCard from "./CharacterLineList/EquipmentCard.svelte";
-import CharacterBasicCard from "./CharacterLineList/CharacterBasicCard.svelte";
-import SummaryCard from "./CharacterLineList/SummaryCard.svelte";
-import IconButton from "../../shared/basicComponent/IconButton.svelte";
+import DragDropList from "../../components/DragDropList.svelte";
+import type {EquipmentType} from "../../util/mapleParser/mapleStat";
+import EquipmentCard from "./_CharacterLineList/EquipmentCard.svelte";
+import CharacterBasicCard from "./_CharacterLineList/CharacterBasicCard.svelte";
+import SummaryCard from "./_CharacterLineList/SummaryCard.svelte";
+import IconButton from "../../components/basicComponent/IconButton.svelte";
 import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
-import {idb} from "../../../storage/idb";
-import {calcDamage, summarizeSpec} from "../../../logic/specCalculator";
+import {idb} from "../../storage/idb";
+import {calcDamage, summarizeSpec} from "../../logic/specCalculator";
 
 let filteredCharacter = [];
 

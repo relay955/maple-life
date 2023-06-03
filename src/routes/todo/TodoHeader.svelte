@@ -1,29 +1,29 @@
 <script lang="ts">
-  import type {Character} from "../../../storage/dto/character";
+  import type {Character} from "../../storage/dto/character";
   import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte'
-  import IconButton from "../../shared/basicComponent/IconButton.svelte";
+  import IconButton from "../../components/basicComponent/IconButton.svelte";
   import MdHelpOutline from 'svelte-icons/md/MdHelpOutline.svelte'
-  import Modal from "../../shared/Modal.svelte";
-  import type {Todo} from "../../../storage/dto/todo";
+  import Modal from "../../components/Modal.svelte";
+  import type {Todo} from "../../storage/dto/todo";
   import ProgressBar from "@okrad/svelte-progressbar";
   import {liveQuery} from "dexie";
-  import {idb} from "../../../storage/idb";
-  import type {Account} from "../../../storage/dto/account";
+  import {idb} from "../../storage/idb";
+  import type {Account} from "../../storage/dto/account";
   import {
     generateCharacterTree,
     lqCharacterTree, swapCharacterOrder
-  } from "../../../storage/queries/characterQuery";
+  } from "../../storage/queries/characterQuery";
   import {toast} from "@zerodevx/svelte-toast";
-  import {calcAccountCharacterCount} from "../../../storage/dto/account.js";
-  import type {AccountWorld} from "../../../storage/dto/world";
-  import {WorldList} from "../../../storage/dto/world";
-  import {lqTodos} from "../../../storage/queries/todoQuery";
-  import {lqShowCharacterPreview} from "../../../storage/queries/systemQuery";
-  import TodoHelpModal from "./TodoHeader/TodoHelpModal.svelte";
-  import {swapWorldOrder} from "../../../storage/queries/worldQuery";
-  import {swapAccountOrder} from "../../../storage/queries/accountQuery";
-  import Title from "../../shared/basicComponent/Title.svelte";
-  import CharacterImage from "../../shared/CharacterImage.svelte";
+  import {calcAccountCharacterCount} from "../../storage/dto/account.js";
+  import type {AccountWorld} from "../../storage/dto/world";
+  import {WorldList} from "../../storage/dto/world";
+  import {lqTodos} from "../../storage/queries/todoQuery";
+  import {lqShowCharacterPreview} from "../../storage/queries/systemQuery";
+  import TodoHelpModal from "./_TodoHeader/TodoHelpModal.svelte";
+  import {swapWorldOrder} from "../../storage/queries/worldQuery";
+  import {swapAccountOrder} from "../../storage/queries/accountQuery";
+  import Title from "../../components/basicComponent/Title.svelte";
+  import CharacterImage from "../../components/CharacterImage.svelte";
 
   export let onClickCharacter:(character:Character)=>void;
   export let onClickAccountBar:(account:Account)=>void;

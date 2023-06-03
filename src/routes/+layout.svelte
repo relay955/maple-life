@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Logo from "../components/shared/Logo.svelte";
-  import LeftBar from "../components/app/layout/LeftBar.svelte";
+  import Logo from "../components/Logo.svelte";
+  import LeftBar from "./LeftBar.svelte";
   import {SvelteToast} from "@zerodevx/svelte-toast";
   import {onMount} from "svelte";
   import {runOnInitialize} from "../logic/runOnInitialize";
-  import Title from "../components/shared/basicComponent/Title.svelte";
-  import BottomInfo from "../components/app/layout/BottomInfo.svelte";
+  import Title from "../components/basicComponent/Title.svelte";
+  import BottomInfo from "./BottomInfo.svelte";
 
   onMount(runOnInitialize)
 

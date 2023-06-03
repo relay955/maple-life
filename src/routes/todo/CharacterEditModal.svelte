@@ -1,26 +1,26 @@
 <script lang="ts">
-import Input from "../../shared/basicComponent/Input.svelte";
-import Modal from "../../shared/Modal.svelte";
-import Button from "../../shared/basicComponent/Button.svelte";
-import type {Character} from "../../../storage/dto/character";
-import {PROXY_URL} from "../../../config";
+import Input from "../../components/basicComponent/Input.svelte";
+import Modal from "../../components/Modal.svelte";
+import Button from "../../components/basicComponent/Button.svelte";
+import type {Character} from "../../storage/dto/character";
+import {PROXY_URL} from "../../config";
 import { toast } from '@zerodevx/svelte-toast'
-import NumberInput from "../../shared/basicComponent/NumberInput.svelte";
-import IconButton from "../../shared/basicComponent/IconButton.svelte";
+import NumberInput from "../../components/basicComponent/NumberInput.svelte";
+import IconButton from "../../components/basicComponent/IconButton.svelte";
 import MdDelete from 'svelte-icons/md/MdDelete.svelte'
 import {liveQuery} from "dexie";
-import {idb} from "../../../storage/idb";
-import Select from "../../shared/basicComponent/Select.svelte";
-import type {AccountWorld, World} from "../../../storage/dto/world";
-import {WorldList} from "../../../storage/dto/world";
-import {insertWorldOrGetWorldId} from "../../../storage/queries/worldQuery.js";
+import {idb} from "../../storage/idb";
+import Select from "../../components/basicComponent/Select.svelte";
+import type {AccountWorld, World} from "../../storage/dto/world";
+import {WorldList} from "../../storage/dto/world";
+import {insertWorldOrGetWorldId} from "../../storage/queries/worldQuery.js";
 import {
   deleteCharacter,
   putCharacter
-} from "../../../storage/queries/characterQuery";
+} from "../../storage/queries/characterQuery";
 import {
   requestMapleCharacterBasicInfo
-} from "../../../util/mapleParser/mapleParserRequester";
+} from "../../util/mapleParser/mapleParserRequester";
 
 export let isOpen = false;
 let account = liveQuery(async () => await idb.account.toArray())

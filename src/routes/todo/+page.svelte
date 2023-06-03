@@ -1,17 +1,17 @@
 <script lang="ts">
-  import Toolbar from "../../components/app/_todo/Toolbar.svelte";
+  import Toolbar from "./Toolbar.svelte";
   import type {Character} from "../../storage/dto/character";
   import type {Todo} from "../../storage/dto/todo";
-  import TodoEditModal from "../../components/app/_todo/TodoEditModal.svelte";
-  import CharacterEditModal from "../../components/app/_todo/CharacterEditModal.svelte";
-  import TodoHeader from "../../components/app/_todo/TodoHeader.svelte";
-  import AddTodoButton from "../../components/app/_todo/AddTodoButton.svelte";
-  import TodoList from "../../components/app/_todo/TodoList.svelte";
+  import TodoEditModal from "./TodoEditModal.svelte";
+  import CharacterEditModal from "./CharacterEditModal.svelte";
+  import TodoHeader from "./TodoHeader.svelte";
+  import AddTodoButton from "./AddTodoButton.svelte";
+  import TodoList from "./TodoList.svelte";
   import type {Account} from "../../storage/dto/account";
-  import AccountEditModal from "../../components/app/_todo/AccountEditModal.svelte";
-  import TodoMemo from "../../components/app/_todo/TodoMemo.svelte";
+  import AccountEditModal from "./AccountEditModal.svelte";
+  import TodoMemo from "./TodoMemo.svelte";
   import PageContainer
-    from "../../components/shared/basicComponent/PageContainer.svelte";
+    from "../../components/basicComponent/PageContainer.svelte";
 
 
   let isEditTodoModalOpen = false;

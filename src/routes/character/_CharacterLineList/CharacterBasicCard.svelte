@@ -1,6 +1,6 @@
 <script lang="ts">
-import type {Character} from "../../../../storage/dto/character";
-import CharacterImage from "../../../shared/CharacterImage.svelte";
+import type {Character} from "../../../storage/dto/character";
+import CharacterImage from "../../../components/CharacterImage.svelte";
 //@ts-ignore
 import SvelteTooltip from "svelte-tooltip";
 

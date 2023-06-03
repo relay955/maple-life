@@ -1,5 +1,5 @@
 <script>
-import Modal from "../../../shared/Modal.svelte";
+import Modal from "../../../components/Modal.svelte";
 export let isOpen;
 </script>
 
