@@ -3,9 +3,9 @@
   export let onClick:()=>void;
 </script>
 
-<div class="add-todo-button" on:click={onClick}>
+<button class="add-todo-button" on:click={onClick}>
   <MdAddCircleOutline/>
-</div>
+</button>
 
 <style lang="scss">
   .add-todo-button{

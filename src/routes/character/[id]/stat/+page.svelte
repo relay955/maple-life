@@ -15,19 +15,19 @@
 
   const debug = () => {
     if($character === undefined) return
-    let specSummary = summarizeSpec($character, $character.spec.default)
+    let specSummary = summarizeSpec($character, $character.spec!.default!)
     simulate(specSummary)
   }
 
   const onClickBuff = (buffName:string,buff:Buff) => () => {
     // @ts-ignore
     const spec:CharacterSpec = $character.spec.default
-    if(spec.buff[buffName] !== undefined){
-      delete c.default.buff[buffName]
-    }else{
-      $character.spec.default.buff[buffName] = buff
-    }
-    idb.character.put($character)
+    // if(spec.buff[buffName] !== undefined){
+    //   delete c.default.buff[buffName]
+    // }else{
+    //   $character.spec!.default!.buff[buffName] = buff
+    // }
+    // idb.character.put($character)
   }
 
   //hoverPanel
@@ -47,28 +47,34 @@
   const onMouseLeave = (e:MouseEvent) => isVisibleHoverPanel = false
 
 </script>
-{#if isOnTauri() && $character}
+{#if isOnTauri() && $character && $character.spec && $character.spec.default}
 <div>
   <div class="bufflink-list-container">
     <div class="subtitle">버프</div>
     <div class="bufflink-list">
       {#each Object.keys(buffDict) as buffName}
         {@const buff = buffDict[buffName]}
-        <img src={buff.imgUrl}
+        <button
              on:click={onClickBuff(buffName,buff)}
              on:mousemove={(e)=>onMouseMove(e,buffName,buff)}
-             on:mouseleave={onMouseLeave}
+             on:mouseleave={onMouseLeave}>
+        <img src={buff.imgUrl}
+             alt={buffName}
              class:active={$character.spec.default.buff[buffName] !== undefined} />
+        </button>
       {/each}
     </div>
     <div class="subtitle">링크스킬</div>
     <div class="bufflink-list">
       {#each Object.keys(linkSkillDict) as linkSkillName}
         {@const linkSkill = linkSkillDict[linkSkillName]}
-        <img src={linkSkill.imgUrl}
+        <button
              on:mousemove={(e)=>onMouseMove(e,linkSkillName,linkSkill)}
-             on:mouseleave={onMouseLeave}
-             class:active={$character.spec.default.linkSkills[linkSkillName] !== undefined} />
+             on:mouseleave={onMouseLeave}> 
+             <img src={linkSkill.imgUrl}
+                  alt={linkSkillName}
+                  class:active={$character.spec.default.linkSkills[linkSkillName] !== undefined} />
+        </button>
       {/each}
     </div>
     <button on:click={debug}>디버그</button>
@@ -92,8 +98,13 @@
   .bufflink-list{
     display: flex;
     margin-bottom: 5px;
-    img{
+    button{
       margin-right: 3px;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+    }
+    img{
       filter:grayscale(1); opacity: (0.5);
       cursor:pointer;
     }

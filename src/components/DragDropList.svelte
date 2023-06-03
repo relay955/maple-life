@@ -45,7 +45,7 @@
   function touchEnter(ev) {
     drag(ev.clientY);
     // trigger dragEnter the first time the cursor moves over a list item
-    let target = document.elementFromPoint(ev.clientX, ev.clientY).closest(".item");
+    let target = document.elementFromPoint(ev.clientX, ev.clientY)!.closest(".item");
     if (target && target != lastTarget) {
       lastTarget = target;
       dragEnter(ev, target);
@@ -105,7 +105,7 @@
         margin-bottom: 0;
       }
 
-      &item:not(#grabbed):not(#ghost) {
+      &:not(#grabbed):not(#ghost) {
         z-index: 10;
       }
       & > * {
@@ -113,31 +113,6 @@
       }
     }
 
-  }
-  .buttons {
-    width: 32px;
-    min-width: 32px;
-    margin: auto 0;
-    display: flex;
-    flex-direction: column;
-
-    button{
-      cursor: pointer;
-      width: 18px;
-      height: 18px;
-      margin: 0 auto;
-      padding: 0;
-      border: 1px solid rgba(0, 0, 0, 0);
-      background-color: inherit;
-    }
-    button:focus{
-      border: 1px solid black;
-    }
-  }
-
-
-  .delete {
-    width: 32px;
   }
 
   #grabbed {

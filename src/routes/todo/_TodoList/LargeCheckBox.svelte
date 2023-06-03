@@ -9,7 +9,7 @@
   export let style:string="";
 
 </script>
-<div class={`main ${checked} ${isShortHeight ? "short-height":""}`} on:click={onClick} style={style}
+<button class={`main ${checked} ${isShortHeight ? "short-height":""}`} on:click={onClick} style={style}
      on:contextmenu|preventDefault={onRightClick}>
   {#if checked==="checked"}
     <MdCheckCircle/>
@@ -17,7 +17,7 @@
   {#if checked==="unchecked"}
     <MdRadioButtonUnchecked/>
   {/if}
-</div>
+</button>
 
 <style lang="scss">
   .main{

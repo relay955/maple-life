@@ -4,7 +4,7 @@
 </script>
 
 <div class={`logo ${isFixed ? "fixed":""}`}>
-  <img src={logo}/>
+  <img src={logo} alt="maplelife-logo"/>
   MapleLife
 </div>
 

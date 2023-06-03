@@ -69,7 +69,7 @@
         iterationTarget = localCharacterIds;
       } else if (todo.type === "perWorld") {
         iterationTarget = localCharacterTree
-          .map(account => account.worlds?.map(world => world.id.toString()) ?? []).flat()
+          .map(account => account.worlds?.map(world => world.id!.toString()) ?? []).flat()
       } else if (todo.type === "perAccount") {
         iterationTarget = localCharacterTree
           .filter(account => (account.worlds ?? []).length > 0)
@@ -174,12 +174,12 @@
     <div class="progress-bar-list">
       <div class="progress-bar">
       <ProgressBar series={[{perc:dailyCheckProgress,color:'#70a5e0'}]}
-                   height="12" textSize="65"
+                   height={12} textSize={65}
                    valueLabel={`일일 : ${dailyCheckProgress}% (${checkedDailyTodoCount}/${totalDailyTodoCount})`} />
       </div>
       <div class="progress-bar">
       <ProgressBar series={[{perc:weeklyCheckProgress,color:'#e3b676'}]}
-                   height="12" textSize="65"
+                   height={12} textSize={65}
                    valueLabel={`주간 : ${weeklyCheckProgress}% (${checkedWeeklyTodoCount}/${totalWeeklyTodoCount})`} />
       </div>
     </div>
@@ -189,20 +189,20 @@
   {#if calcAccountCharacterCount(account) > 0}
   <div class="account" style={`flex-grow:${calcAccountCharacterCount(account)}`}>
     {#if isMultiAccount}
-    <div class="account-bar"
+    <button class="account-bar"
           draggable="true"
-           on:click={()=>onClickAccountBar(account)}
+          on:click={()=>onClickAccountBar(account)}
           on:dragstart={(e)=>onDragStartAccount(e,account)}
           on:dragover={(e)=>e.preventDefault()}
           on:drop={(e)=>onDragEndAccount(e,account)}
          style={`border-bottom:2px solid ${i%2===0 ? "#338cc8":"#bfdbed"}`}>
       {account.name}
-    </div>
+  </button>
     {/if}
     <div class="worlds">
-      {#each account.worlds as world (world.id)}
-      {#if world.characters.length > 0}
-      <div class="world" style={`flex-grow:${world.characters.length}`}>
+      {#each account.worlds ?? [] as world (world.id)}
+      {#if (world.characters?.length ?? 0) > 0}
+      <div class="world" style={`flex-grow:${world.characters?.length}`}>
         {#if isMultiWorld}
         <div class="world-bar"
              draggable="true"
@@ -214,8 +214,8 @@
         </div>
         {/if}
         <div class="characters">
-          {#each world.characters as character (character.id)}
-          <div class="character" on:click={()=>onClickCharacter(character)}
+          {#each world.characters ?? [] as character (character.id)}
+          <button class="character" on:click={()=>onClickCharacter(character)}
                draggable="true"
                on:dragstart={(e)=>onDragStartCharacter(e,character)}
                on:dragover={(e)=>e.preventDefault()}
@@ -227,7 +227,7 @@
             <div class="subtitle">
               Lv.{character.level}, {character.classType}
             </div>
-          </div>
+          </button>
           {/each}
         </div>
       </div>
@@ -292,6 +292,8 @@
         box-sizing: border-box;
         transition: 0.2s all;
         cursor:pointer;
+        border: none;
+        background-color: transparent;
       }
       .account-bar:hover{
         background-color: #f5f5f5;
@@ -327,6 +329,8 @@
       min-width: 80px;
       width:0;
       padding-bottom: 5px;
+      border: none;
+      background-color: transparent;
 
       display: flex;
       flex-direction: column;

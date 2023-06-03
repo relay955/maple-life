@@ -9,15 +9,16 @@ const onClickWorld = (worldId:number) => {
   updateSelectedWorldId(worldId);
 }
 
+
 </script>
 <div class="world-selector">
   {#each ($lqCharacterTree ?? []) as account (account.id)}
     <div class="account">{account.name}</div>
-    {#each account.worlds as world (world.id)}
-      <div class={`world ${$lqSelectedWorldId === world.id ? 'selected':''}`}
-           on:click={()=>onClickWorld(world.id)}>
+    {#each account.worlds ?? [] as world (world.id)}
+      <button class={`world ${$lqSelectedWorldId === world.id ? 'selected':''}`}
+           on:click={()=>onClickWorld(world.id ?? 0)}>
         {world.world}
-      </div>
+      </button>
     {/each}
   {/each}
 </div>

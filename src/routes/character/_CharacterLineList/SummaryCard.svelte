@@ -66,7 +66,7 @@ Object.keys(character.spec.default?.equipments ?? []).map(equipmentName=>{
     </div>
     <div class="force-core-summary">
       <div class="subtitle">포스/코어</div>
-      <div class="arcane-force" style>
+      <div class="arcane-force">
         Arc {arcaneForceTotal}
       </div>
       <div class="core">

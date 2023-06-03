@@ -3,7 +3,7 @@
     lqMemo,
     lqShowMemo,
     updateMemo
-  } from "../../storage/queries/systemQuery.ts";
+  } from "../../storage/queries/systemQuery";
   import TextAreaAutoResize
     from "../../components/basicComponent/TextAreaAutoResize.svelte";
 

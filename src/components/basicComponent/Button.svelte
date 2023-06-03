@@ -34,8 +34,4 @@
   button:hover{
     background-color: #6391c1;
   }
-  .loading{
-    width:30px;
-    height:30px;
-  }
 </style>
