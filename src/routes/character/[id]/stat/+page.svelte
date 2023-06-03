@@ -4,8 +4,15 @@
   import {page} from "$app/stores";
   import {isOnTauri} from "../../../../backendAdapter/backendAdapter";
   import {buffDict} from "../../../../infoDictionary/BuffDict";
+  import {simulate, summarizeSpec} from "../../../../logic/specCalculator";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
+
+  const debug = () => {
+    //@ts-ignore
+    let specSummary = summarizeSpec($character, $character.spec.default)
+    simulate(specSummary)
+  }
 
 </script>
 {#if isOnTauri() && $character}
@@ -22,6 +29,7 @@
     <div class="bufflink-list">
 
     </div>
+    <button on:click={debug}>디버그</button>
   </div>
 </div>
 {/if}

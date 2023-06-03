@@ -40,7 +40,8 @@ export const bowmaster:Job = {
     },
     "피닉스":{
       isDefaultSkill:true,
-      cooldown:36000,
+      startupCooldown:40000,
+      cooldown:360000,
       damage:(spec)=>[{damageRate:3.9*(1+(spec.skills["피닉스 강화"]?.level ?? 0)*0.03), dealtTime:1000, dealtCount:360}],
     },
     "모탈 블로우":{
@@ -59,7 +60,7 @@ export const bowmaster:Job = {
     "폭풍의 시":{
       isDefaultSkill:true,
       actionDelay:120,
-      damage:(spec)=>[{damageRate:262.5*2*(1+(spec.skills["폭풍의 시 강화"]?.level ?? 0)*0.02), dealtTime:0, damageBonusStat:{"보스 데미지":10,"데미지":30}}],
+      damage:(spec)=>[{damageRate:2.625*2*(1+(spec.skills["폭풍의 시 강화"]?.level ?? 0)*0.02), dealtTime:0, damageBonusStat:{"보스 데미지":10,"데미지":30}}],
       autoActiveSkill:{
         "파이널 어택":0.7,
         "마법 화살":0.6
@@ -88,9 +89,9 @@ export const bowmaster:Job = {
     },
     "잔영의 시":{
       actionDelay:800,//임의,
-      cooldown:12000,
+      cooldown:120000,
       damage:(spec)=>[
-        {damageRate:(4+spec.skills["잔영의 시"]!.level*0.16)*3,dealtTime:250,dealtCount:30},
+        {damageRate:(4+spec.skills["잔영의 시"]!.level*0.16)*3,dealtTime:250,dealtCount:120},
         {damageRate:(4+spec.skills["잔영의 시"]!.level*0.16)*3,dealtTime:2000,dealtCount:10},
       ]
     },
@@ -107,7 +108,7 @@ export const bowmaster:Job = {
         {damageRate:(7+spec.skills["애로우 레인"]!.level*0.28)*7*4,dealtTime:8000,dealtCount:5+Math.floor(spec.skills["애로우 레인"]!.level/8)}
       ],
       autoActiveSkill:{
-        "마법 화살":0.6
+        "마법 화살":1
       },
       buffStat:()=>({"데미지":15}),
       buffDuration:(spec)=>40000+spec.skills["애로우 레인"].level*1000
@@ -119,7 +120,7 @@ export const bowmaster:Job = {
     },
     "가이디드 애로우":{
       cooldown:120000,
-      damage:(spec)=>[{damageRate:4+spec.skills["가이디드 애로우"]!.level*0.16,dealtTime:330,dealtCount:33}],
+      damage:(spec)=>[{damageRate:4+spec.skills["가이디드 애로우"]!.level*0.16,dealtTime:330,dealtCount:360}],
       autoActiveSkill:{
         "마법 화살":0.6
       }
@@ -143,8 +144,8 @@ export const bowmaster:Job = {
     }
   },
   skillPriority:[
-    "가이디드 애로우","실루엣 미라주","피닉스","모탈블로우",
-    "프리퍼레이션","에픽 어드벤쳐","크리티컬 리인포스","메이플월드 여신의 축복",
+    "가이디드 애로우","실루엣 미라주","피닉스","모탈 블로우","플레시 미라주",
+    "이볼브","프리퍼레이션","에픽 어드벤쳐","크리티컬 리인포스","메이플월드 여신의 축복",
     "애로우 레인","퀴버 풀버스트","잔영의 시","폭풍의 시"
   ],
   vMatrixSkillType:{
@@ -161,4 +162,5 @@ export const bowmaster:Job = {
     "가이디드 애로우":"skill",
   },
   unionStat:[{"고정DEX":10}, {"고정DEX":20}, {"고정DEX":40}, {"고정DEX":80}, {"고정DEX":100}],
+  damagePeriod:120000,
 }

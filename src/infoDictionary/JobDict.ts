@@ -18,6 +18,7 @@ export interface Job {
     skills?:{[index:string]:Skill};
     vMatrixSkillType?:{[index:string]:"skill"|"enhance"};
     skillPriority?:string[];
+    damagePeriod?:number;
 }
 
 export const jobDict:{[index:string]:Job} = {
