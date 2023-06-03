@@ -330,7 +330,7 @@
       width:0;
       padding-bottom: 5px;
       border: none;
-      background-color: transparent;
+      background-color: white;
 
       display: flex;
       flex-direction: column;

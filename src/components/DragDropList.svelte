@@ -105,9 +105,6 @@
         margin-bottom: 0;
       }
 
-      &:not(#grabbed):not(#ghost) {
-        z-index: 10;
-      }
       & > * {
         margin: auto;
       }
