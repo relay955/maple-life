@@ -7,26 +7,37 @@
   import {buffDict} from "../../../../infoDictionary/BuffDict";
   import {simulate, summarizeSpec} from "../../../../logic/specCalculator";
   import HoverPanel from "../../../../components/HoverPanel.svelte";
-  import type {LinkSkill} from "../../../../infoDictionary/LinkSkillDict";
   import {linkSkillDict} from "../../../../infoDictionary/LinkSkillDict";
+  import type {Skill} from "../../../../infoDictionary/Skill";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
 
   const debug = () => {
-    //@ts-ignore
+    if($character === undefined) return
     let specSummary = summarizeSpec($character, $character.spec.default)
     simulate(specSummary)
   }
 
+  const onClickBuff = (buffName:string,buff:Buff) => () => {
+    // @ts-ignore
+    const spec:CharacterSpec = $character.spec.default
+    if(spec.buff[buffName] !== undefined){
+      delete c.default.buff[buffName]
+    }else{
+      $character.spec.default.buff[buffName] = buff
+    }
+    idb.character.put($character)
+  }
+
   //hoverPanel
-  let hoveredItem:Buff | LinkSkill;
+  let hoveredItem:Buff | Skill;
   let hoveredItemName:string;
   let hoverPanelX = 0;
   let hoverPanelY = 0;
   let isVisibleHoverPanel = false;
 
-  const onMouseMove = (e:MouseEvent,name:string,item:Buff|LinkSkill) =>{
+  const onMouseMove = (e:MouseEvent,name:string,item:Buff) =>{
     hoverPanelX = e.clientX;
     hoverPanelY = e.clientY;
     isVisibleHoverPanel = true;
@@ -44,6 +55,7 @@
       {#each Object.keys(buffDict) as buffName}
         {@const buff = buffDict[buffName]}
         <img src={buff.imgUrl}
+             on:click={onClickBuff(buffName,buff)}
              on:mousemove={(e)=>onMouseMove(e,buffName,buff)}
              on:mouseleave={onMouseLeave}
              class:active={$character.spec.default.buff[buffName] !== undefined} />
@@ -56,7 +68,7 @@
         <img src={linkSkill.imgUrl}
              on:mousemove={(e)=>onMouseMove(e,linkSkillName,linkSkill)}
              on:mouseleave={onMouseLeave}
-             class:active={$character.spec.default.linkSkill[linkSkillName] !== undefined} />
+             class:active={$character.spec.default.linkSkills[linkSkillName] !== undefined} />
       {/each}
     </div>
     <button on:click={debug}>디버그</button>

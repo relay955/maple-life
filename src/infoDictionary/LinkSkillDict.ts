@@ -204,7 +204,7 @@ export const linkSkillDict:{[key in LinkSkillName]:Skill} = {
         imgUrl:iconLink21,
         description:"엔젤릭 버스터 링크스킬\n마스터 레벨: 2\n" +
           "발동시 10초간 데미지 레벨당 30% 증가, 쿨타임 90초\n" +
-          "최대 10초간 데미지 45% 증가, 버프지속시간 적용\n",
+          "최대 10초간 데미지 45% 증가, 버프지속시간 증가 효과 적용\n",
         actionDelay:800,
         cooldown:90000,
         buffStat:(spec)=>({"데미지":15+spec.skills["소울 컨트랙트"].level*15}),
