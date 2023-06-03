@@ -57,27 +57,33 @@ export interface EquipmentStat {
     skillLevel?:number;
 }
 
-export type EquipmentList = {[key in EquipmentType]?:EquipmentStat;}
+export type EquipmentStats = {[key in EquipmentType]?:EquipmentStat;}
 
 export interface SkillStat {
     name:string;
     imageUrl?:string;
-    skillLevel:number;
+    level:number;
 }
+export type SkillStats = {[key:string]:SkillStat}
+
 export interface CharacterSpec{
     ability:Stats;
     hyperStat:Stats;
-    equipments:EquipmentList;
-    skills:SkillStat[];
+    equipments:EquipmentStats;
+    skills:SkillStats;
     tendency:Stats;
     linkSkill:{[key in LinkSkillName]?:number};
     buff:{[key in BuffName]?:boolean};
 }
 export interface CharacterSpecSummary {
-    classInfo:Job;
+    job:Job;
     statList:{[key in Stat]?:{[index:string]:number}};
-    statIndicators:StatIndicators;
     statTotal:Stats;
+    skills:SkillStats;
+    skillsAvgLevel:{
+        skillCore:number;
+        enhanceCore:number;
+    }
     sets:{[index:string]:number};
     starforce:number;
 }

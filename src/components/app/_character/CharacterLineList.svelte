@@ -13,10 +13,8 @@ import CharacterBasicCard from "./CharacterLineList/CharacterBasicCard.svelte";
 import SummaryCard from "./CharacterLineList/SummaryCard.svelte";
 import IconButton from "../../shared/basicComponent/IconButton.svelte";
 import MdRefresh from 'svelte-icons/md/MdRefresh.svelte'
-import {
-  summarizeSpec
-} from "../../../logic/specCalculator";
 import {idb} from "../../../storage/idb";
+import {calcDamage, summarizeSpec} from "../../../logic/specCalculator";
 
 let filteredCharacter = [];
 
@@ -34,7 +32,6 @@ $:{
 const onClickRefreshCharacter = async (character: Character) => {
   try {
     await requestMapleCharacterDetailInfo(character);
-    character.spec.default!.statDetails = await summarizeSpec(character, "default");
     idb.character.put(character);
 
   }catch(e){
@@ -52,9 +49,9 @@ const onMoveCharacter = (event) => {
                 onMove={onMoveCharacter} dataIdField="id">
     <div class="character-item">
       {#if character.spec.default}
-        {@const statDetails = summarizeSpec(character, "default")}
-        <CharacterBasicCard character={character} universalScore={statDetails.statIndicators["종합점수"]}/>
-        <SummaryCard character={character} statDetails={statDetails}/>
+        {@const specSummary = summarizeSpec(character, character.spec.default)}
+        <CharacterBasicCard character={character} universalScore={calcDamage(specSummary)}/>
+        <SummaryCard character={character} specSummary={specSummary}/>
         {#each equipmentTypeOrder as equipmentType}
           <EquipmentCard character={character} equipmentType={equipmentType}/>
         {/each}

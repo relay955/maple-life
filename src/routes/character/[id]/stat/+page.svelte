@@ -4,10 +4,8 @@
   import {page} from "$app/stores";
   import {isOnTauri} from "../../../../backendAdapter/backendAdapter";
   import {buffDict} from "../../../../infoDictionary/BuffDict";
-  import {CharacterSpec} from "../../../../util/mapleParser/mapleStat";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
-  let a:CharacterSpec;
 
 </script>
 {#if isOnTauri() && $character}

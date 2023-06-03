@@ -10,23 +10,15 @@ export interface Job {
     mainStat?:Stat;
     subStat?:Stat;
     atkType:"공격력"|"마력";
-    calcDmg?:(statInfo:Stats, classes:Job)=>StatIndicators;
+    calcDmg?:(statInfo:Stats, classes:Job)=>number;
     calcBonusStatGrade?:(statInfo:Stats, classes:Job)=>number;
     passiveStats?:Stats;
     activeStats?:Stats;
     unionStat?:Stats[]
     skills?:{[index:string]:Skill};
-    matrixSkill?:{[index:string]:{
-        damageRate:number;
-        type:SkillType;
-    }},
-    seedRingFactor?:{
-        "리스트레인트 링":number[];
-        "웨폰퍼프 링":number[];
-    };
+    vMatrixSkillType?:{[index:string]:"skill"|"enhance"};
+    skillPriority?:string[];
 }
-
-export type SkillType = "skill" | "enhance"
 
 export const jobDict:{[index:string]:Job} = {
     "히어로":{
@@ -178,7 +170,7 @@ export const jobDict:{[index:string]:Job} = {
         atkType:"공격력",
         calcDmg:(statInfo,classes)=>{
             // return ((statInfo["STR"] ?? 0) + (statInfo["DEX"] ?? 0) + (statInfo["LUK"] ?? 0))*4
-            return {}
+            return 0
         },
         unionStat:[
             {"고정STR":5, "고정DEX":5, "고정LUK":5},
@@ -199,7 +191,7 @@ export const jobDict:{[index:string]:Job} = {
         atkType:"공격력",
         calcDmg:(statInfo,classes)=>{
             // return (statInfo["APHP"] ?? 0) * 17.5 + ((statInfo["HP"] ?? 0) * 14) + (statInfo["STR"] ?? 0)
-            return {}
+            return 0
         },
         unionStat:[{"보스 데미지":1}, {"보스 데미지":2}, {"보스 데미지":3}, {"보스 데미지":5}, {"보스 데미지":6}]
     },
@@ -316,7 +308,7 @@ export const jobDict:{[index:string]:Job} = {
 
 
 
-export const defaultCalcDmgFomula = (statInfo:Stats, classes:Job):StatIndicators => {
+export const defaultCalcDmgFomula = (statInfo:Stats, classes:Job):number => {
     let mainStatTotal = (statInfo[classes.mainStat!] ?? 0) + (statInfo["AP"+classes.mainStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let subStatTotal = (statInfo[classes.subStat!] ?? 0) + (statInfo["AP"+classes.subStat!] ?? 0) + (statInfo["올스탯"] ?? 0)
     let mainStatPercentTotal = ((statInfo[classes.mainStat+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
@@ -324,12 +316,8 @@ export const defaultCalcDmgFomula = (statInfo:Stats, classes:Job):StatIndicators
     let mainStat = Math.floor(mainStatTotal * (1+mainStatPercentTotal) + (statInfo["고정"+classes.mainStat] ?? 0))
     let subStat = Math.floor(subStatTotal * (1+subStatPercentTotal) + (statInfo["고정"+classes.subStat] ?? 0))
     let atk = statInfo[classes.atkType]! * (1+(statInfo[classes.atkType+"%"] ?? 0)/100)
-    return {
-        [classes.mainStat!]:mainStat,
-        [classes.subStat!]:subStat,
-        [classes.atkType!]:atk,
-        "스탯공격력":(mainStat * 4 + subStat) * atk * 0.01!
-    }
+    return (mainStat * 4 + subStat) * atk * 0.01!
+
 }
 
 export const defaultCalcBonusStatGradeFomula = (statInfo:Stats, classes:Job) => {

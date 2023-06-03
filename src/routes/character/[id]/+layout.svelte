@@ -9,7 +9,7 @@ import {page} from "$app/stores";
 import {liveQuery} from "dexie";
 import Title from "../../../components/shared/basicComponent/Title.svelte";
 import {goto} from "$app/navigation";
-import {summarizeSpec} from "../../../logic/specCalculator.js";
+import {calcDamage, summarizeSpec} from "../../../logic/specCalculator.js";
 
 export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
@@ -29,7 +29,7 @@ export let data;
       </div>
       <div class="universal-score">
         <div class="title">종합점수</div>
-        <div class="value">{summarizeSpec($character,"default").statIndicators["종합점수"]}</div>
+        <div class="value">{calcDamage(summarizeSpec($character,$character.spec.default))}</div>
       </div>
     </div>
     <div class="tab">

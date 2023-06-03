@@ -17,18 +17,12 @@ import {
 import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
 import {buffDict} from "../infoDictionary/BuffDict";
 
-export const summarizeSpec = (character:Character, preset:"default"|"boss"):CharacterSpecSummary => {
-    let spec = character.spec![preset]!
-    let statDetails = calcTotalPerStat(character,spec);
-    statDetails.statIndicators = calcStatIndicators(spec,statDetails);
 
-    return statDetails;
-}
-
-export const calcTotalPerStat = (character:Character,spec:CharacterSpec):CharacterSpecSummary => {
+export const summarizeSpec = (character:Character, spec:CharacterSpec):CharacterSpecSummary => {
     let classInfo = jobDict[character.classType]!
-    let statDetails:CharacterSpecSummary = {classInfo:classInfo,statList:{},statIndicators:{},sets:{},starforce:0,statTotal:{}};
-    let statList = statDetails.statList;
+    let specSummary:CharacterSpecSummary = {job:classInfo,statList:{},sets:{},
+        starforce:0,statTotal:{},skills:spec.skills,skillsAvgLevel:{skillCore:0,enhanceCore:0}};
+    let statList = specSummary.statList;
     //스텟별 합산
     //메용
     if(classInfo.mainStat) {
@@ -73,7 +67,7 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec):Charact
             statList[stat]["[장비] "+equipment.name] = equipment.stats[stat];
         })
         if(equipment.starForce !== undefined){
-            statDetails.starforce += equipment.starForce;
+            specSummary.starforce += equipment.starForce;
         }
         if(equipment.potential !== undefined) {
             Object.keys(equipment.potential.stats).forEach((stat) => {
@@ -100,10 +94,10 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec):Charact
         //세트옵션
         if(equipmentToSetDict[equipment.name] !== undefined){
             let setName = equipmentToSetDict[equipment.name]
-            if(statDetails.sets[setName] === undefined) statDetails.sets[setName] = 1
-            else statDetails.sets[setName] += 1
+            if(specSummary.sets[setName] === undefined) specSummary.sets[setName] = 1
+            else specSummary.sets[setName] += 1
 
-            let setEquipmentcount = statDetails.sets[setName];
+            let setEquipmentcount = specSummary.sets[setName];
             let setOptions = equipmentSetOptions[setName].setOptions[setEquipmentcount]
             if(setOptions !== undefined) {
                 Object.keys(setOptions).forEach((stat) => {
@@ -136,48 +130,68 @@ export const calcTotalPerStat = (character:Character,spec:CharacterSpec):Charact
         });
     })
 
+    //스킬코어/강화코어 평균갯수 계산
+    let skillCoreNum = 0
+    let skillCoreLevelTotal = 0
+    let enhanceCoreNum = 0
+    let enhanceCoreLevelTotal = 0
+
+    Object.keys(spec.skills).forEach((skillName)=>{
+        let skill = spec.skills[skillName]
+        let vMatrixSkillType = classInfo.vMatrixSkillType?.[skillName]
+        if(vMatrixSkillType === "skill"){
+            skillCoreNum += 1
+            skillCoreLevelTotal += skill.level
+        }else if(vMatrixSkillType === "enhance"){
+            enhanceCoreNum += 1
+            enhanceCoreLevelTotal += skill.level
+        }
+    })
+    specSummary.skillsAvgLevel.skillCore = skillCoreNum > 0 ?
+        Math.round(skillCoreLevelTotal / skillCoreNum):0
+    specSummary.skillsAvgLevel.enhanceCore = enhanceCoreNum > 0 ?
+        Math.round(enhanceCoreLevelTotal / enhanceCoreNum):0
 
     //TODO 캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
     //TODO 프리셋 사용 -> 공격대원 스텟 및 점령효과 계산
 
     //스텟합계 계산
-    Object.keys(statDetails.statList).forEach((statName)=>{
-        statDetails.statTotal[statName] = 0;
-        let stats:{[index:string]:number} = statDetails.statList[statName]!
+    Object.keys(specSummary.statList).forEach((statName)=>{
+        specSummary.statTotal[statName] = 0;
+        let stats:{[index:string]:number} = specSummary.statList[statName]!
 
         if(statName === "최종 데미지"){
-            statDetails.statTotal[statName] = 100;
-            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! *= 1+(stats[key]/100));
-            statDetails.statTotal[statName]! = Math.round((statDetails.statTotal[statName]! - 100)*100)/100;
+            specSummary.statTotal[statName] = 100;
+            Object.keys(stats).forEach((key)=> specSummary.statTotal[statName]! *= 1+(stats[key]/100));
+            specSummary.statTotal[statName]! = Math.round((specSummary.statTotal[statName]! - 100)*100)/100;
         }else if(statName === "방어율 무시" || statName === "속성내성 무시"){
             Object.keys(stats).forEach((key)=> {
-                if(statDetails.statTotal[statName] === 0){
-                    statDetails.statTotal[statName] = stats[key];
+                if(specSummary.statTotal[statName] === 0){
+                    specSummary.statTotal[statName] = stats[key];
                     return;
                 }
-                statDetails.statTotal[statName]! = (
-                    (statDetails.statTotal[statName]!/100) + (stats[key]/100) -
-                    (statDetails.statTotal[statName]!/100) * (stats[key]/100)
+                specSummary.statTotal[statName]! = (
+                    (specSummary.statTotal[statName]!/100) + (stats[key]/100) -
+                    (specSummary.statTotal[statName]!/100) * (stats[key]/100)
                 )*100;
             });
-            statDetails.statTotal[statName]! = Math.round(statDetails.statTotal[statName]! *100)/100;
+            specSummary.statTotal[statName]! = Math.round(specSummary.statTotal[statName]! *100)/100;
         }else{
-            Object.keys(stats).forEach((key)=> statDetails.statTotal[statName]! += stats[key]);
+            Object.keys(stats).forEach((key)=> specSummary.statTotal[statName]! += stats[key]);
         }
 
     })
-    return statDetails;
+    return specSummary;
 }
 
 //스텟별 총합, 스텟공격력 및 점수 계산
-export const calcStatIndicators = (spec:CharacterSpec,statDetails:CharacterSpecSummary):StatIndicators => {
+export const calcDamage = (statDetails:CharacterSpecSummary):number => {
     try {
-        const classInfo = statDetails.classInfo;
+        const classInfo = statDetails.job;
         //스텟*공격력 계산
-        let statIndicatorList = classInfo.calcDmg === undefined ?
+        let totalScore = classInfo.calcDmg === undefined ?
             defaultCalcDmgFomula(statDetails.statTotal, classInfo) :
             classInfo.calcDmg(statDetails.statTotal, classInfo)
-        let totalScore = statIndicatorList["스탯공격력"]!
 
         //데미지, 보공 합계 계산
         let dmgFactor = 1+((statDetails.statTotal["데미지"] ?? 0) / 100)
@@ -205,45 +219,11 @@ export const calcStatIndicators = (spec:CharacterSpec,statDetails:CharacterSpecS
         let weaponConstFactor = statDetails.statTotal["무기 상수"] ?? 1
         totalScore *= weaponConstFactor
 
-        //보정계수 - 돌스공직업(스공이 낮고 스킬 퍼뎀이 평균적으로 높은경우)등 변수를 고려하여 직업별로 적용하는 계수
-        let jobConstFactor = statDetails.statTotal["보정계수"] ?? 1
-        totalScore *= jobConstFactor
-
-        //스킬코어 계산
-        let vmatrixFactor = 1
-        let skillCoreNum = 0
-        let skillCoreLevelTotal = 0
-        let enhanceCoreNum = 0
-        let enhanceCoreLevelTotal = 0
-
-        spec.skills.forEach((skill)=>{
-            const skillInfo = classInfo.matrixSkill?.[skill.name]
-            if(skillInfo === undefined) return;
-            //스킬코어는 1레벨당 최종뎀 4%, 강화코어는 1레벨당 최종뎀 2%의 가치를 가짐
-            let finalDamagePerLevel = 0;
-            if(skillInfo.type === "skill"){
-                finalDamagePerLevel = 0.04
-                skillCoreNum += 1
-                skillCoreLevelTotal += skill.skillLevel
-            }else{
-                skillInfo.type === "enhance"
-                enhanceCoreNum += 1
-                enhanceCoreLevelTotal += skill.skillLevel
-            }
-            vmatrixFactor += skillInfo.damageRate+finalDamagePerLevel
-        })
-        statIndicatorList["스킬코어"] = skillCoreNum > 0 ?
-            Math.round(skillCoreLevelTotal / skillCoreNum):0
-        statIndicatorList["강화코어"] = enhanceCoreNum > 0 ?
-            Math.round(enhanceCoreLevelTotal / enhanceCoreNum):0
-        totalScore *= vmatrixFactor
-
-        statIndicatorList["종합점수"] = Math.floor(totalScore/10000);
-        return statIndicatorList;
+        return totalScore
 
     }catch(e:any){
         console.error(e.message)
-        return {};
+        return 0;
     }
 }
 
