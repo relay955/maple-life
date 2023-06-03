@@ -5,13 +5,13 @@ import MdStar from 'svelte-icons/md/MdStar.svelte'
 import GiFire from 'svelte-icons/gi/GiFire.svelte'
 import GiScrollUnfurled from 'svelte-icons/gi/GiScrollUnfurled.svelte'
 import type {Character} from "../../../../storage/dto/character";
-import {classesDict} from "../../../../infoDictionary/ClassesDict";
+import {jobDict} from "../../../../infoDictionary/JobDict";
 
 export let character:Character;
 export let equipmentType:EquipmentType;
 
 let equipment = character.spec.boss?.equipments[equipmentType] ?? character.spec.default?.equipments[equipmentType]
-let classInfo = classesDict[character.classType]
+let classInfo = jobDict[character.classType]
 </script>
 {#if equipment !== undefined}
   <div class="main">

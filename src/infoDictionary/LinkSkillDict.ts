@@ -1,4 +1,4 @@
-import type {Stat, StatInfo} from "../util/mapleParser/mapleStat";
+import type {Stat, Stats} from "../util/mapleParser/mapleStat";
 import iconLink1 from "$lib/images/icon/buff/임피리컬 널리지.png"
 import iconLink2 from "$lib/images/icon/buff/어드벤쳐러 큐리어스.png"
 import iconLink3 from "$lib/images/icon/buff/시프 커닝.png"
@@ -24,7 +24,7 @@ import iconLink21 from "$lib/images/icon/buff/판단.png"
 
 export interface LinkSkill{
     imgUrl:string;
-    statPerLevel:StatInfo[];
+    statPerLevel:Stats[];
     description?:string;
 }
 

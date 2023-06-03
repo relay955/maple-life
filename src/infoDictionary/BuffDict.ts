@@ -1,4 +1,4 @@
-import type {Stat, StatInfo} from "../util/mapleParser/mapleStat";
+import type {Stat, Stats} from "../util/mapleParser/mapleStat";
 import iconBasic1 from "$lib/images/icon/buff/정령의 축복.png"
 import iconBasic2 from "$lib/images/icon/buff/연합의 의지.png"
 import iconGuild1 from "$lib/images/icon/buff/길드의 축복.png"
@@ -27,7 +27,7 @@ import iconSkill5 from "$lib/images/icon/buff/하울링.png"
 
 export interface Buff{
     imgUrl:string;
-    stat:StatInfo;
+    stat:Stats;
     description?:string;
 }
 

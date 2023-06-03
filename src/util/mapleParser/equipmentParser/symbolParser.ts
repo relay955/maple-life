@@ -1,9 +1,9 @@
-import type {EquipmentInfo, Stat} from "../mapleStat";
+import type {EquipmentStat, Stat} from "../mapleStat";
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 
-export const parseSingleArcaneSymbol = (singleEquipmentPage:ParsedHtmlElement):EquipmentInfo => {
+export const parseSingleArcaneSymbol = (singleEquipmentPage:ParsedHtmlElement):EquipmentStat => {
     let nameTag = singleEquipmentPage.querySelector(".item_memo_title > h1")!
-    let equipmentInfo:EquipmentInfo = {
+    let equipmentInfo:EquipmentStat = {
         name:nameTag.structuredText,
         imageUrl: singleEquipmentPage.querySelector(".item_img > img")?.getAttribute("src"),
         type:"아케인심볼1",

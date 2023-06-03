@@ -1,5 +1,5 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
-import type {Stat, StatInfo} from "./mapleStat";
+import type {Stat, Stats} from "./mapleStat";
 
 const hyperStatToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/힘/, "stat":"고정STR"},
@@ -17,13 +17,13 @@ const hyperStatToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/아케인/, "stat":"아케인 포스"},
     {"regex":/경험치/, "stat":"획득경험치"},
 ]
-export const parseHyperStats = (basicInfoPage:ParsedHtmlElement):StatInfo => {
+export const parseHyperStats = (basicInfoPage:ParsedHtmlElement):Stats => {
     const hyperStatsSpan = basicInfoPage.querySelector(
         ".tab01_con_wrap > table:nth-child(4) > tbody > tr:nth-child(11) > td > span"
     )!
 
     const text = hyperStatsSpan.structuredText.split("\n")
-    let statInfo:StatInfo = {}
+    let statInfo:Stats = {}
 
     text.forEach((abilityText) => {
         for (const item of hyperStatToStat) {

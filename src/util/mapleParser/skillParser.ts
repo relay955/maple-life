@@ -1,9 +1,9 @@
-import type {SkillInfo} from "./mapleStat";
+import type {SkillStat} from "./mapleStat";
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 
-export const parseSkills = (skillPageHtml:ParsedHtmlElement):SkillInfo[] => {
+export const parseSkills = (skillPageHtml:ParsedHtmlElement):SkillStat[] => {
     let skillList = skillPageHtml.querySelectorAll(".skill_0 > .skill_list li")!
-    let skillInfoList:SkillInfo[] = []
+    let skillInfoList:SkillStat[] = []
     skillList.forEach(skillTag => {
         skillInfoList.push({
             name:skillTag.querySelector("h2")!.structuredText,

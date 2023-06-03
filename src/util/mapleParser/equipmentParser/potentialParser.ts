@@ -1,4 +1,4 @@
-import type {Stat, PotentialGrade, EquipmentInfo} from "../mapleStat";
+import type {Stat, PotentialGrade, EquipmentStat} from "../mapleStat";
 
 const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/보스/, "stat":"보스 데미지"},
@@ -31,7 +31,7 @@ const potentialOrSoulToStats:{regex:RegExp, stat:Stat}[] = [
     {"regex":/메소 획득량/, "stat":"메소 획득량"},
 ]
 
-export const potentialParsingStrategy = (equipmentInfo:EquipmentInfo,name:string,option:string,type:"potential"|"additionalPotential"):void => {
+export const potentialParsingStrategy = (equipmentInfo:EquipmentStat, name:string, option:string, type:"potential"|"additionalPotential"):void => {
     if(option.includes("없습니다.")) return;
     equipmentInfo[type] = {
         grade:getPotentialGradeFromName(name),

@@ -1,8 +1,8 @@
-import type {StatInfo} from "../util/mapleParser/mapleStat";
+import type {Stats} from "../util/mapleParser/mapleStat";
 
 export type EquipmentSet = {
     nickName:string;
-    setOptions:{[index:number]:StatInfo};
+    setOptions:{[index:number]:Stats};
 }
 export const equipmentSetOptions:{[index:string]:EquipmentSet} = {
     "마이스터 세트":{

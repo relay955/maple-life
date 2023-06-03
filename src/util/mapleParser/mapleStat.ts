@@ -1,6 +1,6 @@
 import type {BuffName} from "../../infoDictionary/BuffDict";
 import type {LinkSkillName} from "../../infoDictionary/LinkSkillDict";
-import type {Classes} from "../../infoDictionary/ClassesDict";
+import type {Job} from "../../infoDictionary/JobDict";
 
 export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |"고정MP" |
     "공격력" | "공격력%" | "레벨당 공격력" |"마력" | "마력%" | "레벨당 마력" |
@@ -26,58 +26,58 @@ export type EquipmentType = "반지1"|"반지2"|"반지3"|"반지4"|"펜던트1"
 
 export type PotentialGrade = "레어"| "에픽" | "유니크" | "레전드리"
 
-export type StatInfo = {[key in Stat]?:number}
+export type Stats = {[key in Stat]?:number}
 
 export interface EquipmentLinkKey{
     type:EquipmentType;
     key:string;
 }
 
-export interface EquipmentInfo{
+export interface EquipmentStat {
     name:string;
     imageUrl?:string;
     type:EquipmentType;
-    stats:StatInfo;
-    bonusStats:StatInfo;
+    stats:Stats;
+    bonusStats:Stats;
     potential?:{
         grade:PotentialGrade;
-        stats:StatInfo;
+        stats:Stats;
         options:Stat[];
     }
     additionalPotential?:{
         grade:PotentialGrade;
-        stats:StatInfo;
+        stats:Stats;
         options:Stat[];
     }
     soul?:{
         name:string;
-        stats:StatInfo;
+        stats:Stats;
     }
     starForce?:number;
     skillLevel?:number;
 }
 
-export type EquipmentList = {[key in EquipmentType]?:EquipmentInfo;}
+export type EquipmentList = {[key in EquipmentType]?:EquipmentStat;}
 
-export interface SkillInfo{
+export interface SkillStat {
     name:string;
     imageUrl?:string;
     skillLevel:number;
 }
 export interface CharacterSpec{
-    ability:StatInfo;
-    hyperStat:StatInfo;
+    ability:Stats;
+    hyperStat:Stats;
     equipments:EquipmentList;
-    skills:SkillInfo[];
-    tendency:StatInfo;
+    skills:SkillStat[];
+    tendency:Stats;
     linkSkill:{[key in LinkSkillName]?:number};
     buff:{[key in BuffName]?:boolean};
 }
-export interface StatDetails{
-    classInfo:Classes;
+export interface CharacterSpecSummary {
+    classInfo:Job;
     statList:{[key in Stat]?:{[index:string]:number}};
     statIndicators:StatIndicators;
-    statTotal:StatInfo;
+    statTotal:Stats;
     sets:{[index:string]:number};
     starforce:number;
 }

@@ -1,5 +1,5 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
-import type {Stat, StatInfo} from "./mapleStat";
+import type {Stat, Stats} from "./mapleStat";
 
 const tendencyToStat:{regex:RegExp, stat:Stat}[] = [
     {"regex":/방어율 무시/, "stat":"방어율 무시"},
@@ -13,9 +13,9 @@ const tendencyToStat:{regex:RegExp, stat:Stat}[] = [
  * 기본정보 페이지에 있는 성향의 스텟 정보를 얻습니다.
  * 사실상 쓸모가 없는 일부 성향 스텟은 아예 표시되지 않습니다.
  */
-export const parseTendency = (basicInfoPage:ParsedHtmlElement):StatInfo => {
+export const parseTendency = (basicInfoPage:ParsedHtmlElement):Stats => {
     const abilityStatTagList = basicInfoPage.querySelectorAll(".dispo_list .total_effect_wrap li")!
-    let statInfo:StatInfo = {}
+    let statInfo:Stats = {}
 
     abilityStatTagList.forEach((abilityStatTag) => {
         let text = abilityStatTag.structuredText;

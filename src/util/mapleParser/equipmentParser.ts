@@ -1,7 +1,7 @@
 import {HTMLElement as ParsedHtmlElement} from "node-html-parser";
 import {defaultStatParsingStrategy} from "./equipmentParser/statParser";
 import {potentialParsingStrategy} from "./equipmentParser/potentialParser";
-import type {EquipmentType, EquipmentInfo, EquipmentLinkKey} from "./mapleStat";
+import type {EquipmentType, EquipmentStat, EquipmentLinkKey} from "./mapleStat";
 import {soulParsingStrategy} from "./equipmentParser/soulParser";
 import {parseSingleArcaneSymbol} from "./equipmentParser/symbolParser";
 
@@ -46,7 +46,7 @@ export const parseSymbolsLinkKey = (equipmentPage:ParsedHtmlElement):EquipmentLi
     return equipmentLinkKeys;
 }
 
-export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):EquipmentInfo => {
+export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):EquipmentStat => {
     let nameTag = singleEquipmentPage.querySelector(".item_memo_title > h1")!
     let name = nameTag.innerHTML
         .replace(/<font .*>.*<\/font>/,"")
@@ -60,7 +60,7 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
     if(name.includes("아케인심볼"))
         return parseSingleArcaneSymbol(singleEquipmentPage)
 
-    let equipmentInfo:EquipmentInfo = {
+    let equipmentInfo:EquipmentStat = {
         name:name,
         imageUrl: singleEquipmentPage.querySelector(".item_img > img")?.getAttribute("src"),
         type:singleEquipmentPage.querySelector(".ablilty02:nth-child(3) > span > em")!.textContent as EquipmentType,
@@ -78,7 +78,7 @@ export const parseSingleEquipment = (singleEquipmentPage:ParsedHtmlElement):Equi
     return equipmentInfo;
 }
 
-const parseStatsInEquipment = (equipmentInfo:EquipmentInfo,singleEquipmentPage:ParsedHtmlElement) => {
+const parseStatsInEquipment = (equipmentInfo:EquipmentStat, singleEquipmentPage:ParsedHtmlElement) => {
     let statsTag = singleEquipmentPage.querySelectorAll(".stet_info > ul > li")
     let parsedStatsTag = statsTag.map((statTag) => {
         return {
@@ -96,7 +96,7 @@ const parseStatsInEquipment = (equipmentInfo:EquipmentInfo,singleEquipmentPage:P
     })
 }
 
-let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentInfo,name:string,option:string)=>void}[] = [
+let statParsingStrategies:{keyword:string,strategy:(equipmentInfo:EquipmentStat, name:string, option:string)=>void}[] = [
     {
         keyword:"공격속도",
         strategy:(equipmentInfo, name, option) => {
