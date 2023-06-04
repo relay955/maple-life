@@ -72,7 +72,7 @@ export interface CharacterSpec{
     equipments:EquipmentStats;
     skills:SkillStats;
     tendency:Stats;
-    linkSkills:SkillStats;
+    linkSkills:{[key:string]:number};
     buff:{[key in BuffName]?:boolean};
 }
 export interface CharacterSpecSummary {

@@ -23,6 +23,7 @@ export interface Skill{
   buffStat?:(specSummary:CharacterSpecSummary)=>Stats;//스킬 사용시 버프형태로 일정시간동안 제공되는 스텟
   buffDuration?:(specSummary:CharacterSpecSummary)=>number;//버프 지속시간. 지속시간동안 버프 적용
 
+  maxLevel?:number;//스킬 최대레벨. 링크스킬 레벨 체크에서만 쓰이므로 링크스킬 제외하고는 안넣어도 무방함
   passiveStat?:(specSummary:CharacterSpecSummary)=>Stats;//패시브 스킬일경우 상시 제공되는 스텟
 }
 
