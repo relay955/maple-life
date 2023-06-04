@@ -1,7 +1,7 @@
 import type {
     CharacterSpec,
     Stat,
-    CharacterSpecSummary, StatIndicator, StatIndicators, Stats,
+    CharacterSpecSummary, StatIndicator, StatIndicators, Stats, SkillStats,
 } from "../util/mapleParser/mapleStat";
 import type {Character} from "../storage/dto/character";
 import type {Job} from "../infoDictionary/JobDict"
@@ -114,7 +114,11 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
     })
 
     //링크스킬 저장
-    specSummary.skills = Object.assign({},specSummary.skills,spec.linkSkills)
+    const linkSkillStats:SkillStats = Object.keys(spec.linkSkills).reduce((acc:SkillStats,skillName:string)=>{
+        acc[skillName] = {name:skillName,level:spec.linkSkills[skillName]}
+        return acc;
+    },{})
+    specSummary.skills = Object.assign({},specSummary.skills,linkSkillStats)
 
     //활성화된 링크스킬 스텟 계산
     Object.keys(spec.linkSkills).forEach((skillName)=> {
@@ -129,9 +133,10 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
 
     //활성화된 버프 계산
     Object.keys(spec.buff).forEach((buffName)=> {
-        Object.keys(buffDict[buffName]).forEach((stat)=>{
+        let stats:Stats = buffDict[buffName].stat
+        Object.keys(stats).forEach((stat)=>{
             if(statList[stat] === undefined) statList[stat] = {}
-            statList[stat]["[버프] "+buffName] = buffDict[buffName][stat];
+            statList[stat]["[버프] "+buffName] = stats[stat];
         });
     })
 
