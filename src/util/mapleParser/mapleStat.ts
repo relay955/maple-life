@@ -79,6 +79,7 @@ export interface CharacterSpecSummary {
     statList:{[key in Stat]?:{[index:string]:number}};
     statTotal:Stats;
     skills:SkillStats;
+    equipments:EquipmentStats
     skillsAvgLevel:{
         skillCore:number;
         enhanceCore:number;
