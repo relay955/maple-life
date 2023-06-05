@@ -73,6 +73,8 @@ export interface CharacterSpec{
     tendency:Stats;
     linkSkills:{[key:string]:number};
     buff:{[key in BuffName]?:boolean};
+    simulateScore?:number;
+    isSimulateNeeded?:boolean;
 }
 export interface CharacterSpecSummary {
     job:Job;

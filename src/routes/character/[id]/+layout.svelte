@@ -10,6 +10,8 @@ import {liveQuery} from "dexie";
 import Title from "../../../components/basicComponent/Title.svelte";
 import {goto} from "$app/navigation";
 import {calcDamage, summarizeSpec} from "../../../logic/specCalculator.js";
+    import { numberWithCommas } from "../../../util/formatter";
+import SvelteTooltip from "svelte-tooltip";
 
 export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
@@ -17,6 +19,8 @@ export let character = liveQuery(() => idb.character.get(Number($page.params.id)
 </script>
 
 {#if isOnTauri() && $character && $character.spec && $character.spec.default}
+{@const spec = $character.spec.default}
+{@const specSummary = summarizeSpec($character, spec)}
   <PageContainer>
     <Title text="캐릭터 정보"/>
     <div class="header">
@@ -25,9 +29,22 @@ export let character = liveQuery(() => idb.character.get(Number($page.params.id)
         <div class="name">{$character.name}</div>
         <div class="level-class">Lv.{$character.level}, {$character.classType}</div>
       </div>
+        <div class="universal-score">
+          <div class="title">기본약식점수</div>
+          <div class="value">{spec.simulateScore ?? "계산필요"}</div>
+        </div>
       <div class="universal-score">
-        <div class="title">종합점수</div>
-        <div class="value">{calcDamage(summarizeSpec($character,$character.spec.default))}</div>
+        <div class="title">최종 스텟공격력</div>
+        <div class="value">
+          {numberWithCommas(Math.round(calcDamage(specSummary)))} </div>
+      </div>
+      <div class="universal-score">
+        <div class="title">가변인자 (방무/아케인/어센틱)</div>
+        <div class="value">
+          {specSummary.statTotal["방어율 무시"] ?? 0}% /
+          {specSummary.statTotal["아케인 포스"] ?? 0} /
+          {specSummary.statTotal["어센틱 포스"] ?? 0} 
+        </div>
       </div>
     </div>
     <div class="tab">
@@ -39,7 +56,7 @@ export let character = liveQuery(() => idb.character.get(Number($page.params.id)
 <!--      보스 점수컷, 계산과정 표시-->
       <button on:click={()=>goto(`/character/${$character?.id}/cutline`)}>보스/사냥</button>
       <!--      점수계산 과정 표시-->
-      <button on:click={()=>goto(`/character/${$character?.id}/universal-score`)}>종합점수</button>
+      <button on:click={()=>goto(`/character/${$character?.id}/universal-score`)}>약식점수(약식 시뮬레이션)</button>
     </div>
     <div class="body">
       <slot></slot>
