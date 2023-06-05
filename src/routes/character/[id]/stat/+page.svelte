@@ -61,7 +61,7 @@
   let hoverPanelY = 0;
   let isVisibleHoverPanel = false;
 
-  const onMouseMove = (e:MouseEvent,name:string,item:Buff) =>{
+  const onMouseMove = (e:MouseEvent,name:string,item:Buff|Skill) =>{
     hoverPanelX = e.clientX;
     hoverPanelY = e.clientY;
     isVisibleHoverPanel = true;
