@@ -22,21 +22,18 @@ import { seedringSkillDict } from "../infoDictionary/skill/seedringSkill";
 
 //스텟 요약
 export const summarizeSpec = (character:Character, spec:CharacterSpec):CharacterSpecSummary => {
-    let classInfo = jobDict[character.classType]!
-    let specSummary:CharacterSpecSummary = {job:classInfo,statList:{},sets:{},
+    let jobInfo = jobDict[character.classType]!
+    let specSummary:CharacterSpecSummary = {job:jobInfo,statList:{},sets:{},
         starforce:0,statTotal:{},skills:spec.skills,equipments:spec.equipments,
         skillsAvgLevel:{skillCore:0,enhanceCore:0}};
     let statList = specSummary.statList;
     //스텟별 합산
-    //메용
-    if(classInfo.mainStat) {
-        //캐릭터 AP
-        statList["AP"+classInfo.mainStat] = {};
-        let characterAP = 18 + character.level*5;
-        statList["AP"+classInfo.mainStat]["캐릭터 스텟"] = characterAP;
-        statList[classInfo.mainStat] = {};
-        statList[classInfo.mainStat]!["메이플 용사"] = Math.floor(characterAP * 0.15);
-    }
+    //캐릭터 AP
+    let apstats = jobInfo.apStatPerLevel(character.level)
+    Object.keys(apstats).forEach((stat)=> {
+        if(statList[stat] === undefined) statList[stat] = {}
+        statList[stat]["캐릭터 AP"] = apstats[stat];
+    })
 
     //캐릭터 기본스텟
     let passiveStats = jobDict[character.classType].passiveStats ?? {}
@@ -126,24 +123,6 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
         specSummary.skills[skillName] = {name:skillName,level:equipment.skillLevel ?? 1}
     })
 
-    //링크스킬을 스킬목록에 추가(엔버링크 등)
-    const linkSkillStats:SkillStats = Object.keys(spec.linkSkills).reduce((acc:SkillStats,skillName:string)=>{
-        acc[skillName] = {name:skillName,level:spec.linkSkills[skillName]}
-        return acc;
-    },{})
-    specSummary.skills = Object.assign({},specSummary.skills,linkSkillStats)
-
-    //활성화된 링크스킬 스텟 계산
-    Object.keys(spec.linkSkills).forEach((skillName)=> {
-        let skillInfo:Skill = linkSkillDict[skillName];
-        let stats = skillInfo.passiveStat?.(specSummary) ?? {}
-
-        Object.keys(stats).forEach((stat)=>{
-            if(statList[stat] === undefined) statList[stat] = {}
-            statList[stat]["[링크] "+skillName] = stats[stat];
-        });
-    })
-
     //활성화된 버프 계산
     Object.keys(spec.buff).forEach((buffName)=> {
         let stats:Stats = buffDict[buffName].stat
@@ -153,17 +132,29 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
         });
     })
 
+    //기본스킬을 스킬목록에 추가
+    const defaultSkillStats:SkillStats = jobInfo.defaultSkills!.reduce((acc:SkillStats,skillName:string)=>{
+        acc[skillName] = {name:skillName,level:1}
+        return acc;
+    },{})
+    //링크스킬을 스킬목록에 추가
+    const linkSkillStats:SkillStats = Object.keys(spec.linkSkills).reduce((acc:SkillStats,skillName:string)=>{
+        acc[skillName] = {name:skillName,level:spec.linkSkills[skillName]}
+        return acc;
+    },{})
+    specSummary.skills = Object.assign({},specSummary.skills,defaultSkillStats,linkSkillStats)
+
     //스킬코어/강화코어 평균갯수 계산
     let skillCoreNum = 0
     let skillCoreLevelTotal = 0
     let enhanceCoreNum = 0
     let enhanceCoreLevelTotal = 0
 
-    //캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
-    Object.keys(spec.skills).forEach((skillName)=>{
-        let skillStat = spec.skills[skillName]
+    //캐릭터가 가지고있는 5차스킬 통계를 내고, 각 스킬에 패시브가 붙어있는경우 패시브스텟 적용
+    Object.keys(specSummary.skills).forEach((skillName)=>{
+        let skillStat = specSummary.skills[skillName]
         let skill = skillDict[skillName]
-        let vMatrixSkillType = classInfo.vMatrixSkillType?.[skillName]
+        let vMatrixSkillType = jobInfo.vMatrixSkillType?.[skillName]
         if(vMatrixSkillType === "skill"){
             skillCoreNum += 1
             skillCoreLevelTotal += skillStat.level
