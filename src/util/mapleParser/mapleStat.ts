@@ -1,7 +1,7 @@
 import type {BuffName} from "../../infoDictionary/BuffDict";
 import type {Job} from "../../infoDictionary/JobDict";
 
-export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |"고정MP" |
+export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | "APMP" | "고정HP" |"고정MP" |
     "공격력" | "공격력%" | "레벨당 공격력" |"마력" | "마력%" | "레벨당 마력" |
     "APSTR" | "APDEX" | "APINT" | "APLUK" |
     "STR" | "DEX" | "INT" | "LUK" | "올스탯" |

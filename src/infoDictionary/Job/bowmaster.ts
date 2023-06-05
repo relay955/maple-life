@@ -1,13 +1,10 @@
 import type {Job} from "../JobDict";
-import type {
-  CharacterSpecSummary,
-  Stats
-} from "../../util/mapleParser/mapleStat";
 
 export const bowmaster:Job = {
   mainStat:"DEX",
   subStat:"STR",
   atkType:"공격력",
+  apStatPerLevel:(level)=>({"APDEX":18+(level*5)}),
   passiveStats:{
     "무기 상수":1.3,
     "공격속도":3,
@@ -25,40 +22,33 @@ export const bowmaster:Job = {
   },
   skills:{
     "파이널 어택":{
-      isDefaultSkill:true,
       damage:(spec)=>[{damageRate:2.1*(1+(spec.skills["파이널 어택 강화"]?.level ?? 0)*0.02),dealtTime:0}]
     },
     "마법 화살":{
-      isDefaultSkill:true,
       damage:(spec)=>[{damageRate:2.6*(1+(spec.skills["마법 화살 강화"]?.level ?? 0)*0.02),dealtTime:0}]
     },
     "플레시 미라주":{
-      isDefaultSkill:true,
       cooldown:20000,
       startupCooldown:30000,
       damage:(spec)=>[{damageRate:4.2*4*5*(1+(spec.skills["애로우 플래터/플레시 미라주 강화"]?.level ?? 0)*0.02), dealtTime:0}],
     },
     "피닉스":{
-      isDefaultSkill:true,
       startupCooldown:40000,
       cooldown:360000,
       damage:(spec)=>[{damageRate:3.9*(1+(spec.skills["피닉스 강화"]?.level ?? 0)*0.03), dealtTime:1000, dealtCount:360}],
     },
     "모탈 블로우":{
-      isDefaultSkill:true,
       startupCooldown:3000,
       cooldown:15000,
       buffStat:()=>({"데미지":35}),
       buffDuration:()=>5000,
     },
     "애로우 플래터":{
-      isDefaultSkill:true,
       actionDelay:600,//임의
       cooldown:60000,
       damage:(spec)=>[{damageRate:2.3*(1+(spec.skills["애로우 플래터/플레시 미라주 강화"]?.level ?? 0)*0.02), dealtTime:230, dealtCount:260, damageBonusStat:{"데미지":30}}],
     },
     "폭풍의 시":{
-      isDefaultSkill:true,
       actionDelay:120,
       damage:(spec)=>[{damageRate:2.625*2*(1+(spec.skills["폭풍의 시 강화"]?.level ?? 0)*0.02), dealtTime:0, damageBonusStat:{"보스 데미지":10,"데미지":30}}],
       autoActiveSkill:{
@@ -67,7 +57,6 @@ export const bowmaster:Job = {
       }
     },
     "프리퍼레이션":{
-      isDefaultSkill:true,
       actionDelay:800,//임의
       cooldown:120000,
       buffStat:()=>({"공격력":50,"보스 데미지":20}),
@@ -107,8 +96,11 @@ export const bowmaster:Job = {
       buffStat:()=>({"데미지":15}),
       buffDuration:(spec)=>40000+spec.skills["애로우 레인"].level*1000
     },
-
   },
+  defaultSkills:[
+    "파이널 어택","마법 화살","플레시 미라주","폭풍의 시","애로우 플래터",
+    "모탈 블로우","프리퍼레이션","메이플 용사","피닉스"
+  ],
   skillPriority:[
     "리스트레인트 링","리스크테이커 링","웨폰퍼프-D 링","크리데미지 링",
     "크레스트 오브 더 솔라","스파이더 인 미러",

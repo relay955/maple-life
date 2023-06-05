@@ -1,5 +1,6 @@
 <script lang="ts">
     import HoverPanel from "../../../../components/HoverPanel.svelte";
+    import SubTitle from "../../../../components/basicComponent/SubTitle.svelte";
     import { buffDict, type Buff } from "../../../../infoDictionary/BuffDict";
     import type { Skill } from "../../../../infoDictionary/SkillDict";
     import { linkSkillDict } from "../../../../infoDictionary/skill/linkSkill";
@@ -61,7 +62,7 @@ const onClickBuff = (buffName:string,buff:Buff) => {
 
 </script>
 <div class="bufflink-list-container">
-    <div class="subtitle">버프</div>
+    <SubTitle>버프</SubTitle>
     <div class="bufflink-list">
       {#each Object.keys(buffDict) as buffName}
         {@const buff = buffDict[buffName]}
@@ -75,7 +76,7 @@ const onClickBuff = (buffName:string,buff:Buff) => {
         </button>
       {/each}
     </div>
-    <div class="subtitle">링크스킬 ({Object.keys(spec.linkSkills).length}/13)</div>
+    <SubTitle>링크스킬 ({Object.keys(spec.linkSkills).length}/13)</SubTitle>
     <div class="bufflink-list">
       {#each Object.keys(linkSkillDict) as linkSkillName}
         {@const linkSkill = linkSkillDict[linkSkillName]}
@@ -102,12 +103,6 @@ const onClickBuff = (buffName:string,buff:Buff) => {
 </HoverPanel>
 
 <style lang="scss">
-  .subtitle{
-    font-size: 14px;
-    font-weight: bold;
-    color: #949494;
-    margin-bottom: 3px;
-  }
 
   .bufflink-list{
     display: flex;

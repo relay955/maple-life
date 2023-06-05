@@ -7,6 +7,7 @@
   import { simulate } from "../../../../logic/dpmSimulator";
   import Bufflink from "./bufflink.svelte";
     import { numberWithCommas } from "../../../../util/formatter";
+    import StatSummary from "./statSummary.svelte";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
@@ -22,6 +23,7 @@
 <div>
 
   <Bufflink character={$character} spec={spec}/>
+  <StatSummary character={$character} spec={spec}/>
   <div>
 
   </div>

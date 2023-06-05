@@ -18,6 +18,7 @@ export interface SimulationEvent{
 }
 
 export const simulate = (spec:CharacterSpecSummary) => {
+    console.log(spec)
     const job = spec.job
     const skillPriority = job.skillPriority!;
     let skillCooldownList:SkillCooldownList = {};
@@ -36,8 +37,7 @@ export const simulate = (spec:CharacterSpecSummary) => {
     while(currentActionDelay < job.damagePeriod!) {
         //사용할수있는 스킬 탐색..
         const targetSkillName = skillPriority.find((skillName: string) => {
-            const targetSkill = skillDict![skillName]
-            if (!targetSkill.isDefaultSkill && spec.skills[skillName] === undefined) return false
+            if (spec.skills[skillName] === undefined) return false
             if ((skillCooldownList[skillName] ?? 0) > currentActionDelay) return false
             return true;
         })!

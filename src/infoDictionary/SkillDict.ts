@@ -23,7 +23,6 @@ export interface Skill{
     damageBonusStat?:Stats;//타격시 추가적으로 적용되는 스텟
   }[];
   autoActiveSkill?:{[index:string]:number};//스킬 사용시 자동으로 발동되는 스킬 목록. 스킬명:확률. 0~1사이로 표기
-  isDefaultSkill?:boolean;//기본스킬인지 여부.1~4차, 하이퍼스킬을 기본스킬로 정의하며 항상 사용가능하다고 판단함. 5차스킬은 코어 장착 여부에 따라 사용여부가 달라짐.
 
   buffStat?:(specSummary:CharacterSpecSummary)=>Stats;//스킬 사용시 버프형태로 일정시간동안 제공되는 스텟
   buffDuration?:(specSummary:CharacterSpecSummary)=>number;//버프 지속시간. 지속시간동안 버프 적용
