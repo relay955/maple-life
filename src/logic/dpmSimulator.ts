@@ -156,7 +156,7 @@ const skillActivation = (skillName:string,targetSkill: Skill,spec:CharacterSpecS
         const randomFactor = Math.random()
         Object.keys(targetSkill.autoActiveSkill).forEach((skillName:string)=>{
             const activeRate = targetSkill.autoActiveSkill![skillName]
-            if(activeRate < randomFactor){
+            if(activeRate > randomFactor){
                 eventList.push(...skillActivation(skillName,spec.job.skills![skillName],spec,currentActionDelay))
             }
         })
