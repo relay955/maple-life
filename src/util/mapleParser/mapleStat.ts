@@ -1,5 +1,4 @@
 import type {BuffName} from "../../infoDictionary/BuffDict";
-import type {LinkSkillName} from "../../infoDictionary/LinkSkillDict";
 import type {Job} from "../../infoDictionary/JobDict";
 
 export type Stat = "HP" | "MP" | "HP%" | "MP%" | "APHP" | " APMP" | "고정HP" |"고정MP" |

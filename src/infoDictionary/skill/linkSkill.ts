@@ -1,4 +1,3 @@
-import type {Stat, Stats} from "../util/mapleParser/mapleStat";
 import iconLink1 from "$lib/images/icon/linkskill/임피리컬 널리지.png"
 import iconLink2 from "$lib/images/icon/linkskill/어드벤쳐러 큐리어스.png"
 import iconLink3 from "$lib/images/icon/linkskill/시프 커닝.png"
@@ -20,20 +19,9 @@ import iconLink18 from "$lib/images/icon/linkskill/자연의 벗.png"
 import iconLink19 from "$lib/images/icon/linkskill/자신감.png"
 import iconLink20 from "$lib/images/icon/linkskill/륀느의 축복.png"
 import iconLink21 from "$lib/images/icon/linkskill/판단.png"
-import type {Skill} from "./Skill";
+import type {Skill} from "../SkillDict";
 
-
-
-export type LinkSkillName = "임피리컬 널리지" | "어드벤쳐러 큐리어스" |
-    "시프 커닝" | "파이렛 블레스" | "시그너스 블레스" |
-    "하이브리드 로직" | "데몬스 퓨리" | "와일드 레이지" |
-    "퍼미에이트" | "데들리 인스팅트" |
-    "아이언 윌" | "프라이어 프리퍼레이션" | "인텐시브 인썰트" |
-    "노블레스" | "전투의 흐름" |
-    "이네이트 기프트" | "무아" | "자연의 벗" | "자신감" |
-    "륀느의 축복" | "판단" | "소울 컨트랙트"
-
-export const linkSkillDict:{[key in LinkSkillName]:Skill} = {
+export const linkSkillDict:{[key in string]:Skill} = {
     "임피리컬 널리지":{
         description:"모험가 마법사 링크스킬\n"+
           "계산 편의를 위해 상시적용으로 간주합니다.\n"+

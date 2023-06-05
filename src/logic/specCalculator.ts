@@ -14,9 +14,9 @@ import {
     equipmentSetOptions,
     equipmentToSetDict
 } from "../infoDictionary/EquipmentDict";
-import {linkSkillDict} from "../infoDictionary/LinkSkillDict";
 import {buffDict} from "../infoDictionary/BuffDict";
-import type {Skill} from "../infoDictionary/Skill";
+import {skillDict, type Skill} from "../infoDictionary/SkillDict";
+import { linkSkillDict } from "../infoDictionary/skill/linkSkill";
 
 
 export const summarizeSpec = (character:Character, spec:CharacterSpec):CharacterSpecSummary => {
@@ -113,7 +113,6 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
         }
     })
 
-    //링크스킬 저장
     const linkSkillStats:SkillStats = Object.keys(spec.linkSkills).reduce((acc:SkillStats,skillName:string)=>{
         acc[skillName] = {name:skillName,level:spec.linkSkills[skillName]}
         return acc;
@@ -261,7 +260,7 @@ export const simulate = (spec:CharacterSpecSummary) => {
 
     //시작쿨타임있는것들 먼저 적용
     skillPriority.forEach((skillName:string)=>{
-        const skill = job.skills![skillName]
+        const skill = skillDict![skillName]
         if(skill.startupCooldown){
             skillCooldownList[skillName] = skill.startupCooldown
         }
@@ -271,14 +270,14 @@ export const simulate = (spec:CharacterSpecSummary) => {
     while(currentActionDelay < job.damagePeriod!) {
         //사용할수있는 스킬 탐색..
         const targetSkillName = skillPriority.find((skillName: string) => {
-            const targetSkill = job.skills![skillName]
+            const targetSkill = skillDict![skillName]
             if (!targetSkill.isDefaultSkill && spec.skills[skillName] === undefined) return false
             if ((skillCooldownList[skillName] ?? 0) > currentActionDelay) return false
             return true;
         })!
         if(targetSkillName === undefined) throw Error("스킬이 없어요 ㅠ")
 
-        const targetSkill = spec.job.skills![targetSkillName]
+        const targetSkill = skillDict![targetSkillName]
         //쿨다운 적용
         if (targetSkill.cooldown) {
             skillCooldownList[targetSkillName] = currentActionDelay + targetSkill.cooldown

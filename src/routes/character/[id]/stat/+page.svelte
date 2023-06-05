@@ -7,10 +7,10 @@
   import {buffDict} from "../../../../infoDictionary/BuffDict";
   import {simulate, summarizeSpec} from "../../../../logic/specCalculator";
   import HoverPanel from "../../../../components/HoverPanel.svelte";
-  import {linkSkillDict} from "../../../../infoDictionary/LinkSkillDict";
-  import type {Skill} from "../../../../infoDictionary/Skill";
   import type { CharacterSpec } from "../../../../util/mapleParser/mapleStat";
     import { parseMapleCharacterInfo } from "../../../../util/mapleParser/basicInfoParser";
+    import type { Skill } from "../../../../infoDictionary/SkillDict";
+    import { linkSkillDict } from "../../../../infoDictionary/skill/linkSkill";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
