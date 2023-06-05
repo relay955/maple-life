@@ -4,7 +4,7 @@ import type {
     Stats
 } from "../util/mapleParser/mapleStat";
 import {bowmaster} from "./Job/bowmaster";
-import type {Skill} from "./Skill";
+import type {Skill} from "./SkillDict";
 
 export interface Job {
     mainStat?:Stat;

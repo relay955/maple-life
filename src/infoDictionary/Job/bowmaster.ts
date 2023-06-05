@@ -36,7 +36,7 @@ export const bowmaster:Job = {
       isDefaultSkill:true,
       cooldown:20000,
       startupCooldown:30000,
-      damage:(spec)=>[{damageRate:4.2*4*5*(1+(spec.skills["플레시 미라주 강화"]?.level ?? 0)*0.02), dealtTime:0}],
+      damage:(spec)=>[{damageRate:4.2*4*5*(1+(spec.skills["애로우 플래터/플레시 미라주 강화"]?.level ?? 0)*0.02), dealtTime:0}],
     },
     "피닉스":{
       isDefaultSkill:true,
@@ -55,7 +55,7 @@ export const bowmaster:Job = {
       isDefaultSkill:true,
       actionDelay:600,//임의
       cooldown:60000,
-      damage:(spec)=>[{damageRate:2.3*(1+(spec.skills["애로우 플래터 강화"]?.level ?? 0)*0.02), dealtTime:230, dealtCount:260, damageBonusStat:{"데미지":30}}],
+      damage:(spec)=>[{damageRate:2.3*(1+(spec.skills["애로우 플래터/플레시 미라주 강화"]?.level ?? 0)*0.02), dealtTime:230, dealtCount:260, damageBonusStat:{"데미지":30}}],
     },
     "폭풍의 시":{
       isDefaultSkill:true,
@@ -73,13 +73,7 @@ export const bowmaster:Job = {
       buffStat:()=>({"공격력":50,"보스 데미지":20}),
       buffDuration:()=>40000,
     },
-    "에픽 어드벤쳐":{
-      isDefaultSkill:true,
-      actionDelay:800,
-      cooldown:120000,
-      buffStat:()=>({"데미지":10}),
-      buffDuration:()=>60000,
-    },
+
     "퀴버 풀버스트":{
       actionDelay:800,//임의
       cooldown:120000,
@@ -113,41 +107,13 @@ export const bowmaster:Job = {
       buffStat:()=>({"데미지":15}),
       buffDuration:(spec)=>40000+spec.skills["애로우 레인"].level*1000
     },
-    "이볼브":{
-      actionDelay:800,
-      cooldown:120000,
-      damage:(spec)=>[{damageRate:(4.5+spec.skills["이볼브"]!.level*0.15)*7,dealtTime:4000,dealtCount:10},],
-    },
-    "가이디드 애로우":{
-      cooldown:120000,
-      damage:(spec)=>[{damageRate:4+spec.skills["가이디드 애로우"]!.level*0.16,dealtTime:330,dealtCount:360}],
-      autoActiveSkill:{
-        "마법 화살":0.6
-      }
-    },
-    "크리티컬 리인포스":{
-      actionDelay:800,
-      cooldown:120000,
-      buffStat:(spec)=> ({
-        "크리티컬 데미지": (spec.statTotal["크리티컬 확률"] ?? 0) * (0.20 + spec.skills["크리티컬 리인포스"]!.level * 0.01),
-      }),
-      buffDuration:()=>30000
-    },
-    "메이플월드 여신의 축복":{
-      actionDelay:800,
-      cooldown:120000,
-      buffStat:(spec)=> ({
-        "DEX": (spec.statTotal["APDEX"] ?? 0) * 0.15 * (1 + spec.skills["메이플월드 여신의 축복"]!.level * 0.1),
-        "데미지": 5 + Math.floor(spec.skills["메이플월드 여신의 축복"]!.level * 0.5),
-      }),
-      buffDuration:()=>60000
-    }
+
   },
   skillPriority:[
     "가이디드 애로우","실루엣 미라주","피닉스","모탈 블로우","플레시 미라주",
-    "이볼브","프리퍼레이션","에픽 어드벤쳐","크리티컬 리인포스","메이플월드 여신의 축복",
-    "소울 컨트랙트",
-    "애로우 레인","퀴버 풀버스트","잔영의 시","폭풍의 시"
+    "이볼브","프리퍼레이션","에픽 어드벤쳐",
+    "크리티컬 리인포스","메이플월드 여신의 축복", "소울 컨트랙트",
+    "애로우 레인","퀴버 풀버스트","잔영의 시","애로우 플래터","폭풍의 시"
   ],
   vMatrixSkillType:{
     "폭풍의 시 강화":"enhance",

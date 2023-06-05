@@ -1,4 +1,9 @@
 import type {CharacterSpecSummary, Stats} from "../util/mapleParser/mapleStat";
+import { bowmaster } from "./Job/bowmaster";
+import { commonSkillDict } from "./skill/commonSkill";
+import { linkSkillDict } from "./skill/linkSkill";
+import { seedringSkillDict } from "./skill/seedringSkill";
+import { vMaxtrixCommonSkillDict } from "./skill/vmatrixCommonSkill";
 
 export interface Skill{
   imgUrl?:string;
@@ -27,9 +32,11 @@ export interface Skill{
   passiveStat?:(specSummary:CharacterSpecSummary)=>Stats;//패시브 스킬일경우 상시 제공되는 스텟
 }
 
-//어떻게 할것인가?
-//파이널 어택 -> 폭풍의시 타격시 일정확률로 발동
-//플래시 미라주
-//마법화살
-//모탈블로우 -> 30번 직접공격하는 스킬이 적중하면 5초간 데미지 35% 증가
-//설치기들, 소환물들은 어떻게 처리할것인가?
+export const skillDict:{[index:string]:Skill}={
+  ...commonSkillDict,
+  ...linkSkillDict,
+  ...vMaxtrixCommonSkillDict,
+  ...seedringSkillDict,
+  
+  ...bowmaster.skills
+}
