@@ -39,8 +39,9 @@ export let character = liveQuery(() => idb.character.get(Number($page.params.id)
           {numberWithCommas(Math.round(calcDamage(specSummary)))} </div>
       </div>
       <div class="universal-score">
-        <div class="title">가변인자 (방무/아케인/어센틱)</div>
+        <div class="title">가변인자 (레벨/방무/아케인/어센틱)</div>
         <div class="value">
+          Lv.{$character.level} /
           {specSummary.statTotal["방어율 무시"] ?? 0}% /
           {specSummary.statTotal["아케인 포스"] ?? 0} /
           {specSummary.statTotal["어센틱 포스"] ?? 0} 
