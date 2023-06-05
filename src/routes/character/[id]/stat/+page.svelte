@@ -5,12 +5,13 @@
   import {isOnTauri} from "../../../../backendAdapter/backendAdapter";
   import type {Buff} from "../../../../infoDictionary/BuffDict";
   import {buffDict} from "../../../../infoDictionary/BuffDict";
-  import {simulate, summarizeSpec} from "../../../../logic/specCalculator";
+  import {summarizeSpec} from "../../../../logic/specCalculator";
   import HoverPanel from "../../../../components/HoverPanel.svelte";
   import type { CharacterSpec } from "../../../../util/mapleParser/mapleStat";
     import { parseMapleCharacterInfo } from "../../../../util/mapleParser/basicInfoParser";
     import type { Skill } from "../../../../infoDictionary/SkillDict";
     import { linkSkillDict } from "../../../../infoDictionary/skill/linkSkill";
+    import { simulate } from "../../../../logic/dpmSimulator";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 

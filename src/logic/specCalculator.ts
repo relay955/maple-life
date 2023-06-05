@@ -17,12 +17,15 @@ import {
 import {buffDict} from "../infoDictionary/BuffDict";
 import {skillDict, type Skill} from "../infoDictionary/SkillDict";
 import { linkSkillDict } from "../infoDictionary/skill/linkSkill";
+import { seedringSkillDict } from "../infoDictionary/skill/seedringSkill";
 
 
+//스텟 요약
 export const summarizeSpec = (character:Character, spec:CharacterSpec):CharacterSpecSummary => {
     let classInfo = jobDict[character.classType]!
     let specSummary:CharacterSpecSummary = {job:classInfo,statList:{},sets:{},
-        starforce:0,statTotal:{},skills:spec.skills,skillsAvgLevel:{skillCore:0,enhanceCore:0}};
+        starforce:0,statTotal:{},skills:spec.skills,equipments:spec.equipments,
+        skillsAvgLevel:{skillCore:0,enhanceCore:0}};
     let statList = specSummary.statList;
     //스텟별 합산
     //메용
@@ -113,6 +116,17 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
         }
     })
 
+    //시드링 탐색. 시드링이 있는 경우 레벨을 얻고 시드링 스킬 부여
+    new Array("반지1","반지2","반지3","반지4").forEach((equipmentType)=>{
+        const equipment = spec.equipments[equipmentType]
+        if(equipment === undefined) return;
+        const skillName = equipment.name;
+        const seedringSkill = seedringSkillDict[skillName]
+        if(seedringSkill === undefined) return;
+        specSummary.skills[skillName] = {name:skillName,level:equipment.skillLevel ?? 1}
+    })
+
+    //링크스킬을 스킬목록에 추가(엔버링크 등)
     const linkSkillStats:SkillStats = Object.keys(spec.linkSkills).reduce((acc:SkillStats,skillName:string)=>{
         acc[skillName] = {name:skillName,level:spec.linkSkills[skillName]}
         return acc;
@@ -145,23 +159,34 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
     let enhanceCoreNum = 0
     let enhanceCoreLevelTotal = 0
 
+    //캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
     Object.keys(spec.skills).forEach((skillName)=>{
-        let skill = spec.skills[skillName]
+        let skillStat = spec.skills[skillName]
+        let skill = skillDict[skillName]
         let vMatrixSkillType = classInfo.vMatrixSkillType?.[skillName]
         if(vMatrixSkillType === "skill"){
             skillCoreNum += 1
-            skillCoreLevelTotal += skill.level
+            skillCoreLevelTotal += skillStat.level
         }else if(vMatrixSkillType === "enhance"){
             enhanceCoreNum += 1
-            enhanceCoreLevelTotal += skill.level
+            enhanceCoreLevelTotal += skillStat.level
+        }
+        //스킬에 패시브 스텟이 붙어있는경우(쿨없는 버프도 패시브로 취급) 패시브스텟 적용
+        if(skill !== undefined && skill.passiveStat){
+            let stats = skill.passiveStat(specSummary)
+            Object.keys(stats).forEach((stat)=>{
+                if(statList[stat] === undefined) statList[stat] = {}
+                statList[stat]["[스킬] "+skillName] = stats[stat];
+            });
         }
     })
+
     specSummary.skillsAvgLevel.skillCore = skillCoreNum > 0 ?
         Math.round(skillCoreLevelTotal / skillCoreNum):0
     specSummary.skillsAvgLevel.enhanceCore = enhanceCoreNum > 0 ?
         Math.round(enhanceCoreLevelTotal / enhanceCoreNum):0
 
-    //TODO 캐릭터가 가지고있는 5차 버프스킬을 기반으로 버프효과 추가
+    
     //TODO 프리셋 사용 -> 공격대원 스텟 및 점령효과 계산
 
     //스텟합계 계산
@@ -236,167 +261,6 @@ export const calcDamage = (statDetails:CharacterSpecSummary):number => {
     }
 }
 
-export type SkillCooldownList = {
-    [index:string]:number
-}
-
-export interface SimulationEvent{
-    name:string;
-    timing:number,
-    applyStat?:Stats,
-    detachStat?:Stats,
-    damageDealt?:{
-        damageRate:number,
-        bonusStat?:Stats
-    }
-}
-
-export const simulate = (spec:CharacterSpecSummary) => {
-    const job = spec.job
-    const skillPriority = job.skillPriority!;
-    let skillCooldownList:SkillCooldownList = {};
-    let eventList:SimulationEvent[] = [];
-    let currentActionDelay = 0;
-
-    //시작쿨타임있는것들 먼저 적용
-    skillPriority.forEach((skillName:string)=>{
-        const skill = skillDict![skillName]
-        if(skill.startupCooldown){
-            skillCooldownList[skillName] = skill.startupCooldown
-        }
-    })
-
-    //합 actiondelay가 120000이 될때까지, 우선순위에 따라 모든 스킬을 사용하고 효과 적용
-    while(currentActionDelay < job.damagePeriod!) {
-        //사용할수있는 스킬 탐색..
-        const targetSkillName = skillPriority.find((skillName: string) => {
-            const targetSkill = skillDict![skillName]
-            if (!targetSkill.isDefaultSkill && spec.skills[skillName] === undefined) return false
-            if ((skillCooldownList[skillName] ?? 0) > currentActionDelay) return false
-            return true;
-        })!
-        if(targetSkillName === undefined) throw Error("스킬이 없어요 ㅠ")
-
-        const targetSkill = skillDict![targetSkillName]
-        //쿨다운 적용
-        if (targetSkill.cooldown) {
-            skillCooldownList[targetSkillName] = currentActionDelay + targetSkill.cooldown
-        }
-
-        eventList.push(...skillActivation(targetSkillName,targetSkill,spec,currentActionDelay))
-        currentActionDelay += targetSkill.actionDelay ?? 0
-    }
-
-    //모든 시전 완료 후, 스킬시전시간에 따라 정렬
-    eventList = eventList.sort((a:SimulationEvent,b:SimulationEvent)=>a.timing-b.timing)
-    console.log(eventList)
-
-    //액션 시뮬레이션 시작
-    currentActionDelay = 0;
-    let totalDamage:{[index:string]:number} = {}
-    let simSpec:CharacterSpecSummary = JSON.parse(JSON.stringify(spec))
-    let cachedDamage:{[index:string]:number} = {
-        default:calcDamage(simSpec)
-    };
-    let targetSkillNum = 0;
-    while(currentActionDelay < job.damagePeriod!){
-        const event = eventList[targetSkillNum]
-        if(event === undefined || event.timing > job.damagePeriod!) break;
-        if(event.damageDealt){
-            let damage;
-            if(event.damageDealt.bonusStat){
-                if(cachedDamage[event.name] === undefined){
-                    let tempSpec = JSON.parse(JSON.stringify(simSpec))
-                    Object.keys(event.damageDealt.bonusStat).forEach((statName:string)=> {
-                        tempSpec.statTotal[statName] = (simSpec.statTotal[statName] ?? 0) + (event.damageDealt!.bonusStat![statName] ?? 0)
-                    })
-                    damage = calcDamage(tempSpec)
-                    cachedDamage[event.name] = damage
-                }else{
-                    damage = cachedDamage[event.name]
-                }
-            }else{
-                damage = cachedDamage.default
-            }
-            if(totalDamage[event.name] === undefined) totalDamage[event.name] = 0
-            totalDamage[event.name] += damage * event.damageDealt.damageRate
-        }
-
-        if(event.applyStat){
-            Object.keys(event.applyStat).forEach((statName:string)=> {
-                simSpec.statTotal[statName] = (simSpec.statTotal[statName] ?? 0) + (event.applyStat![statName] ?? 0)
-            })
-            cachedDamage = {default:calcDamage(simSpec)}
-        }
-
-        if(event.detachStat){
-            Object.keys(event.detachStat).forEach((statName:string)=> {
-                simSpec.statTotal[statName] = (simSpec.statTotal[statName] ?? 0) - (event.detachStat![statName] ?? 0)
-            })
-            cachedDamage = {default:calcDamage(simSpec)}
-        }
-
-        targetSkillNum++;
-    }
-
-    let realTotalDamage = 0;
-    Object.keys(totalDamage).map((skillName:string)=>{
-        totalDamage[skillName] = totalDamage[skillName]/100000000
-        console.log(skillName,totalDamage[skillName])
-        realTotalDamage += totalDamage[skillName]
-    })
-    console.log("전체",realTotalDamage)
-    console.log("초당데미지",realTotalDamage/(job.damagePeriod!/1000))
-
-    //방어율, 레벨뎀감, 보스기본뎀감, 아케인/어센틱 포스뎀감 적용
-}
-
-const skillActivation = (skillName:string,targetSkill: Skill,spec:CharacterSpecSummary,currentActionDelay:number)=>{
-    let eventList:SimulationEvent[] = [];
-    //스킬 시전
-    if (targetSkill.damage) {
-        let damageList = targetSkill.damage(spec)
-        let beforeDealtTime = 0;
-        damageList.forEach((damage) => {
-            for(let i=1; i<=(damage.dealtCount ?? 1); i++){
-                let event:SimulationEvent = {
-                    name:skillName,
-                    timing: currentActionDelay + beforeDealtTime + (damage.dealtTime * i),
-                    damageDealt: {
-                        damageRate: damage.damageRate,
-                    }
-                }
-                if(damage.damageBonusStat)
-                    event.damageDealt!.bonusStat = damage.damageBonusStat
-                eventList.push(event)
-            }
-            beforeDealtTime = damage.dealtTime * (damage.dealtCount ?? 1)
-        })
-    }
-    if (targetSkill.buffStat) {
-        eventList.push({
-            name:skillName,
-            timing: currentActionDelay,
-            applyStat: targetSkill.buffStat(spec)
-        })
-        //버프지속시간이 끝나고 버프해제
-        eventList.push({
-            name:skillName,
-            timing: currentActionDelay + (targetSkill.buffDuration!(spec)),
-            detachStat: targetSkill.buffStat(spec)
-        })
-    }
-    if (targetSkill.autoActiveSkill) {
-        const randomFactor = Math.random()
-        Object.keys(targetSkill.autoActiveSkill).forEach((skillName:string)=>{
-            const activeRate = targetSkill.autoActiveSkill![skillName]
-            if(activeRate < randomFactor){
-                eventList.push(...skillActivation(skillName,spec.job.skills![skillName],spec,currentActionDelay))
-            }
-        })
-    }
-    return eventList;
-}
 
 
 //추가옵션 급수계산

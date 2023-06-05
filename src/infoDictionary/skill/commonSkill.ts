@@ -8,4 +8,5 @@ export const commonSkillDict:{[key in string]:Skill} = {
       buffStat:()=>({"데미지":10}),
       buffDuration:()=>60000,
     },
+
 }
