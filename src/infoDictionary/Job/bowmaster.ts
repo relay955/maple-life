@@ -22,10 +22,10 @@ export const bowmaster:Job = {
   },
   skills:{
     "파이널 어택":{
-      damage:(spec)=>[{damageRate:2.1*(1+(spec.skills["파이널 어택 강화"]?.level ?? 0)*0.02),dealtTime:0}]
+      damage:(spec)=>[{damageRate:2.1*(1+(spec.skills["파이널 어택 : 활 강화"]?.level ?? 0)*0.02),dealtTime:0}]
     },
     "마법 화살":{
-      damage:(spec)=>[{damageRate:2.6*(1+(spec.skills["마법 화살 강화"]?.level ?? 0)*0.02),dealtTime:0}]
+      damage:(spec)=>[{damageRate:2.6*(1+(spec.skills["퀴버 카트리지 강화"]?.level ?? 0)*0.02),dealtTime:0}]
     },
     "플레시 미라주":{
       cooldown:20000,
