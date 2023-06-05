@@ -208,7 +208,7 @@ export const calcDamage = (statDetails:CharacterSpecSummary):number => {
         totalScore *= dmgFactor;
 
         //크리티컬 계수 계산
-        let critcalFactor = 1+((statDetails.statTotal["크리티컬 확률"] ?? 0)/100)
+        let critcalFactor = 1+Math.min(1,(statDetails.statTotal["크리티컬 확률"] ?? 0)/100)
                              *(((statDetails.statTotal["크리티컬 데미지"] ?? 0)+35)/100)
         totalScore *= critcalFactor;
 
