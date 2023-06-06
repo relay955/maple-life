@@ -4,6 +4,7 @@
   import {SvelteToast} from "@zerodevx/svelte-toast";
   import {onMount} from "svelte";
   import {runOnInitialize} from "../logic/runOnInitialize";
+    import HoverPanel from "../components/HoverPanel.svelte";
 
   onMount(runOnInitialize)
 
@@ -33,6 +34,7 @@
 </div>
 
 <SvelteToast/>
+<HoverPanel/>
 
 <style lang="scss">
   .main{

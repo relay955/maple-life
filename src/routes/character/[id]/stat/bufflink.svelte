@@ -1,5 +1,6 @@
 <script lang="ts">
     import HoverPanel from "../../../../components/HoverPanel.svelte";
+    import { hoverPanelState } from "../../../../components/HoverPanelStore";
     import SubTitle from "../../../../components/basicComponent/SubTitle.svelte";
     import { buffDict, type Buff } from "../../../../infoDictionary/BuffDict";
     import type { Skill } from "../../../../infoDictionary/SkillDict";
@@ -44,21 +45,10 @@ const onClickBuff = (buffName:string,buff:Buff) => {
     idb.character.put(character)
   }
 
-  //hoverPanel
-  let hoveredItem:Buff | Skill;
-  let hoveredItemName:string;
-  let hoverPanelX = 0;
-  let hoverPanelY = 0;
-  let isVisibleHoverPanel = false;
 
   const onMouseMove = (e:MouseEvent,name:string,item:Buff|Skill) =>{
-    hoverPanelX = e.clientX;
-    hoverPanelY = e.clientY;
-    isVisibleHoverPanel = true;
-    hoveredItemName = name;
-    hoveredItem=item;
+    hoverPanelState.show( name, item.description ?? "", e.clientX, e.clientY, ) 
   }
-  const onMouseLeave = (e:MouseEvent) => isVisibleHoverPanel = false
 
 </script>
 <div class="bufflink-list-container">
@@ -69,7 +59,7 @@ const onClickBuff = (buffName:string,buff:Buff) => {
         <button
              on:click={()=>onClickBuff(buffName,buff)}
              on:mousemove={(e)=>onMouseMove(e,buffName,buff)}
-             on:mouseleave={onMouseLeave}>
+             on:mouseleave={hoverPanelState.hide}>
           <img src={buff.imgUrl}
               alt={buffName}
               class:active={spec.buff[buffName] !== undefined} />
@@ -85,7 +75,7 @@ const onClickBuff = (buffName:string,buff:Buff) => {
              on:click={()=>onClickLinkSkill(linkSkillName,linkSkill)}
              on:contextmenu|preventDefault={()=>onRightClickLinkSkill(linkSkillName,linkSkill)}
              on:mousemove={(e)=>onMouseMove(e,linkSkillName,linkSkill)}
-             on:mouseleave={onMouseLeave}> 
+             on:mouseleave={hoverPanelState.hide}> 
           {#if skillLevel !== undefined}
           <div class="linkskill-level">Lv.{skillLevel}</div>
           {/if}
@@ -96,11 +86,6 @@ const onClickBuff = (buffName:string,buff:Buff) => {
       {/each}
     </div>
 </div>
-<HoverPanel isVisible={isVisibleHoverPanel}
-            x={hoverPanelX} y={hoverPanelY}>
-    <div class="hoverpanel-title">{hoveredItemName}</div>
-    <div class="hoverpanel-description">{hoveredItem.description ?? "설명 없음"}</div>
-</HoverPanel>
 
 <style lang="scss">
 
@@ -133,15 +118,5 @@ const onClickBuff = (buffName:string,buff:Buff) => {
         filter: none; opacity: 1;
       }
     }
-  }
-  .hoverpanel-title{
-    font-size:14px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .hoverpanel-description{
-    font-size: 12px;
-    color: #5e5e5e;
-    white-space: pre-line;
   }
 </style>
