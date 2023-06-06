@@ -1,25 +1,37 @@
 <script lang="ts">
-  export let width = 300;
-  export let x = 0;
-  export let y = 0;
-  export let isVisible;
+    import { hoverPanelState } from "./HoverPanelStore";
+
+  
 </script>
 
-{#if isVisible}
+{#if $hoverPanelState.isVisible}
   <div class="main"
-       style={`width:${width}px; top:${y+10}px; left:${x+10}px`}>
-    <slot></slot>
+       style={`width:${$hoverPanelState.width}px; 
+       top:${$hoverPanelState.y+10}px; left:${$hoverPanelState.x+10}px`}>
+       <div class="title"> {$hoverPanelState.title} </div>
+       <div class="description"> {$hoverPanelState.description} </div>
   </div>
 {/if}
 
 <style>
   .main{
     position:absolute;
-    backdrop-filter: blur(4px);
-    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.7);
     z-index: 1000;
     padding:10px;
     border-radius: 5px;
     border:solid 1px #cccccc;
+  }
+
+  .title{
+    font-size:14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .description{
+    font-size: 12px;
+    color: #5e5e5e;
+    white-space: pre-line;
   }
 </style>
