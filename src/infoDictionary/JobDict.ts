@@ -360,7 +360,7 @@ export const jobDict:{[index:string]:Job} = {
     }
 }
 
-export const calAPStatTotal = (statInfo:Stats, statName:string):number => {
+export const calcAPStatTotal = (statInfo:Stats, statName:string):number => {
     let statTotal = (statInfo[statName] ?? 0) + (statInfo["AP"+statName] ?? 0) + (statInfo["올스탯"] ?? 0)
     let statPercentTotal = ((statInfo[statName+"%"] ?? 0) + (statInfo["올스탯%"] ?? 0))/100
     return Math.floor(statTotal * (1+statPercentTotal) + (statInfo["고정"+statName] ?? 0))
@@ -368,8 +368,8 @@ export const calAPStatTotal = (statInfo:Stats, statName:string):number => {
 
 
 export const defaultCalcDmgFomula = (statInfo:Stats, classes:Job):number => {
-    let mainStat = calAPStatTotal(statInfo, classes.mainStat as Stat) 
-    let subStat = calAPStatTotal(statInfo, classes.subStat!) 
+    let mainStat = calcAPStatTotal(statInfo, classes.mainStat as Stat) 
+    let subStat = calcAPStatTotal(statInfo, classes.subStat!) 
     let atk = statInfo[classes.atkType]! * (1+(statInfo[classes.atkType+"%"] ?? 0)/100)
     return (mainStat * 4 + subStat) * atk * 0.01!
 
