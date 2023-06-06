@@ -23,8 +23,8 @@
 <div>
 
   <Bufflink character={$character} spec={spec}/>
-  <StatSummary character={$character} spec={spec}/>
-  <div>
+  <div class="stat-info">
+    <StatSummary character={$character} spec={spec}/>
 
   </div>
   <button on:click={debug}>디버그</button>
@@ -32,5 +32,11 @@
 {/if}
 
 <style lang="scss">
+  .stat-info{
+    margin-top: 15px;
 
+    width:100%;
+    display: flex;
+    flex-direction: row;
+  }
 </style>
