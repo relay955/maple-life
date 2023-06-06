@@ -124,10 +124,11 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
 
     //활성화된 버프 계산
     Object.keys(spec.buff).forEach((buffName)=> {
-        let stats:Stats = buffDict[buffName].stat
+        let stats:Stats|undefined = buffDict[buffName]?.stat
+        if(stats === undefined) return;
         Object.keys(stats).forEach((stat)=>{
             if(statList[stat] === undefined) statList[stat] = {}
-            statList[stat]["[버프] "+buffName] = stats[stat];
+            statList[stat]["[버프] "+buffName] = stats![stat];
         });
     })
 
