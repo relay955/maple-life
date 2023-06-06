@@ -9,7 +9,7 @@
     min-width: 1420px;
     margin-left: 60px;
     margin-right: 20px;
-    padding-bottom: 400px;
+    padding-bottom: 200px;
   }
   @media(max-width: 1550px){
     .container{
