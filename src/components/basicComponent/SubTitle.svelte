@@ -4,7 +4,7 @@
   .subtitle{
     font-size: 14px;
     font-weight: bold;
-    color: #949494;
-    margin-bottom: 3px;
+    color: #4e4e4e;
+    margin-bottom: 7px;
   }
 </style>

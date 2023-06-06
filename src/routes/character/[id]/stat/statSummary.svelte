@@ -123,9 +123,8 @@
     .stat-list{
         width:450px;
         height:340px;
-        padding:5px 10px;
+        padding:5px 8px;
         box-sizing: border-box;
-        border-left:2px solid lightgray;
 
         display: flex;
         flex-direction: column;

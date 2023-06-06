@@ -8,9 +8,11 @@
   import Bufflink from "./bufflink.svelte";
     import { numberWithCommas } from "../../../../util/formatter";
     import StatSummary from "./statSummary.svelte";
+    import type { Stat } from "../../../../util/mapleParser/mapleStat";
+    import StatOrigins from "./StatOrigins.svelte";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
-
+  let detailStatTarget:Stat = "최종 데미지"
 
   const debug = () => {
     if($character === undefined) return
@@ -25,9 +27,9 @@
   <Bufflink character={$character} spec={spec}/>
   <div class="stat-info">
     <StatSummary character={$character} spec={spec}/>
-
+    <StatOrigins character={$character} spec={spec} targetStat={detailStatTarget}/>
   </div>
-  <button on:click={debug}>디버그</button>
+  <!-- <button on:click={debug}>디버그</button> -->
 </div>
 {/if}
 
