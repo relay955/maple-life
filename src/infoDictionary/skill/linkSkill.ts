@@ -32,7 +32,7 @@ export const linkSkillDict:{[key in string]:Skill} = {
         maxLevel:6,
         passiveStat:(spec)=>({
           "데미지":3*(Math.floor((spec.skills["임피리컬 널리지"].level+1)/2)),
-          "방어율무시":3*(Math.floor((spec.skills["임피리컬 널리지"].level+1)/2))
+          "방어율 무시":3*(Math.floor((spec.skills["임피리컬 널리지"].level+1)/2))
         })
     },
     "어드벤쳐러 큐리어스":{
