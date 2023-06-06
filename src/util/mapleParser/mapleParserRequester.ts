@@ -112,6 +112,7 @@ export const requestMapleCharacterDetailInfo = async (character:Character) => {
     let skillPageHtml = parse(
         await requestWithProxy(`${DETAIL_PAGE}/${character.name}/${SKILL_PAGE_KEY}?p=${character.detailInfoKey}`)
     )
+
     defaultSpec.skills = parseSkills(skillPageHtml);
     return character;
 }

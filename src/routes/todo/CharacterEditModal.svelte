@@ -80,12 +80,14 @@ const onClickSubmitButton = async () => {
       character.level = result.level;
       character.detailInfoKey = result.detailInfoKey;
       character.worldId = await insertWorldOrGetWorldId(character.accountId, result.world as World)
+      character.isReboot = result.world.includes("리부트")
     }else{
       if(character.level < 1 || character.level > 300){
         toast.push("레벨은 1~300 사이입니다.");
         return;
       }
       character.worldId = await insertWorldOrGetWorldId(character.accountId, selectedWorld)
+      character.isReboot = selectedWorld.includes("리부트")
     }
 
     await putCharacter(character)

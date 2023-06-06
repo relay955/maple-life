@@ -78,6 +78,7 @@ export interface CharacterSpec{
 }
 export interface CharacterSpecSummary {
     job:Job;
+    level:number;
     statList:{[key in Stat]?:{[index:string]:number}};
     statTotal:Stats;
     skills:SkillStats;

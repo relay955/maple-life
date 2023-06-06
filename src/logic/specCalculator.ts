@@ -16,14 +16,13 @@ import {
 } from "../infoDictionary/EquipmentDict";
 import {buffDict} from "../infoDictionary/BuffDict";
 import {skillDict, type Skill} from "../infoDictionary/SkillDict";
-import { linkSkillDict } from "../infoDictionary/skill/linkSkill";
 import { seedringSkillDict } from "../infoDictionary/skill/seedringSkill";
 
 
 //스텟 요약
 export const summarizeSpec = (character:Character, spec:CharacterSpec):CharacterSpecSummary => {
     let jobInfo = jobDict[character.classType]!
-    let specSummary:CharacterSpecSummary = {job:jobInfo,statList:{},sets:{},
+    let specSummary:CharacterSpecSummary = {level:character.level,job:jobInfo,statList:{},sets:{},
         starforce:0,statTotal:{},skills:spec.skills,equipments:spec.equipments,
         skillsAvgLevel:{skillCore:0,enhanceCore:0}};
     let statList = specSummary.statList;
@@ -131,6 +130,11 @@ export const summarizeSpec = (character:Character, spec:CharacterSpec):Character
             statList[stat]["[버프] "+buffName] = stats[stat];
         });
     })
+
+    //리부트서버일 경우 리부트스킬 추가
+    if(character.isReboot) specSummary.skills["리부트"] = {name:"리부트",level:1}
+    
+
 
     //기본스킬을 스킬목록에 추가
     const defaultSkillStats:SkillStats = jobInfo.defaultSkills!.reduce((acc:SkillStats,skillName:string)=>{

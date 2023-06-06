@@ -17,6 +17,7 @@ export interface Character {
     orderInCharacterPage:number;//캐릭터 페이지에서의 캐릭터 순서
     useTodo:boolean;
     detailInfoKey?:string;
+    isReboot?:boolean;
     spec:{
         default?:CharacterSpec;
         boss?:CharacterSpec;
