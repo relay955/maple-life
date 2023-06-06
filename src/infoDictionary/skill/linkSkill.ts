@@ -19,6 +19,7 @@ import iconLink18 from "$lib/images/icon/linkskill/자연의 벗.png"
 import iconLink19 from "$lib/images/icon/linkskill/자신감.png"
 import iconLink20 from "$lib/images/icon/linkskill/륀느의 축복.png"
 import iconLink21 from "$lib/images/icon/linkskill/판단.png"
+import iconLink22 from "$lib/images/icon/linkskill/소울 컨트랙트.png"
 import type {Skill} from "../SkillDict";
 
 export const linkSkillDict:{[key in string]:Skill} = {
@@ -210,7 +211,7 @@ export const linkSkillDict:{[key in string]:Skill} = {
         passiveStat:(spec)=>({"크리티컬 데미지":spec.skills["판단"].level*2}),
     },
     "소울 컨트랙트":{
-        imgUrl:iconLink21,
+        imgUrl:iconLink22,
         description:"엔젤릭 버스터 링크스킬\n마스터 레벨: 2\n" +
           "발동시 10초간 데미지 레벨당 30% 증가, 쿨타임 90초\n" +
           "최대 10초간 데미지 45% 증가, 버프지속시간 증가 효과 적용\n",
@@ -219,5 +220,6 @@ export const linkSkillDict:{[key in string]:Skill} = {
         cooldown:90000,
         buffStat:(spec)=>({"데미지":15+spec.skills["소울 컨트랙트"].level*15}),
         buffDuration:(spec)=>(10000*(1+((spec.statTotal["버프지속시간"] ?? 0)/100)))
-    }
+    },
+
 }
