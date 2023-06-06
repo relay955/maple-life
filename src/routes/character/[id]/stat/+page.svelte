@@ -12,13 +12,14 @@
     import StatOrigins from "./StatOrigins.svelte";
 
   export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
-  let detailStatTarget:Stat = "최종 데미지"
+  let detailStatTarget:Stat[] = ["최종 데미지"]
 
   const debug = () => {
     if($character === undefined) return
     let specSummary = summarizeSpec($character, $character.spec!.default!)
     simulate(specSummary)
   }
+
 </script>
 {#if isOnTauri() && $character && $character.spec && $character.spec.default}
 {@const spec = $character.spec.default}
@@ -26,7 +27,7 @@
 
   <Bufflink character={$character} spec={spec}/>
   <div class="stat-info">
-    <StatSummary character={$character} spec={spec}/>
+    <StatSummary character={$character} spec={spec} bind:detailStatTarget={detailStatTarget}/>
     <StatOrigins character={$character} spec={spec} targetStat={detailStatTarget}/>
   </div>
   <!-- <button on:click={debug}>디버그</button> -->

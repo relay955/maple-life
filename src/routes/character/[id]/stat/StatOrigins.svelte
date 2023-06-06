@@ -5,7 +5,7 @@
     import type { Character } from "../../../../storage/dto/character";
     import type { CharacterSpec, Stat } from "../../../../util/mapleParser/mapleStat";
     export let character:Character;
-    export let targetStat:Stat;
+    export let targetStat:Stat[];
     export let spec:CharacterSpec;
 
     $:specSummary = summarizeSpec(character, spec);
@@ -28,10 +28,12 @@
 
 <style lang="scss">
     .main{
-        flex-grow: 1;
         margin-left:30px;
     }
     .stat-origin-list{
+        height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
         .origin-info{
             display: flex;
             flex-direction: row;
