@@ -32,7 +32,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "user.relay955.maplelife",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

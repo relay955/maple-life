@@ -10,10 +10,8 @@ import {liveQuery} from "dexie";
 import Title from "../../../components/basicComponent/Title.svelte";
 import {goto} from "$app/navigation";
 import {calcDamage, summarizeSpec} from "../../../logic/specCalculator.js";
-    import { numberWithCommas } from "../../../util/formatter";
-    import show from "../../../components/HoverPanel.svelte"
-import SvelteTooltip from "svelte-tooltip";
-    import { hoverPanelState } from "../../../components/HoverPanelStore";
+  import { numberWithCommas } from "../../../util/formatter";
+  import { hoverPanelState } from "../../../components/HoverPanelStore";
 
 export let character = liveQuery(() => idb.character.get(Number($page.params.id)))
 
@@ -65,7 +63,7 @@ hoverPanelState.show(
         <div class="name">{$character.name}</div>
         <div class="level-class">Lv.{$character.level}, {$character.classType}</div>
       </div>
-        <div class="informal-score" 
+        <div class="informal-score"
           on:mousemove={onMouseHoverInformalScore}
           on:mouseleave={hoverPanelState.hide}>
           <div class="title">기본약식점수</div>
@@ -86,7 +84,7 @@ hoverPanelState.show(
           Lv.{$character.level} /
           {specSummary.statTotal["방어율 무시"] ?? 0}% /
           {specSummary.statTotal["아케인 포스"] ?? 0} /
-          {specSummary.statTotal["어센틱 포스"] ?? 0} 
+          {specSummary.statTotal["어센틱 포스"] ?? 0}
         </div>
       </div>
     </div>
