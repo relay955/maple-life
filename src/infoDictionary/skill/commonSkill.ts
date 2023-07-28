@@ -1,6 +1,6 @@
 import type { Stats } from "../../util/mapleParser/mapleStat";
 import type { Skill } from "../SkillDict";
-import iconLink22 from "$lib/images/icon/linkskill/리부트.png"
+import iconLink22 from "$lib/images/icon/buff/리부트.png"
 
 export const commonSkillDict:{[key in string]:Skill} = {
     "리부트":{

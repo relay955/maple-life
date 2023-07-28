@@ -18,7 +18,7 @@ tauri-build = { version = "1.3.0", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.3.0", features = ["shell-open"] }
-reqwest = { version = "0.11", features = ["blocking","json"] }
+reqwest = { version = "0.11", features = ["blocking", "json"] }
 tokio = { version = "1", features = ["full"] }
 log = "0.4.17"
 simplelog = "^0.12.0"
