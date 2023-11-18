@@ -26,6 +26,7 @@ const EQUIPMENT_PAGE_KEY = `Equipment`
 const SKILL_PAGE_KEY = `Skill`
 
 
+//
 export const requestMapleCharacterBasicInfo = async (characterName: string) => {
     try {
         const res = await requestWithProxy(`${RANKING_PAGE}?c=${characterName}&w=0`)
