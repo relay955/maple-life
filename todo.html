@@ -31,16 +31,16 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 
-		<meta http-equiv="content-security-policy" content="">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.4d6d20ce.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.d85bb8f3.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.e646d436.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.0cc5740e.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.a2a4706a.js">
+		
+		<link rel="modulepreload" href="./_app/immutable/entry/start.fdbffeea.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.942381d5.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.b071772f.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.f3aeeb80.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.5c1f9af9.js">
 		<title>Maple Life</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-      html{
+      html, button{
         font-family: 'Noto Sans KR', sans-serif;
       }
     </style>
@@ -49,7 +49,7 @@
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_s31w2i = {
+					__sveltekit_58z40q = {
 						base: new URL(".", location).pathname.slice(0, -1),
 						env: {}
 					};
@@ -57,11 +57,17 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("./_app/immutable/entry/start.4d6d20ce.js"),
-						import("./_app/immutable/entry/app.a2a4706a.js")
+						import("./_app/immutable/entry/start.fdbffeea.js"),
+						import("./_app/immutable/entry/app.5c1f9af9.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('./service-worker.js');
+						});
+					}
 				}
 			</script>
 		</div>
