@@ -19,7 +19,7 @@ import {parseSkills} from "./skillParser";
 import {parseTendency} from "./tendencyParser";
 
 const MAPLE_HOMEPAGE = "https://maplestory.nexon.com"
-const RANKING_PAGE = `${MAPLE_HOMEPAGE}/Ranking/World/Total`
+const RANKING_PAGE = `${MAPLE_HOMEPAGE}/N23Ranking/World/Total`
 const DETAIL_PAGE = `${MAPLE_HOMEPAGE}/Common/Character/Detail`
 const ITEM_PAGE = `${MAPLE_HOMEPAGE}/Common/Resource/Item`
 const EQUIPMENT_PAGE_KEY = `Equipment`
