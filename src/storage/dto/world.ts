@@ -1,6 +1,7 @@
 import type {Character} from "./character";
 
-export type World = "스카니아"|"베라"|"루나"|"제니스"|"크로아"|"유니온"|"엘리시움"|"이노시스"|"레드"|"오로라"|"아케인"|"노바"|"리부트"|"리부트2"|"이벤트"
+export type World = "스카니아"|"베라"|"루나"|"제니스"|"크로아"|"유니온"|"엘리시움"|
+  "이노시스"|"레드"|"오로라"|"아케인"|"노바"|"리부트"|"리부트2"|"이벤트"|"에오스"|"핼리오스"|"챌린저스"
 
 export interface WorldInfo{
     color:string;
@@ -21,7 +22,10 @@ export const WorldList:{[index:string]:WorldInfo} = {
     "노바":{color:'#3f7fa7'},
     "리부트":{color:'#fdf7a8'},
     "리부트2":{color:'#c0b334'},
+    "에오스":{color:'#fdf7a8'},
+    "핼리오스":{color:'#c0b334'},
     "이벤트":{color:'red'},
+    "챌린저스":{color:'red'},
 }
 
 export interface AccountWorld{
