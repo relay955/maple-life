@@ -24,6 +24,7 @@ const worldByIconFileName:{[index:string]:string} = {
     "icon_15.png":"노바",
     "icon_3.png":"리부트",
     "icon_2.png":"리부트2",
+    "icon_20.png":"챌린저스",
 }
 
 
