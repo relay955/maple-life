@@ -48,34 +48,6 @@
       <MdInsertComment/>
     </a>
   </IconButton>
-  <IconButton tooltip="메이플 유틸 - 시드/몬라 유틸리티"
-              direction="right"
-              style="margin-bottom: 4px">
-    <a href="https://mapleutils.com" target="_blank" style="color:gray;">
-      <MdBuild/>
-    </a>
-  </IconButton>
-  <IconButton tooltip="큐브매수통 - 큐브 기댓값 계산기"
-              style="margin-bottom: 4px"
-              direction="right">
-    <a href="https://cubemesu.co" target="_blank" style="color:gray;">
-      <MdInbox/>
-    </a>
-  </IconButton>
-  <IconButton tooltip="쓸만한 분배금 계산기"
-              style="margin-bottom: 4px"
-              direction="right">
-    <a href="https://141.kr" target="_blank" style="color:gray;">
-      <MdMonetizationOn/>
-    </a>
-  </IconButton>
-  <IconButton tooltip="메소리 - 고확 확인 및 경뿌 알림"
-              style="margin-bottom: 4px"
-              direction="right">
-    <a href="https://maplesori.com/sori" target="_blank" style="color:gray;">
-      <IoMdMegaphone/>
-    </a>
-  </IconButton>
   <Space/>
   <IconButton tooltip="웹사이트 정보"
               style="margin-bottom: 4px"
