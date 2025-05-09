@@ -85,46 +85,22 @@ export const getTodoPresets = ():{[index:string]:TodoPreset} => {
             type: "perAccount",
             repeatType: "daily"
         },
-        "이벤트 - 코인수집": {
-            type: "perCharacter",
-            repeatType: "daily"
+        "몬스터파크 익스트림": {
+          type: "perAccount",
+          repeatType: "weeklyThursday",
         },
-        "이벤트 - 던전 블래스트": {
-            type: "perAccount",
-            repeatType: "daily"
+        "아즈모스 협곡": {
+          type: "perAccount",
+          repeatType: "weeklyThursday",
         },
-        "이벤트 - 메모리아 레오나 찬스": {
-            type: "perAccount",
-            repeatType: "daily"
+        "에픽 던전": {
+          type: "perAccount",
+          repeatType: "weeklyThursday",
         },
-        "이벤트 - 메이프릴 캔디 미니게임 참여": {
-            type: "perCharacter",
-            repeatType: "daily"
+        "드래곤 아일랜드": {
+          type: "perAccount",
+          repeatType: "monthly",
         },
-        "에르다 스펙트럼": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "배고픈 무토": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "미드나잇 체이서": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "스피릿 세이비어": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "엔하임 디펜스": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "프로텍트 에스페라": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        }
     }
 }
 
