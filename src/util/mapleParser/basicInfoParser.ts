@@ -42,7 +42,6 @@ export const parseMapleCharacterInfo = (rankingPage:ParsedHtmlElement):MapleChar
         detailInfoKey: tr.querySelector(".left > dl > dt > a")!.getAttribute("href")!.split("?p=")[1],
         nickname: tr.querySelector(".left > dl > dt > a")!.textContent,
         classType: tr.querySelector(".left > dl > dd")!.textContent
-            .split("/")[1]
             .trim(),
         level: Number(tr.querySelector("td:nth-child(3)")!.textContent
             .split(".")[1]
