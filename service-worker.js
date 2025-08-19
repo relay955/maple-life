@@ -1,4 +1,4 @@
-const a = "1700311395104", o = `cache-${a}`;
+const a = "1755644899474", o = `cache-${a}`;
 self.addEventListener("install", (e) => {
   console.log("install");
 });
