@@ -54,4 +54,16 @@
     font-size: 11px;
     color: gray;
   }
+  
+  :global(input){
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    color: #666;
+    outline: none;
+    &:focus{
+      border: 1px solid #2b91da;
+    }
+  }
 </style>
