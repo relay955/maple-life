@@ -82,8 +82,9 @@ const onClickStartScreenCapture = async () => {
     position: relative;
     .display{
       position: relative;
-      min-width: 400px;
-      min-height: 300px;
+      height: 600px;
+      width: auto;
+      min-width: 800px;
       border: 1px solid #dddddd;
     }
   }
