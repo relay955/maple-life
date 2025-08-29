@@ -1,12 +1,13 @@
 <script lang="ts">
+  import type {TimerRect} from "../../logic/repeat-timer/timerRect";
+
   let overlayEl: HTMLDivElement | null = null;
   type Point = { x: number; y: number };
-  type Rect = { left: number; top: number; width: number; height: number };
 
   let isSelecting = false;
   let startPt: Point = { x: 0, y: 0 };
   let currPt: Point = { x: 0, y: 0 };
-  let lastRect: Rect | null = null;
+  export let selectedArea: TimerRect | null = null;
 
 
   const getRelativePoint = (e: MouseEvent): Point => {
@@ -17,7 +18,7 @@
     return { x, y };
   }
 
-  const toRect = (a: Point, b: Point): Rect => {
+  const toRect = (a: Point, b: Point): TimerRect => {
     const left = Math.min(a.x, b.x);
     const top = Math.min(a.y, b.y);
     const width = Math.abs(a.x - b.x);
@@ -29,7 +30,7 @@
     isSelecting = true;
     startPt = getRelativePoint(e);
     currPt = startPt;
-    lastRect = null;
+    selectedArea = null;
   }
 
   const onMouseMove = (e: MouseEvent) => {
@@ -41,18 +42,18 @@
     if (!isSelecting) return;
     if (e) currPt = getRelativePoint(e);
     isSelecting = false;
-    lastRect = toRect(startPt, currPt);
+    selectedArea = toRect(startPt, currPt);
 
     // 좌표 결과: 픽셀 및 정규화(0~1)
-    if (overlayEl && lastRect) {
+    if (overlayEl && selectedArea) {
       const r = overlayEl.getBoundingClientRect();
       const norm = {
-        x: lastRect.left / r.width,
-        y: lastRect.top / r.height,
-        w: lastRect.width / r.width,
-        h: lastRect.height / r.height
+        x: selectedArea.left / r.width,
+        y: selectedArea.top / r.height,
+        w: selectedArea.width / r.width,
+        h: selectedArea.height / r.height
       };
-      console.log("선택 영역(px):", lastRect);
+      console.log("선택 영역(px):", selectedArea);
       console.log("선택 영역(normalized 0~1):", norm);
     }
   }
@@ -65,7 +66,7 @@
     if (isSelecting) finishSelection(e);
   }
 
-  $: drawRect = isSelecting ? toRect(startPt, currPt) : lastRect;
+  $: drawRect = isSelecting ? toRect(startPt, currPt) : selectedArea;
 </script>
 <div
     class="overlay"
