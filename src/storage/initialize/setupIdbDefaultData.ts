@@ -75,44 +75,21 @@ export const initDefaultData = async (idb: Idb) => {
             order:2
         },
         {
-            name:"이벤트 - 코인수집",
-            type:"perCharacter",
-            repeatType:"daily",
-            isChecked:{},
-            color:"default",
-            order:3
-        },
-        {
             name: "데일리 기프트 수령",
             type: "perAccount",
             repeatType: "daily",
             isChecked: {},
             color:"default",
-            order:4
+            order:3
         },
-        {
-            name: "우르스",
-            type: "perAccount",
-            repeatType: "daily",
-            isChecked: {},
-            color:"default",
-            order:5
-        },
+
         {
             name: "몬스터 파크",
             type: "perAccount",
             repeatType: "daily",
             isChecked: {},
             color:"default",
-            order:6
-        },
-        {
-            name: "황금마차 출석",
-            type: "perAccount",
-            repeatType: "daily",
-            isChecked: {},
-            color:"default",
-            order:7
+            order:4
         },
         {
             name: "주간 보스",
@@ -122,15 +99,7 @@ export const initDefaultData = async (idb: Idb) => {
                 "2":"blocked"
             },
             color:"default",
-            order:8
-        },
-        {
-            name: "심볼 주간퀘",
-            type: "perCharacter",
-            repeatType: "weeklyMonday",
-            isChecked: {},
-            color:"default",
-            order:9
+            order:5
         },
         {
             name: "길드컨텐츠 - 지하수로",
@@ -140,7 +109,7 @@ export const initDefaultData = async (idb: Idb) => {
                 "2":"blocked"
             },
             color:"default",
-            order:10
+            order:6
         },
         {
             name: "길드컨텐츠 - 플래그레이스",
@@ -150,15 +119,7 @@ export const initDefaultData = async (idb: Idb) => {
                 "2":"blocked"
             },
             color:"default",
-            order:11
-        },
-        {
-            name: "헤이븐/야영지",
-            type: "perCharacter",
-            repeatType: "weeklyMonday",
-            isChecked: {},
-            color:"default",
-            order:12
+            order:7
         }
     ])
 
