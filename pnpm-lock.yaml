@@ -18,6 +18,7 @@ specifiers:
   svelte-check: ^3.0.1
   svelte-icons: ^2.1.0
   svelte-loading-spinners: ^0.3.4
+  svelte-persisted-store: ^0.12.0
   svelte-tooltip: ^1.2.0
   tesseract.js: ^6.0.1
   tslib: ^2.4.1
@@ -47,6 +48,7 @@ devDependencies:
   svelte: 3.59.2
   svelte-check: 3.4.6_sass@1.64.1+svelte@3.59.2
   svelte-loading-spinners: 0.3.4
+  svelte-persisted-store: 0.12.0_svelte@3.59.2
   tesseract.js: 6.0.1
   tslib: 2.6.1
   typescript: 5.1.6
@@ -1356,6 +1358,15 @@ packages:
 
   /svelte-loading-spinners/0.3.4:
     resolution: {integrity: sha512-vKaW71QMCBcTNijAGc0mUl8k3DQ66iYmp6MB8BMGCXyWk82bTrcLy8FOnSm9fE+8q6TwzD6PLUoYFHt0II93Xw==}
+    dev: true
+
+  /svelte-persisted-store/0.12.0_svelte@3.59.2:
+    resolution: {integrity: sha512-BdBQr2SGSJ+rDWH8/aEV5GthBJDapVP0GP3fuUCA7TjYG5ctcB+O9Mj9ZC0+Jo1oJMfZUd1y9H68NFRR5MyIJA==}
+    engines: {node: '>=0.14'}
+    peerDependencies:
+      svelte: ^3.48.0 || ^4 || ^5
+    dependencies:
+      svelte: 3.59.2
     dev: true
 
   /svelte-preprocess/5.0.4_sgjjlnjzvdbaullsum6lvum2pu:
