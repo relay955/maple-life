@@ -54,7 +54,7 @@
     }
   }
   .icon{
-    color: #aeaeae;
+    color: #757575;
   }
   .icon.activated{
     filter:
