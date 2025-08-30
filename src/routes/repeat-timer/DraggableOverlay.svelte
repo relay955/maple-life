@@ -8,6 +8,7 @@
   let startPt: Point = { x: 0, y: 0 };
   let currPt: Point = { x: 0, y: 0 };
   export let selectedArea: TimerRect | null = null;
+  export let onSelection: (rect: TimerRect) => void = () => {};
 
 
   const getRelativePoint = (e: MouseEvent): Point => {
@@ -43,6 +44,7 @@
     if (e) currPt = getRelativePoint(e);
     isSelecting = false;
     selectedArea = toRect(startPt, currPt);
+    onSelection(selectedArea);
 
     // 좌표 결과: 픽셀 및 정규화(0~1)
     if (overlayEl && selectedArea) {

@@ -5,11 +5,17 @@
   import DraggableOverlay from "./DraggableOverlay.svelte";
   import type {TimerRect} from "../../logic/repeat-timer/timerRect";
   import {createWorker, PSM, RecognizeResult} from "tesseract.js";
-
+  import {addSavedRect, findSavedRect, timerSettings} from "../../storage/persistedstore";
 
   let videoEl: HTMLVideoElement | null = null;
-let currentStream: MediaStream | null = null;
-let selectedArea: TimerRect | null = null;
+  let currentStream: MediaStream | null = null;
+  let selectedArea: TimerRect | null = null;
+
+  let worker: Awaited<ReturnType<typeof createWorker>> | null = null;
+  let cropCanvas: HTMLCanvasElement | null = null;
+  let cropCtx: CanvasRenderingContext2D | null = null;
+  let ocrTimer: number | null = null;
+  let ocrResult: string = "";
 
 const onClickStartScreenCapture = async () => {
   if (videoEl === null) return;
@@ -22,7 +28,7 @@ const onClickStartScreenCapture = async () => {
 
     currentStream = await navigator.mediaDevices.getDisplayMedia({
       video: {
-        displaySurface: "monitor",
+        displaySurface: "window",
         frameRate: 15
       },
       audio: false
@@ -35,8 +41,12 @@ const onClickStartScreenCapture = async () => {
       return videoEl?.play();
     });
 
-    // 사용자가 브라우저 UI에서 "공유 중지"를 누를 수 있으므로 이벤트 처리
     const [videoTrack] = currentStream.getVideoTracks();
+    //예전에 저장된 영역이 있으면 그대로 적용
+    const savedRect = findSavedRect($timerSettings.rects, videoEl.videoWidth, videoEl.videoHeight)
+    if (savedRect) selectedArea = savedRect.rect;
+    
+    // 사용자가 브라우저 UI에서 "공유 중지"를 누를 수 있으므로 이벤트 처리
     if (videoTrack) {
       videoTrack.onended = () => {
         videoEl!.srcObject = null;
@@ -48,14 +58,6 @@ const onClickStartScreenCapture = async () => {
     alert("화면 캡처 권한이 거부되었거나 지원되지 않습니다.");
   }
 }
-
-let worker: Awaited<ReturnType<typeof createWorker>> | null = null;
-let cropCanvas: HTMLCanvasElement | null = null;
-let cropCtx: CanvasRenderingContext2D | null = null;
-let ocrTimer: number | null = null;
-let isOcrBusy = false;
-let ocrResult: string = "";
-let blurRadius: number = 1;
 
 // Tesseract 워커 초기화
 const getOrCreateWorker = async () => {
@@ -69,7 +71,7 @@ const getOrCreateWorker = async () => {
 };
 
 // 선택 영역을 실제 비디오 픽셀 좌표로 변환
-function getVideoCropRectFromSelection(sel: TimerRect, v: HTMLVideoElement) {
+const getVideoCropRectFromSelection = (sel: TimerRect, v: HTMLVideoElement) => {
   const vw = v.videoWidth;
   const vh = v.videoHeight;
   const cw = v.clientWidth;
@@ -88,7 +90,7 @@ function getVideoCropRectFromSelection(sel: TimerRect, v: HTMLVideoElement) {
 
   if (sw <= 0 || sh <= 0) return null;
   return { sx, sy, sw, sh };
-}
+};
 
 
 const stopOcrLoop = () => {
@@ -97,6 +99,7 @@ const stopOcrLoop = () => {
     ocrTimer = null;
   }
 };
+
 // 매 프레임(또는 일정 주기) 잘라 그리기 + OCR
 const runOcrLoop = async (intervalMs = 500) => {
   await getOrCreateWorker();
@@ -104,7 +107,9 @@ const runOcrLoop = async (intervalMs = 500) => {
   if (!cropCtx) cropCtx = cropCanvas.getContext('2d');
   if (!cropCtx || !videoEl) return;
 
-  const tick = async () => {
+  // 기존 타이머 정리 후 시작
+  stopOcrLoop();
+  ocrTimer = window.setInterval(async () => {
     if (!videoEl || !selectedArea) return;
 
     const crop = getVideoCropRectFromSelection(selectedArea, videoEl);
@@ -127,7 +132,7 @@ const runOcrLoop = async (intervalMs = 500) => {
     // 간단한 RGB 규칙 기반: R, G가 높고 B가 상대적으로 낮은 픽셀을 "노란색"으로 간주
     const img = cropCtx!.getImageData(0, 0, crop.sw, crop.sh);
     const d = img.data;
-    
+
     // 1단계: 색상 분류
     for (let i = 0; i < d.length; i += 4) {
       const r = d[i];
@@ -160,12 +165,16 @@ const runOcrLoop = async (intervalMs = 500) => {
     if (!worker) return;
     const result: RecognizeResult = await worker.recognize(cropCanvas!);
     ocrResult = result.data.text.trim();
-  };
-
-  // 기존 타이머 정리 후 시작
-  stopOcrLoop();
-  ocrTimer = window.setInterval(tick, intervalMs);
+  }, intervalMs);
 };
+
+  const onSelectArea = (rect: TimerRect) => {
+    if (!videoEl) return;
+    let resolutionWidth = videoEl.videoWidth;
+    let resolutionHeight = videoEl.videoHeight;
+    $timerSettings.rects = addSavedRect($timerSettings.rects, resolutionWidth, resolutionHeight, rect);
+  }
+
 
 
 </script>
@@ -181,7 +190,7 @@ const runOcrLoop = async (intervalMs = 500) => {
   <div class="horizontal-center">
   <div class="display-area">
     <video class="display" bind:this={videoEl} autoplay muted></video>
-    <DraggableOverlay bind:selectedArea={selectedArea}/>
+    <DraggableOverlay bind:selectedArea={selectedArea} onSelection={onSelectArea}/>
   </div>
   </div>
   <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
