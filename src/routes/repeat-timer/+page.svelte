@@ -5,6 +5,7 @@
   import DraggableOverlay from "./DraggableOverlay.svelte";
   import type {TimerRect} from "../../logic/repeat-timer/timerRect";
   import {addSavedRect, findSavedRect, timerSettings} from "../../storage/persistedstore";
+  import RangeSlider from 'svelte-range-slider-pips';
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
 
   let videoEl: HTMLVideoElement | null = null;
@@ -91,12 +92,13 @@
 
 <PageContainer>
   <Title text="파운틴 타이머"/>
-  <!--  설정 프리셋-->
   <div class="settings">
+    <div>
     알림 시간(-60~60초)
     <input type="number" style="width: 50px;" bind:value={$timerSettings.alertTime} />
     초
-    <div style="width: 10px;"/>
+    </div>
+    <div>
     프레임속도
     <select bind:value={$timerSettings.frameRate} style="width: 70px;">
       <option value={10}>10</option>
@@ -106,17 +108,24 @@
       <option value={60}>60</option>
     </select>
    hz
-    <div style="width: 10px;"/>
+    </div>
+    <div>
     랜덤 지연
     <input type="checkbox" bind:checked={$timerSettings.randomDelay} />
     <div style="width: 10px;"/>
+    </div>
+    <div>
     미확인 재알림
     <input type="checkbox" bind:checked={$timerSettings.unConfirmedAlert} />
     <div style="width: 10px;"/>
+    </div>
+    <div>
     볼륨
-    <input type="number" style="width: 50px;" bind:value={$timerSettings.volume} />
-    
-    
+    <RangeSlider bind:value={$timerSettings.volume} min={0} max={1} step={0.05} style="width: 150px;"} />
+    </div>
+    <div>
+    OCR 결과 : {ocrResult === "" ? "없음" : ocrResult ?? "없음"}
+      </div>
   </div>
   <div class="horizontal-center">
   <div class="display-area">
@@ -128,32 +137,47 @@
   <div class="notice">
     <div class="title">도움말</div>
     <ul>
-      <li>숫자 OCR 인식을 사용하여 에르다 파운틴 쿨타임이 감소한 경우 알림음으로 알려주는 도구입니다.</li>
+      <li>숫자 OCR 인식을 사용하여 에르다 파운틴 쿨다운이 감소한 경우 알림음으로 알려주는 도구입니다.</li>
       <li>사용 방법</li>
       <ol>
         <li>녹화 시작 버튼을 클릭하고 메이플스토리 화면 캡처를 시작합니다.</li>
         <li>퀵슬롯의 파운틴 영역을 드래그하세요.</li>
       </ol>
-    <li>OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 녹화 시작을 하시면 저장된 해상도를 다시 불러옵니다.
-    </li>
+      <li>옵션</li>
+      <ol>
+        <li>랜덤 지연 : 알람 시간에 0~3초의 랜덤한 지연을 추가합니다</li>
+        <li>프레임 속도 : 값을 높이면 출력 화면이 부드러워지지만 CPU를 더 많이 사용합니다. 화면 PIP를 사용하지 않고 알림만 사용하는 경우 10hz가 유리합니다. </li>
+        <li>미확인 재알림 : 알람 시간이 지났는데도 파운틴을 설치하지 않은경우 10초마다 다시 알립니다.</li>
+        <li>알림 시간 : 알림을 띄울 시간을 설정합니다. 0초로 설정한 경우 파운틴 쿨다운이 0초가 된 경우에 알림이 울립니다. 지연을 추가하려는 경우 음수를 입력하세요.</li>
+      </ol>
+      <li>참고</li>
+      <ol>
+        <li>OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 녹화 시작을 하시면 저장된 해상도를 다시 불러옵니다.</li>
+        <li>48~55초 사이의 값을 인식하면 알림 타이머가 시작됩니다. 에르다 파운틴 외의 쿨타임이 있는 대부분의 스킬을 사용할 수 있습니다.</li>
+        <li>네트워크를 사용하지 않으며, 화면을 아무곳에도 전송하지 않고, 설정은 PC에 저장됩니다. 본 웹사이트는 오픈소스입니다.</li>
+      </ol>
     </ul>
   </div>
   <div>
     <canvas bind:this={cropCanvas}/>
-    OCR 결과 :
-    {ocrResult ?? "없음"}
   </div>
 </PageContainer>
 
 <style lang="scss">
   .settings{
     display: flex;
-    gap: 5px;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-bottom: 20px;
     align-items: center;
     background-color: #f1f1f1;
     border-radius: 5px;
     padding: 8px;
+    &>div{
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
   }
   .horizontal-center{
     display: flex;
