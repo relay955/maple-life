@@ -17,7 +17,7 @@
   import RangeSlider from 'svelte-range-slider-pips';
   import Space from "../../components/basicComponent/Space.svelte";
   import IconButton from "../../components/basicComponent/IconButton.svelte";
-  import {openFloatingTimerPip} from "../../logic/repeat-timer/timerPIP";
+  import {openFloatingTimerPip, updateLeftSecond} from "../../logic/repeat-timer/timerPIP";
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -28,6 +28,7 @@
   let ocrResult: string = "";
   let isOcrRunning = false;
   let ocrRecognizeLeftTick = 0;
+  let alertStartTick = 0;
   let alertLeftTick = 0;
   let alertActived = false;
   let firstTimerDetected = false;
@@ -75,6 +76,7 @@
     let ocrResultNumber = parseInt(ocrResult);
     if (ocrResultNumber >= 48 && ocrResultNumber <= 55) {
       alertLeftTick = (ocrResultNumber + $timerSettings.alertTime) * 10;
+      alertStartTick = alertLeftTick;
       firstTimerDetected = true;
       alertActived = false;
       unConfirmedAlertLeftTick = 0;
@@ -91,6 +93,8 @@
       alertActived = true;
       unConfirmedAlertLeftTick = 60;
     }
+    //PIP 플로팅 타이머가 켜져있는경우 상태 업데이트
+    if (pipWindow) updateLeftSecond(pipWindow, alertStartTick,alertLeftTick);
     //미확인 재알림
     if (alertActived && firstTimerDetected && $timerSettings.unConfirmedAlert && alertLeftTick <= 0) {
       if (unConfirmedAlertLeftTick > 0) {
