@@ -4,7 +4,6 @@
   import Title from "../../components/basicComponent/Title.svelte";
   import DraggableOverlay from "./DraggableOverlay.svelte";
   import type {TimerRect} from "../../logic/repeat-timer/timerRect";
-  import {createWorker, PSM, recognize, RecognizeResult} from "tesseract.js";
   import {addSavedRect, findSavedRect, timerSettings} from "../../storage/persistedstore";
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
 
@@ -94,9 +93,30 @@
   <Title text="파운틴 타이머"/>
   <!--  설정 프리셋-->
   <div class="settings">
-    알림 시간
-    <input type="number" style="width: 50px;" />
+    알림 시간(-60~60초)
+    <input type="number" style="width: 50px;" bind:value={$timerSettings.alertTime} />
     초
+    <div style="width: 10px;"/>
+    프레임속도
+    <select bind:value={$timerSettings.frameRate} style="width: 70px;">
+      <option value={10}>10</option>
+      <option value={15}>15</option>
+      <option value={20}>20</option>
+      <option value={30}>30</option>
+      <option value={60}>60</option>
+    </select>
+   hz
+    <div style="width: 10px;"/>
+    랜덤 지연
+    <input type="checkbox" bind:checked={$timerSettings.randomDelay} />
+    <div style="width: 10px;"/>
+    미확인 재알림
+    <input type="checkbox" bind:checked={$timerSettings.unConfirmedAlert} />
+    <div style="width: 10px;"/>
+    볼륨
+    <input type="number" style="width: 50px;" bind:value={$timerSettings.volume} />
+    
+    
   </div>
   <div class="horizontal-center">
   <div class="display-area">
@@ -105,8 +125,18 @@
   </div>
   </div>
   <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
-  <div>
-    OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 녹화 시작을 하시면 저장된 해상도를 다시 불러옵니다.
+  <div class="notice">
+    <div class="title">도움말</div>
+    <ul>
+      <li>숫자 OCR 인식을 사용하여 에르다 파운틴 쿨타임이 감소한 경우 알림음으로 알려주는 도구입니다.</li>
+      <li>사용 방법</li>
+      <ol>
+        <li>녹화 시작 버튼을 클릭하고 메이플스토리 화면 캡처를 시작합니다.</li>
+        <li>퀵슬롯의 파운틴 영역을 드래그하세요.</li>
+      </ol>
+    <li>OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 녹화 시작을 하시면 저장된 해상도를 다시 불러옵니다.
+    </li>
+    </ul>
   </div>
   <div>
     <canvas bind:this={cropCanvas}/>
@@ -143,6 +173,20 @@
   .horizontal-center{
     display: flex;
     justify-content: center;
+  }
+  .notice{
+    .title{
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 8px;
   }
   
 </style>
