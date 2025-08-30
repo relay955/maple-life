@@ -1,1 +1,0 @@
-import{w as l}from"./index.f3aeeb80.js";const n=()=>{const{subscribe:t,set:e}=l({title:"",description:"",x:0,y:0,width:300,isVisible:!1});return{subscribe:t,show:(i,s,r,o,a=300)=>e({title:i,description:s,x:r,y:o,width:a,isVisible:!0}),hide:()=>e({title:"",description:"",x:0,y:0,width:300,isVisible:!1})}},b=n();export{b as h};
