@@ -13,15 +13,17 @@ interface TimerSettings{
   randomDelay:boolean,
   unConfirmedAlert:boolean,
   volume:number,
+  soundFile:string,
 }
 
 export const timerSettings = persisted<TimerSettings>('timerSettings',{
   rects:[],
   alertTime:0,
   frameRate:15,
-  randomDelay:false,
-  unConfirmedAlert:false,
+  randomDelay:true,
+  unConfirmedAlert:true,
   volume:1,
+  soundFile:"",
 });
 
 /**
