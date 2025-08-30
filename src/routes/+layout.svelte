@@ -66,4 +66,49 @@
       border: 1px solid #2b91da;
     }
   }
+  
+  :global(select){
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    color: #666;
+    outline: none;
+  }
+  
+  :global(input[type=checkbox]){
+    width: 18px;
+    height: 18px;
+    margin: 2px 0 0;
+    cursor: pointer;
+    appearance: none;
+    border: 2px solid #cccccc;
+    border-radius: 4px;
+    background-color: white;
+    position: relative;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:checked {
+      background-color: #2b91da;
+      border-color: #2b91da;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    &:hover {
+      border-color: #2b91da;
+    }
+  }
 </style>

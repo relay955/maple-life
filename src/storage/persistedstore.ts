@@ -8,10 +8,20 @@ interface SavedRect{
 }
 interface TimerSettings{
   rects:SavedRect[],
+  alertTime:number, 
+  frameRate:number,
+  randomDelay:boolean,
+  unConfirmedAlert:boolean,
+  volume:number,
 }
 
 export const timerSettings = persisted<TimerSettings>('timerSettings',{
   rects:[],
+  alertTime:0,
+  frameRate:15,
+  randomDelay:false,
+  unConfirmedAlert:false,
+  volume:1,
 });
 
 /**
