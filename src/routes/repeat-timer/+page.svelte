@@ -14,8 +14,44 @@
 
   let cropCanvas: HTMLCanvasElement | null = null;
   let cropCtx: CanvasRenderingContext2D | null = null;
-  let ocrTimer: number | null = null;
   let ocrResult: string = "";
+  let isOcrRunning = false;
+  let ocrRecognizeLeftTick = 0;
+  let alertLeftTick = 0;
+  let alertActived = false;
+
+  //시스템 업데이트 루프, 1틱=0.1초
+  window.setInterval(async () => {
+    await detectOcr();
+    await tickTimer();
+  },100);
+  
+  const detectOcr = async () => {
+    if (!isOcrRunning || alertLeftTick > 0) return;
+    if (!cropCtx || !cropCanvas || !videoEl || !selectedArea) return;
+    if (ocrRecognizeLeftTick > 0) {
+      ocrRecognizeLeftTick--;
+      return;
+    }
+    ocrRecognizeLeftTick = 5;
+    ocrResult = await recognizeNumber(videoEl, cropCanvas, cropCtx, selectedArea) ?? "식별불가";
+    let ocrResultNumber = parseInt(ocrResult);
+    if (ocrResultNumber >= 48 && ocrResultNumber <= 55) {
+      alertLeftTick = (ocrResultNumber + $timerSettings.alertTime) * 10;
+      alertActived = false;
+      if ($timerSettings.randomDelay) alertLeftTick += Math.floor(Math.random() * 30);
+    }
+  }
+  
+  const tickTimer = async () => {
+    if (!isOcrRunning) return;
+    if (alertLeftTick > 0) {
+      alertLeftTick--;
+    }else if(!alertActived){
+      alert("")
+      alertActived = true;
+    }
+  }
 
   const onClickStartScreenCapture = async () => {
     if (videoEl === null) return;
@@ -29,7 +65,7 @@
       currentStream = await navigator.mediaDevices.getDisplayMedia({
         video: {
           displaySurface: "window",
-          frameRate: 15
+          frameRate: $timerSettings.frameRate,
         },
         audio: false
       });
@@ -53,32 +89,27 @@
           currentStream = null;
         };
       }
-      runOcrLoop(500);
+      startOcr();
     } catch (err) {
       alert("화면 캡처 권한이 거부되었거나 지원되지 않습니다.");
     }
   }
 
-  const stopOcrLoop = () => {
-    if (ocrTimer) {
-      window.clearInterval(ocrTimer);
-      ocrTimer = null;
-    }
-  };
-
   // 매 프레임(또는 일정 주기) 잘라 그리기 + OCR
-  const runOcrLoop = async (intervalMs = 500) => {
+  const startOcr = async () => {
     await getOrCreateWorker();
     if (!cropCanvas) cropCanvas = document.createElement('canvas');
     if (!cropCtx) cropCtx = cropCanvas.getContext('2d');
-
-    // 기존 타이머 정리 후 시작
-    stopOcrLoop();
-    ocrTimer = window.setInterval(async () => {
-      if (!cropCtx || !cropCanvas || !videoEl || !selectedArea) return;
-      ocrResult = await recognizeNumber(videoEl,cropCanvas,cropCtx,selectedArea) ?? "식별불가";
-    }, intervalMs);
+    stopOcr();
+    isOcrRunning = true;
   };
+  
+  const stopOcr = () => {
+    isOcrRunning = false;
+    ocrRecognizeLeftTick = 0;
+    alertLeftTick = 0;
+    alertActived = true;
+  }
 
   const onSelectArea = (rect: TimerRect) => {
     if (!videoEl) return;
@@ -121,11 +152,14 @@
     </div>
     <div>
     볼륨
-    <RangeSlider bind:value={$timerSettings.volume} min={0} max={1} step={0.05} style="width: 150px;"} />
+    <RangeSlider bind:value={$timerSettings.volume} min={0} max={1} step={0.05} style="width: 150px;" />
     </div>
     <div>
     OCR 결과 : {ocrResult === "" ? "없음" : ocrResult ?? "없음"}
-      </div>
+    </div>
+    <div>
+    타이머 : {alertLeftTick > 0 ? `${Math.floor(alertLeftTick / 10)}초` : "미탐지"}
+    </div>
   </div>
   <div class="horizontal-center">
   <div class="display-area">
