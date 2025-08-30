@@ -20,6 +20,7 @@ const config = {
 				'/',
 				'/character',
 				'/todo',
+                '/repeat-timer',
 				'/character/[id]/stat',
 			]
 		}
