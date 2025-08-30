@@ -4,10 +4,17 @@
   import Title from "../../components/basicComponent/Title.svelte";
   import DraggableOverlay from "./DraggableOverlay.svelte";
   import type {TimerRect} from "../../logic/repeat-timer/timerRect";
-  import {addSavedRect, findSavedRect, timerSettings} from "../../storage/persistedstore";
-  import RangeSlider from 'svelte-range-slider-pips';
+  import {
+    addSavedRect,
+    base64ToObjectURL,
+    fileToBase64,
+    findSavedRect,
+    timerSettings,
+    timerSoundSettings
+  } from "../../storage/persistedstore";
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
   import alertSound from "$lib/sounds/notification-alert-269289.mp3";
+  import RangeSlider from 'svelte-range-slider-pips';
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -23,15 +30,21 @@
   let firstTimerDetected = false;
   let alertAudio: HTMLAudioElement | null = null;
   let unConfirmedAlertLeftTick = 0;
+  let soundFile = "";
 
   $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
+
+  // 컴포넌트 마운트 시 저장된 blob 데이터로부터 사운드 파일 복원
+  $: if ($timerSoundSettings.soundFileBlob && !soundFile) {
+    soundFile = base64ToObjectURL($timerSoundSettings.soundFileBlob);
+  }
 
   const playSoundAlert = async () => {
     if (!alertAudio) return;
     try {
       await alertAudio.play();
-    } catch (err) {
-      $timerSettings.soundFile = "";
+    } catch (err:any) {
+      onClickResetSoundFile();
       try {
         await alertAudio.play();
       } catch (err) {
@@ -88,11 +101,32 @@
   const onChangeSoundFile = async (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (!target.files || !target.files[0]) return;
-    $timerSettings.soundFile = URL.createObjectURL(target.files[0]);
+    
+    const file = target.files[0]
+    if (file.size > 1024 * 1024) {
+      alert('1MB 이하의 파일만 사용할 수 있습니다.');
+      return;
+    }
+
+
+    try {
+      // 파일을 base64로 변환하여 저장
+      $timerSoundSettings.soundFileBlob = await fileToBase64(file);
+      $timerSoundSettings.soundFileName = file.name;
+      soundFile = URL.createObjectURL(file);
+    } catch (error) {
+      alert('파일을 처리하는 중 오류가 발생했습니다.');
+    }
   }
   
   const onClickResetSoundFile = () => {
-    $timerSettings.soundFile = "";
+    // URL 객체 해제
+    if (soundFile && soundFile !== alertSound) {
+      URL.revokeObjectURL(soundFile);
+    }
+    soundFile = "";
+    $timerSoundSettings.soundFileBlob = undefined;
+    $timerSoundSettings.soundFileName = undefined;
   }
 
   const onClickStartScreenCapture = async () => {
@@ -215,11 +249,16 @@
     </div>
     <div>
       사운드 파일
-      {#if $timerSettings.soundFile === ""}
+      {#if soundFile === ""}
       <input type="file" accept="audio/*" on:change={onChangeSoundFile}
              style="width: 200px;" />
       {:else}
-      <button on:click={onClickResetSoundFile}>초기화</button>
+      <div style="display: flex; align-items: center; gap: 5px;">
+        <span style="font-size: 12px; color: #666;">
+          {$timerSoundSettings.soundFileName ?? "사용자 지정"}
+        </span>
+        <button on:click={onClickResetSoundFile}>초기화</button>
+      </div>
       {/if}
     </div>
   </div>
@@ -231,10 +270,9 @@
   </div>
   <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
   
-  <!-- 미리 만들어둔 오디오 태그 -->
   <audio 
     bind:this={alertAudio} 
-    src={$timerSettings.soundFile === "" ? alertSound : $timerSettings.soundFile }  
+    src={soundFile === "" ? alertSound : soundFile }  
     preload="auto"
     style="display: none;"
   ></audio>
