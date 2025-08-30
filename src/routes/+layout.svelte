@@ -4,7 +4,7 @@
   import {SvelteToast} from "@zerodevx/svelte-toast";
   import {onMount} from "svelte";
   import {runOnInitialize} from "../logic/runOnInitialize";
-    import HoverPanel from "../components/HoverPanel.svelte";
+  import HoverPanel from "../components/HoverPanel.svelte";
 
   onMount(runOnInitialize)
 
@@ -79,7 +79,7 @@
   :global(input[type=checkbox]){
     width: 18px;
     height: 18px;
-    margin: 2px 0 0;
+    margin: 0;
     cursor: pointer;
     appearance: none;
     border: 2px solid #cccccc;

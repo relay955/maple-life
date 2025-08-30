@@ -20,6 +20,7 @@ specifiers:
   svelte-icons: ^2.1.0
   svelte-loading-spinners: ^0.3.4
   svelte-persisted-store: ^0.12.0
+  svelte-range-slider-pips: ^4.0.7
   svelte-tooltip: ^1.2.0
   tesseract.js: ^6.0.1
   tslib: ^2.4.1
@@ -51,6 +52,7 @@ devDependencies:
   svelte-check: 3.4.6_sass@1.64.1+svelte@3.59.2
   svelte-loading-spinners: 0.3.4
   svelte-persisted-store: 0.12.0_svelte@3.59.2
+  svelte-range-slider-pips: 4.0.7_svelte@3.59.2
   tesseract.js: 6.0.1
   tslib: 2.6.1
   typescript: 5.1.6
@@ -1421,6 +1423,14 @@ packages:
       strip-indent: 3.0.0
       svelte: 3.59.2
       typescript: 5.1.6
+    dev: true
+
+  /svelte-range-slider-pips/4.0.7_svelte@3.59.2:
+    resolution: {integrity: sha512-d4MJsuoGDkzfiTU/bk5jjZgbKe/dtAB1gTewF28+3g2GzUpUgSpA0Lox6JB0GNQVnPB46bepiXK8sO26iHvTZA==}
+    peerDependencies:
+      svelte: ^4.2.7 || ^5.0.0
+    dependencies:
+      svelte: 3.59.2
     dev: true
 
   /svelte-tooltip/1.2.0:
