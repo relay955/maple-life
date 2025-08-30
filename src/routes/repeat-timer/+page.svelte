@@ -15,6 +15,9 @@
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
   import alertSound from "$lib/sounds/notification-alert-269289.mp3";
   import RangeSlider from 'svelte-range-slider-pips';
+  import Space from "../../components/basicComponent/Space.svelte";
+  import IconButton from "../../components/basicComponent/IconButton.svelte";
+  import {openFloatingTimerPip} from "../../logic/repeat-timer/timerPIP";
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -31,6 +34,7 @@
   let alertAudio: HTMLAudioElement | null = null;
   let unConfirmedAlertLeftTick = 0;
   let soundFile = "";
+  let pipWindow:any|null = null;
 
   $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
 
@@ -194,7 +198,24 @@
     let resolutionHeight = videoEl.videoHeight;
     $timerSettings.rects = addSavedRect($timerSettings.rects, resolutionWidth, resolutionHeight, rect);
   }
-
+  
+  const onClickPip = async () => {
+    if (!videoEl) return;
+    if (!videoEl.requestPictureInPicture) {
+      alert("PIP를 사용할 수 없습니다.");
+      return;
+    }
+    try {
+      await videoEl.requestPictureInPicture()
+    }catch (e){
+      alert("PIP를 사용할 수 없습니다. 먼저 캡처를 시작해 주세요.");
+      return;
+    }
+  }
+  
+  const onClickFloatingBar = async () => {
+    pipWindow = await openFloatingTimerPip(window)
+  }
 
 </script>
 
@@ -230,7 +251,7 @@
     {#if isOcrRunning}
       {#if selectedArea === null}
       <div style="color: red;">
-        녹화 화면에서 에르다 파운틴의 퀵슬롯 부분을 드래그하세요.
+        캡처 화면에서 에르다 파운틴의 퀵슬롯 부분을 드래그하세요.
       </div>
       {:else}
         <div>
@@ -241,6 +262,13 @@
         </div>
       {/if}
     {/if}
+    <Space/>
+    <IconButton tooltip="PIP" onClick={onClickPip}>
+      <div class="pip-icon"></div>
+    </IconButton>
+    <IconButton tooltip="플로팅 타이머" onClick={onClickFloatingBar}>
+      <div class="floating-bar-icon"></div>
+    </IconButton>
   </div>
   <div class="settings">
     <div>
@@ -268,7 +296,7 @@
     <DraggableOverlay bind:selectedArea={selectedArea} onSelection={onSelectArea}/>
   </div>
   </div>
-  <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
+  <Button onClick={onClickStartScreenCapture}>캡처 시작</Button>
   
   <audio 
     bind:this={alertAudio} 
@@ -283,7 +311,7 @@
       <li>숫자 OCR 인식을 사용하여 에르다 파운틴 쿨다운이 감소한 경우 알림음으로 알려주는 도구입니다.</li>
       <li>사용 방법</li>
       <ol>
-        <li>녹화 시작 버튼을 클릭하고 메이플스토리 화면 캡처를 시작합니다.</li>
+        <li>캡처 시작 버튼을 클릭하고 메이플스토리 화면 캡처를 시작합니다.</li>
         <li>퀵슬롯의 파운틴 영역을 드래그하세요.</li>
       </ol>
       <li>옵션</li>
@@ -293,16 +321,18 @@
         <li>미확인 재알림 : 알람 시간이 지났는데도 파운틴을 설치하지 않은경우 6초마다 다시 알립니다.</li>
         <li>알림 시간 : 알림을 띄울 시간을 설정합니다. 0초로 설정한 경우 파운틴 쿨다운이 0초가 된 경우에 알림이 울립니다. 지연을 추가하려는 경우 음수를 입력하세요.</li>
       </ol>
+      <li>추가 기능</li>
+      <ol>
+        <li>PIP : 메이플스토리 창을 조그만 화면으로 축소하여 표시할 수 있습니다.</li>
+        <li>플로팅 타이머 : 작은 타이머 표시기를 항상 위에 표시할 수 있습니다. 다른 작업을 하는 중 타이머 남은시간을 확인하고 싶을때 유용합니다. </li>
+      </ol>
       <li>참고</li>
       <ol>
-        <li>OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 녹화 시작을 하시면 저장된 해상도를 다시 불러옵니다.</li>
-        <li>48~55초 사이의 값을 인식하면 알림 타이머가 시작됩니다. 에르다 파운틴 외의 쿨타임이 있는 대부분의 스킬을 사용할 수 있습니다.</li>
+        <li>OCR 영역 설정은 해상도별로 저장됩니다. 전체화면으로 플레이하다가 작은 화면 해상도로 변경한 경우 새로 캡처 시작을 하시면 저장된 해상도를 다시 불러옵니다.</li>
+        <li>48~55초 사이의 값을 인식하면 알림 타이머가 시작됩니다. 에르다 파운틴 외의 쿨다운이 있는 대부분의 스킬에 사용할 수 있습니다.</li>
         <li>네트워크를 사용하지 않으며, 화면을 아무곳에도 전송하지 않고, 설정은 PC에 저장됩니다. 본 웹사이트는 오픈소스입니다.</li>
       </ol>
     </ul>
-  </div>
-  <div>
-    <canvas bind:this={cropCanvas}/>
   </div>
 </PageContainer>
 
@@ -354,6 +384,33 @@
     background-color: #f1f1f1;
     border-radius: 5px;
     padding: 8px;
+  }
+  .pip-icon{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M2 11V9h3.6L1.3 4.7l1.4-1.4L7 7.6V4h2v7zm2 9q-.825 0-1.412-.587T2 18v-5h2v5h8v2zm16-7V6h-9V4h9q.825 0 1.413.588T22 6v7zm-6 7v-5h8v5z'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    
+  }
+  .floating-bar-icon{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M8.5 20q-3.125 0-5.312-2.187T1 12.5t2.188-5.312T8.5 5q1.3 0 2.45.413t2.1 1.137l.35-.35q.275-.275.687-.288t.713.288q.275.275.275.7t-.275.7l-.35.35q.725.95 1.138 2.113T16 12.5q0 3.125-2.187 5.313T8.5 20M7 4q-.425 0-.712-.288T6 3t.288-.712T7 2h3q.425 0 .713.288T11 3t-.288.713T10 4zm1.5 14q2.3 0 3.9-1.6t1.6-3.9t-1.6-3.9T8.5 7T4.6 8.6T3 12.5t1.6 3.9T8.5 18m0-4.5q.425 0 .713-.288T9.5 12.5v-3q0-.425-.288-.712T8.5 8.5t-.712.288T7.5 9.5v3q0 .425.288.713t.712.287m10-5.7l-.6.6q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l2.3-2.3q.3-.3.7-.3t.7.3L22.5 7q.275.3.275.713t-.3.687t-.712.288t-.688-.288l-.575-.575V19q0 .425-.287.713T19.5 20t-.712-.288T18.5 19z'/%3E%3C/svg%3E");
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
   }
   
 </style>
