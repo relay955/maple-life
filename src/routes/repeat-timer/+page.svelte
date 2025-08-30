@@ -1,13 +1,13 @@
 <script lang="ts">
-import Button from "../../components/basicComponent/Button.svelte";
-import PageContainer from "../../components/basicComponent/PageContainer.svelte";
-import Title from "../../components/basicComponent/Title.svelte";
-import DraggableOverlay from "./DraggableOverlay.svelte";
-import type {TimerRect} from "../../logic/repeat-timer/timerRect";
-import {createWorker, RecognizeResult} from "tesseract.js";
+  import Button from "../../components/basicComponent/Button.svelte";
+  import PageContainer from "../../components/basicComponent/PageContainer.svelte";
+  import Title from "../../components/basicComponent/Title.svelte";
+  import DraggableOverlay from "./DraggableOverlay.svelte";
+  import type {TimerRect} from "../../logic/repeat-timer/timerRect";
+  import {createWorker, PSM, RecognizeResult} from "tesseract.js";
 
 
-let videoEl: HTMLVideoElement | null = null;
+  let videoEl: HTMLVideoElement | null = null;
 let currentStream: MediaStream | null = null;
 let selectedArea: TimerRect | null = null;
 
@@ -55,13 +55,16 @@ let cropCtx: CanvasRenderingContext2D | null = null;
 let ocrTimer: number | null = null;
 let isOcrBusy = false;
 let ocrResult: string = "";
+let blurRadius: number = 1;
 
 // Tesseract 워커 초기화
 const getOrCreateWorker = async () => {
   if (!worker) worker = await createWorker("eng");
   worker.setParameters({
-    tessedit_char_whitelist: "0123456789"
-  })
+    tessedit_char_whitelist: "0123456789",
+    classify_bln_numeric_mode: "1",
+    tessedit_pageseg_mode:PSM.SINGLE_LINE,
+})
   return worker;
 };
 
@@ -97,11 +100,8 @@ const stopOcrLoop = () => {
 // 매 프레임(또는 일정 주기) 잘라 그리기 + OCR
 const runOcrLoop = async (intervalMs = 500) => {
   await getOrCreateWorker();
-  // 캔버스 준비(재사용)
-  if (!cropCanvas) {
-    cropCanvas = document.createElement('canvas');
-    cropCtx = cropCanvas.getContext('2d');
-  }
+  if (!cropCanvas) cropCanvas = document.createElement('canvas');
+  if (!cropCtx) cropCtx = cropCanvas.getContext('2d');
   if (!cropCtx || !videoEl) return;
 
   const tick = async () => {
@@ -123,10 +123,12 @@ const runOcrLoop = async (intervalMs = 500) => {
       0, 0, crop.sw, crop.sh
     );
 
-    // 노란색만 검정, 나머지는 흰색으로 전처리
+    // 노란색만 검정, 나머지는 흰색으로 전처리 + 안티앨리어싱
     // 간단한 RGB 규칙 기반: R, G가 높고 B가 상대적으로 낮은 픽셀을 "노란색"으로 간주
     const img = cropCtx!.getImageData(0, 0, crop.sw, crop.sh);
     const d = img.data;
+    
+    // 1단계: 색상 분류
     for (let i = 0; i < d.length; i += 4) {
       const r = d[i];
       const g = d[i + 1];
@@ -135,12 +137,8 @@ const runOcrLoop = async (intervalMs = 500) => {
       // - R, G가 충분히 큼
       // - B는 상대적으로 작음
       // - R+G가 B의 2배보다 큼(채도 확보용)
-      const isYellow =
-        r > 180 &&
-        g > 180 &&
-        b < 140 &&
-        (r + g) > 2 * b &&
-        Math.abs(r - g) < 80; // R, G가 너무 벌어지지 않도록
+      const isYellow = r > 150 && g > 150 && b < 140 &&
+        (r + g) > 2 * b && Math.abs(r - g) < 80;
 
       if (isYellow) {
         // 노란색 → 검정
@@ -159,18 +157,9 @@ const runOcrLoop = async (intervalMs = 500) => {
     cropCtx!.putImageData(img, 0, 0);
 
 
-    if (!(!isOcrBusy && worker)) return;
-    // OCR은 비동기이므로 이전 작업과 겹치지 않게 보호
-    isOcrBusy = true;
-    try {
-      // 필요 시 전처리(그레이스케일/리사이즈) 수행 가능
-      const result: RecognizeResult = await worker.recognize(cropCanvas!);
-      ocrResult = result.data.text.trim();
-    } catch (e) {
-      console.error('OCR error', e);
-    } finally {
-      isOcrBusy = false;
-    }
+    if (!worker) return;
+    const result: RecognizeResult = await worker.recognize(cropCanvas!);
+    ocrResult = result.data.text.trim();
   };
 
   // 기존 타이머 정리 후 시작
@@ -188,8 +177,6 @@ const runOcrLoop = async (intervalMs = 500) => {
     알림 시간
     <input type="number" style="width: 50px;" />
     초
-    OCR 결과 :
-    {ocrResult ?? "없음"}
   </div>
   <div class="horizontal-center">
   <div class="display-area">
@@ -198,6 +185,11 @@ const runOcrLoop = async (intervalMs = 500) => {
   </div>
   </div>
   <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
+  <div>
+    <canvas bind:this={cropCanvas}/>
+    OCR 결과 :
+    {ocrResult ?? "없음"}
+  </div>
 </PageContainer>
 
 <style lang="scss">
