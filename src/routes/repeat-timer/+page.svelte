@@ -7,6 +7,7 @@
   import {addSavedRect, findSavedRect, timerSettings} from "../../storage/persistedstore";
   import RangeSlider from 'svelte-range-slider-pips';
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
+  import alertSound from "$lib/sounds/notification-alert-269289.mp3";
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -19,6 +20,25 @@
   let ocrRecognizeLeftTick = 0;
   let alertLeftTick = 0;
   let alertActived = false;
+  let firstTimerDetected = false;
+  let alertAudio: HTMLAudioElement | null = null;
+  let unConfirmedAlertLeftTick = 0;
+
+  $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
+
+  const playSoundAlert = async () => {
+    if (!alertAudio) return;
+    try {
+      await alertAudio.play();
+    } catch (err) {
+      $timerSettings.soundFile = "";
+      try {
+        await alertAudio.play();
+      } catch (err) {
+        alert("알림음을 재생할 수 없습니다.");
+      }
+    }
+  };
 
   //시스템 업데이트 루프, 1틱=0.1초
   window.setInterval(async () => {
@@ -38,7 +58,9 @@
     let ocrResultNumber = parseInt(ocrResult);
     if (ocrResultNumber >= 48 && ocrResultNumber <= 55) {
       alertLeftTick = (ocrResultNumber + $timerSettings.alertTime) * 10;
+      firstTimerDetected = true;
       alertActived = false;
+      unConfirmedAlertLeftTick = 0;
       if ($timerSettings.randomDelay) alertLeftTick += Math.floor(Math.random() * 30);
     }
   }
@@ -48,9 +70,29 @@
     if (alertLeftTick > 0) {
       alertLeftTick--;
     }else if(!alertActived){
-      alert("")
+      playSoundAlert();
       alertActived = true;
+      unConfirmedAlertLeftTick = 60;
     }
+    //미확인 재알림
+    if (alertActived && firstTimerDetected && $timerSettings.unConfirmedAlert && alertLeftTick <= 0) {
+      if (unConfirmedAlertLeftTick > 0) {
+        unConfirmedAlertLeftTick--;
+      }else{
+        unConfirmedAlertLeftTick = 60;
+        await playSoundAlert();
+      }
+    }
+  }
+  
+  const onChangeSoundFile = async (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (!target.files || !target.files[0]) return;
+    $timerSettings.soundFile = URL.createObjectURL(target.files[0]);
+  }
+  
+  const onClickResetSoundFile = () => {
+    $timerSettings.soundFile = "";
   }
 
   const onClickStartScreenCapture = async () => {
@@ -95,7 +137,6 @@
     }
   }
 
-  // 매 프레임(또는 일정 주기) 잘라 그리기 + OCR
   const startOcr = async () => {
     await getOrCreateWorker();
     if (!cropCanvas) cropCanvas = document.createElement('canvas');
@@ -109,6 +150,8 @@
     ocrRecognizeLeftTick = 0;
     alertLeftTick = 0;
     alertActived = true;
+    firstTimerDetected = false;
+    unConfirmedAlertLeftTick = 0;
   }
 
   const onSelectArea = (rect: TimerRect) => {
@@ -150,15 +193,34 @@
     <input type="checkbox" bind:checked={$timerSettings.unConfirmedAlert} />
     <div style="width: 10px;"/>
     </div>
+    {#if isOcrRunning}
+      {#if selectedArea === null}
+      <div style="color: red;">
+        녹화 화면에서 에르다 파운틴의 퀵슬롯 부분을 드래그하세요.
+      </div>
+      {:else}
+        <div>
+          OCR 결과 : {ocrResult === "" ? "없음" : ocrResult ?? "없음"}
+        </div>
+        <div>
+          타이머 : {alertLeftTick > 0 ? `${Math.floor(alertLeftTick / 10)}초` : "미탐지"}
+        </div>
+      {/if}
+    {/if}
+  </div>
+  <div class="settings">
     <div>
-    볼륨
-    <RangeSlider bind:value={$timerSettings.volume} min={0} max={1} step={0.05} style="width: 150px;" />
+      볼륨
+      <RangeSlider bind:value={$timerSettings.volume} min={0} max={1} step={0.05} style="width: 150px;" />
     </div>
     <div>
-    OCR 결과 : {ocrResult === "" ? "없음" : ocrResult ?? "없음"}
-    </div>
-    <div>
-    타이머 : {alertLeftTick > 0 ? `${Math.floor(alertLeftTick / 10)}초` : "미탐지"}
+      사운드 파일
+      {#if $timerSettings.soundFile === ""}
+      <input type="file" accept="audio/*" on:change={onChangeSoundFile}
+             style="width: 200px;" />
+      {:else}
+      <button on:click={onClickResetSoundFile}>초기화</button>
+      {/if}
     </div>
   </div>
   <div class="horizontal-center">
@@ -168,6 +230,15 @@
   </div>
   </div>
   <Button onClick={onClickStartScreenCapture}>녹화 시작</Button>
+  
+  <!-- 미리 만들어둔 오디오 태그 -->
+  <audio 
+    bind:this={alertAudio} 
+    src={$timerSettings.soundFile === "" ? alertSound : $timerSettings.soundFile }  
+    preload="auto"
+    style="display: none;"
+  ></audio>
+
   <div class="notice">
     <div class="title">도움말</div>
     <ul>
@@ -181,7 +252,7 @@
       <ol>
         <li>랜덤 지연 : 알람 시간에 0~3초의 랜덤한 지연을 추가합니다</li>
         <li>프레임 속도 : 값을 높이면 출력 화면이 부드러워지지만 CPU를 더 많이 사용합니다. 화면 PIP를 사용하지 않고 알림만 사용하는 경우 10hz가 유리합니다. </li>
-        <li>미확인 재알림 : 알람 시간이 지났는데도 파운틴을 설치하지 않은경우 10초마다 다시 알립니다.</li>
+        <li>미확인 재알림 : 알람 시간이 지났는데도 파운틴을 설치하지 않은경우 6초마다 다시 알립니다.</li>
         <li>알림 시간 : 알림을 띄울 시간을 설정합니다. 0초로 설정한 경우 파운틴 쿨다운이 0초가 된 경우에 알림이 울립니다. 지연을 추가하려는 경우 음수를 입력하세요.</li>
       </ol>
       <li>참고</li>
