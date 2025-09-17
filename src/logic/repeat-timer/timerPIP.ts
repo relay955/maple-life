@@ -47,6 +47,17 @@ export const openFloatingTimerPip = async (window:Window) => {
         font-weight: bold;
         min-width: 60px;
       }
+      .play-pause-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0 5px;
+      }
+      .play-pause-btn:hover {
+        color: #44aaee;
+      }
     `;
     pipWindow.document.head.appendChild(style);
     
@@ -57,6 +68,7 @@ export const openFloatingTimerPip = async (window:Window) => {
         <div class="progress" id="timer"></div>
       </div>
       <div class="timer-text" id="timer-text">0초</div>
+<!--      <button class="play-pause-btn" id="play-pause-btn">▌▌</button>-->
     `;
     return pipWindow;
 
