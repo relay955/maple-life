@@ -8,7 +8,7 @@ export const openFloatingTimerPip = async (window:Window) => {
   try {
     //@ts-ignore
     const pipWindow = await window.documentPictureInPicture.requestWindow({
-      width: 400,
+      width: 425,
       height: 50,
     });
 
@@ -51,9 +51,10 @@ export const openFloatingTimerPip = async (window:Window) => {
         background: none;
         border: none;
         color: white;
-        font-size: 20px;
+        font-size: 14px;
         cursor: pointer;
-        padding: 0 5px;
+        padding: 0px;
+        margin-right: 10px;
       }
       .play-pause-btn:hover {
         color: #44aaee;
@@ -64,11 +65,11 @@ export const openFloatingTimerPip = async (window:Window) => {
 
     // 타이머 콘텐츠 추가
     pipWindow.document.body.innerHTML = `
+<!--      <button class="play-pause-btn" id="play-pause-btn">▌▌</button>-->
       <div class="timer-bar">
         <div class="progress" id="timer"></div>
       </div>
       <div class="timer-text" id="timer-text">0초</div>
-<!--      <button class="play-pause-btn" id="play-pause-btn">▌▌</button>-->
     `;
     return pipWindow;
 
