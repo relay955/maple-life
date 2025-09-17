@@ -1,4 +1,5 @@
-export const openFloatingTimerPip = async (window:Window) => {
+export const openFloatingTimerPip = async (
+  window:Window,startOcr:()=>void, pauseOcr:()=>void) => {
   //@ts-ignore
   if (!window.documentPictureInPicture) {
     alert("해당 기능을 지원하지 않는 브라우저입니다. (Chrome,Edge 사용 가능)");
@@ -96,6 +97,9 @@ export const openFloatingTimerPip = async (window:Window) => {
 }
 
 
+export const updatePausePlayStatus = (pipWindow:any) => {
+  //구현필요
+}
 export const updateLeftSecond = (pipWindow:any, maxTick:number,  leftTick:number) => {
   const timer = pipWindow.document.getElementById('timer');
   const timerText = pipWindow.document.getElementById('timer-text');
