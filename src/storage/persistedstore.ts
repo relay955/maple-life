@@ -34,6 +34,13 @@ export const timerSoundSettings = persisted<TimerSoundSettings>('timerSoundSetti
   soundFileName: undefined
 })
 
+interface TimerUISettings{
+  floatingOption:"PIP"|"floatingTimer"|"none",
+}
+export const timerUISettings = persisted<TimerUISettings>('timerUISettings',{
+  floatingOption:"none",
+})
+
 /**
  * 주어진 `width`와 `height`에 해당하는 해상도를 갖는 저장된 사각형을 찾고,
  * 해당 사각형의 데이터를 업데이트하거나 새로운 사각형 데이터를 추가합니다.
