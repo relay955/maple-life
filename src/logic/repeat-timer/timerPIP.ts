@@ -5,7 +5,6 @@ export const openFloatingTimerPip = async (
     alert("해당 기능을 지원하지 않는 브라우저입니다. (Chrome,Edge 사용 가능)");
     return;
   }
-
   try {
     //@ts-ignore
     const pipWindow = await window.documentPictureInPicture.requestWindow({

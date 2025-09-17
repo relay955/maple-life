@@ -185,7 +185,7 @@
       if ($timerUISettings.floatingOption === "PIP" && !document.pictureInPictureElement){
         await openPip();
       }else if ($timerUISettings.floatingOption === "floatingTimer" && !pipWindow){
-        pipWindow = await openFloatingTimerPip(window)
+        pipWindow = await openFloatingTimerPip(window, startOcr,stopOcr)
       }
     } catch (err) {
       alert("화면 캡처 권한이 거부되었거나 지원되지 않습니다.");
@@ -201,6 +201,13 @@
     videoEl.srcObject = null;
     selectedArea = null;
     stopOcr();
+    if (document.pictureInPictureElement) {
+      await document.exitPictureInPicture();
+    }
+    if (pipWindow) {
+      console.log(pipWindow)
+      pipWindow.close();
+    }
   }
 
   const startOcr = async () => {
