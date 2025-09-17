@@ -1,0 +1,1 @@
+import{S as n,i as a,s,o as e}from"../chunks/index.7a7c1c93.js";import{g as r}from"../chunks/navigation.1d8daacd.js";async function i(o,t){await r(`/${o}`,{replaceState:t})}function u(o){return e(async()=>{await i("todo",!0)}),[]}class l extends n{constructor(t){super(),a(this,t,u,null,s,{})}}export{l as component};

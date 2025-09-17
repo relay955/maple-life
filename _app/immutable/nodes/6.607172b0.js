@@ -38,7 +38,7 @@ import{S as mn,i as pn,s as _n,k as I,l as L,m as O,h as d,n as S,b as N,R as re
         font-size: 14px;
         cursor: pointer;
         padding-left:10px;
-        margin-right: 10px;
+        margin-right: 15px;
         width:20px;
       }
       .play-pause-btn:hover {
