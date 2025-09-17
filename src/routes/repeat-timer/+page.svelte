@@ -17,7 +17,7 @@
   import RangeSlider from 'svelte-range-slider-pips';
   import Space from "../../components/basicComponent/Space.svelte";
   import IconButton from "../../components/basicComponent/IconButton.svelte";
-  import {openFloatingTimerPip, updateLeftSecond} from "../../logic/repeat-timer/timerPIP";
+  import {openFloatingTimerPip, updateLeftSecond, updatePausePlayStatus} from "../../logic/repeat-timer/timerPIP";
   import CaptureController from "./CaptureController.svelte";
 
   let videoEl: HTMLVideoElement | null = null;
@@ -85,11 +85,11 @@
     let ocrResultNumber = parseInt(ocrResult);
     if (ocrResultNumber >= 48 && ocrResultNumber <= 55) {
       alertLeftTick = (ocrResultNumber + $timerSettings.alertTime) * 10;
+      if ($timerSettings.randomDelay) alertLeftTick += Math.floor(Math.random() * 30);
       alertStartTick = alertLeftTick;
       firstTimerDetected = true;
       alertActived = false;
       unConfirmedAlertLeftTick = 0;
-      if ($timerSettings.randomDelay) alertLeftTick += Math.floor(Math.random() * 30);
     }
   }
   
@@ -185,7 +185,7 @@
       if ($timerUISettings.floatingOption === "PIP" && !document.pictureInPictureElement){
         await openPip();
       }else if ($timerUISettings.floatingOption === "floatingTimer" && !pipWindow){
-        pipWindow = await openFloatingTimerPip(window, startOcr,stopOcr)
+        pipWindow = await openFloatingTimerPip(window, isOcrRunning,startOcr,stopOcr)
       }
     } catch (err) {
       alert("화면 캡처 권한이 거부되었거나 지원되지 않습니다.");
@@ -201,12 +201,10 @@
     videoEl.srcObject = null;
     selectedArea = null;
     stopOcr();
-    if (document.pictureInPictureElement) {
-      await document.exitPictureInPicture();
-    }
+    if (document.pictureInPictureElement) await document.exitPictureInPicture();
     if (pipWindow) {
-      console.log(pipWindow)
       pipWindow.close();
+      pipWindow=null;
     }
   }
 
@@ -216,6 +214,7 @@
     if (!cropCtx) cropCtx = cropCanvas.getContext('2d');
     stopOcr();
     isOcrRunning = true;
+    updatePausePlayStatus(pipWindow,isOcrRunning)
   };
   
   const stopOcr = () => {
@@ -225,6 +224,10 @@
     unConfirmedAlertLeftTick = 0;
     alertActived = true;
     firstTimerDetected = false;
+    if (pipWindow) {
+      updateLeftSecond(pipWindow, 0, 0);
+      updatePausePlayStatus(pipWindow,isOcrRunning)
+    }
   }
 
   const onSelectArea = (rect: TimerRect) => {
@@ -260,7 +263,7 @@
   const onClickFloatingBar = async () => {
     if ($timerUISettings.floatingOption != "floatingTimer"){
       $timerUISettings.floatingOption = "floatingTimer";
-      pipWindow = await openFloatingTimerPip(window)
+      pipWindow = await openFloatingTimerPip(window,isOcrRunning,startOcr,stopOcr)
     }else{
       $timerUISettings.floatingOption = "none";
     }

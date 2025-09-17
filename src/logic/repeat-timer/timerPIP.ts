@@ -1,5 +1,5 @@
 export const openFloatingTimerPip = async (
-  window:Window,startOcr:()=>void, pauseOcr:()=>void) => {
+  window:Window,isOcrRunning:boolean,startOcr:()=>void, pauseOcr:()=>void) => {
   //@ts-ignore
   if (!window.documentPictureInPicture) {
     alert("해당 기능을 지원하지 않는 브라우저입니다. (Chrome,Edge 사용 가능)");
@@ -17,7 +17,7 @@ export const openFloatingTimerPip = async (
     style.textContent = `
       body {
         margin: 0;
-        padding-left: 20px;
+        padding-left: 10px;
         padding-right: 10px;
         height: 100vh;
         font-family: Arial, sans-serif;
@@ -53,8 +53,9 @@ export const openFloatingTimerPip = async (
         color: white;
         font-size: 14px;
         cursor: pointer;
-        padding: 0px;
+        padding-left:10px;
         margin-right: 10px;
+        width:20px;
       }
       .play-pause-btn:hover {
         color: #44aaee;
@@ -73,20 +74,17 @@ export const openFloatingTimerPip = async (
     `;
 
     // play-pause 버튼 이벤트 리스너 추가
-    try {
-      const playPauseBtn = pipWindow.document.getElementById('play-pause-btn') as HTMLButtonElement | null;
-      if (playPauseBtn) {
-        let isPlaying = true;
-        playPauseBtn.addEventListener('click', () => {
-          isPlaying = !isPlaying;
-          playPauseBtn.textContent = isPlaying ? '▌▌' : '▶';
-          // 원본 윈도우(호출자)로 토글 이벤트 전송
-          try {
-            window.postMessage({ type: 'pip-toggle-play-pause' }, '*');
-          } catch (e) { }
-        });
-      }
-    } catch (e) { }
+    const playPauseBtn = pipWindow.document.getElementById('play-pause-btn') as HTMLButtonElement | null;
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', () => {
+        let isOcrRunning = playPauseBtn.textContent === '▌▌';
+        try {
+          if (isOcrRunning) pauseOcr();
+          else startOcr();
+          playPauseBtn.textContent = isOcrRunning ? '▶' : '▌▌';
+        } catch (e) { }
+      });
+    }
 
     return pipWindow;
 
@@ -96,8 +94,10 @@ export const openFloatingTimerPip = async (
 }
 
 
-export const updatePausePlayStatus = (pipWindow:any) => {
-  //구현필요
+export const updatePausePlayStatus = (pipWindow:any,isOcrRunning:boolean) => {
+ const playPauseBtn = pipWindow.document.getElementById('play-pause-btn') as HTMLButtonElement | null;
+ if (!playPauseBtn) return;
+ playPauseBtn.textContent = isOcrRunning ? '▌▌':'▶';
 }
 export const updateLeftSecond = (pipWindow:any, maxTick:number,  leftTick:number) => {
   const timer = pipWindow.document.getElementById('timer');
