@@ -54,7 +54,7 @@ export const openFloatingTimerPip = async (
         font-size: 14px;
         cursor: pointer;
         padding-left:10px;
-        margin-right: 10px;
+        margin-right: 15px;
         width:20px;
       }
       .play-pause-btn:hover {
