@@ -176,10 +176,7 @@
 
       // 사용자가 브라우저 UI에서 "공유 중지"를 누를 수 있으므로 이벤트 처리
       if (videoTrack) {
-        videoTrack.onended = () => {
-          videoEl!.srcObject = null;
-          currentStream = null;
-        };
+        videoTrack.onended = () => onClickStopScreenCapture();
       }
 
       startOcr();
