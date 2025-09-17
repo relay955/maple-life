@@ -18,6 +18,7 @@
   import Space from "../../components/basicComponent/Space.svelte";
   import IconButton from "../../components/basicComponent/IconButton.svelte";
   import {openFloatingTimerPip, updateLeftSecond} from "../../logic/repeat-timer/timerPIP";
+  import CaptureController from "./CaptureController.svelte";
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -39,6 +40,7 @@
   let soundFile = "";
   let pipWindow:any|null = null;
   let lastTickTime = new Date();
+  let pause=false;
 
   $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
 
@@ -193,6 +195,17 @@
     }
   }
 
+  const onClickStopScreenCapture = async () => {
+    if (videoEl === null) return;
+    if (currentStream) {
+      currentStream.getTracks().forEach((t) => t.stop());
+      currentStream = null;
+    }
+    videoEl.srcObject = null;
+    selectedArea = null;
+    stopOcr();
+  }
+
   const startOcr = async () => {
     await getOrCreateWorker();
     if (!cropCanvas) cropCanvas = document.createElement('canvas');
@@ -205,9 +218,9 @@
     isOcrRunning = false;
     ocrRecognizeLeftTick = 0;
     alertLeftTick = 0;
+    unConfirmedAlertLeftTick = 0;
     alertActived = true;
     firstTimerDetected = false;
-    unConfirmedAlertLeftTick = 0;
   }
 
   const onSelectArea = (rect: TimerRect) => {
@@ -227,7 +240,6 @@
   
   const openPip = async () => {
     if (!videoEl) return;
-    $timerUISettings.floatingOption = "PIP";
     if (!videoEl.requestPictureInPicture) {
       alert("PIP를 사용할 수 없습니다.");
       return;
@@ -238,6 +250,7 @@
       alert("PIP를 사용할 수 없습니다. 먼저 캡처를 시작해 주세요.");
       return;
     }
+    $timerUISettings.floatingOption = "PIP";
   }
   
   const onClickFloatingBar = async () => {
@@ -324,14 +337,24 @@
       {/if}
     </div>
   </div>
+  <CaptureController onClickStartScreenCapture={onClickStartScreenCapture}
+                     onClickStopScreenCapture={onClickStopScreenCapture}
+                     onClickPause={stopOcr}
+                     onClickRestart={startOcr}
+                     isCapturing={videoEl?.srcObject != null}
+                     isOcrRunning={isOcrRunning}/>
   <div class="horizontal-center">
   <div class="display-area">
     <video class="display" bind:this={videoEl} autoplay muted></video>
     <DraggableOverlay bind:selectedArea={selectedArea} onSelection={onSelectArea}/>
   </div>
   </div>
-  <Button onClick={onClickStartScreenCapture} style="padding: 10px">캡처 시작</Button>
-  
+  <CaptureController onClickStartScreenCapture={onClickStartScreenCapture}
+                     onClickStopScreenCapture={onClickStopScreenCapture}
+                     onClickPause={stopOcr}
+                     onClickRestart={startOcr}
+                     isCapturing={videoEl?.srcObject != null}
+                     isOcrRunning={isOcrRunning}/>
   <audio 
     bind:this={alertAudio} 
     src={soundFile === "" ? alertSound : soundFile }  
@@ -390,6 +413,7 @@
   .horizontal-center{
     display: flex;
     justify-content: center;
+    margin-top: 20px;
     margin-bottom: 20px;
   }
   .display-area{
