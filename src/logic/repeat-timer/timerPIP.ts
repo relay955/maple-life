@@ -65,12 +65,29 @@ export const openFloatingTimerPip = async (window:Window) => {
 
     // 타이머 콘텐츠 추가
     pipWindow.document.body.innerHTML = `
-<!--      <button class="play-pause-btn" id="play-pause-btn">▌▌</button>-->
+      <button class="play-pause-btn" id="play-pause-btn">▌▌</button>
       <div class="timer-bar">
         <div class="progress" id="timer"></div>
       </div>
       <div class="timer-text" id="timer-text">0초</div>
     `;
+
+    // play-pause 버튼 이벤트 리스너 추가
+    try {
+      const playPauseBtn = pipWindow.document.getElementById('play-pause-btn') as HTMLButtonElement | null;
+      if (playPauseBtn) {
+        let isPlaying = true;
+        playPauseBtn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          playPauseBtn.textContent = isPlaying ? '▌▌' : '▶';
+          // 원본 윈도우(호출자)로 토글 이벤트 전송
+          try {
+            window.postMessage({ type: 'pip-toggle-play-pause' }, '*');
+          } catch (e) { }
+        });
+      }
+    } catch (e) { }
+
     return pipWindow;
 
   } catch (error) {
