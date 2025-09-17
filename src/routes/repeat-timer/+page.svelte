@@ -10,7 +10,7 @@
     fileToBase64,
     findSavedRect,
     timerSettings,
-    timerSoundSettings
+    timerSoundSettings, timerUISettings
   } from "../../storage/persistedstore";
   import {getOrCreateWorker, recognizeNumber} from "../../logic/repeat-timer/ocr";
   import alertSound from "$lib/sounds/notification-alert-269289.mp3";
@@ -22,6 +22,8 @@
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
   let selectedArea: TimerRect | null = null;
+  
+  const tickMs=100;
 
   let cropCanvas: HTMLCanvasElement | null = null;
   let cropCtx: CanvasRenderingContext2D | null = null;
@@ -36,6 +38,7 @@
   let unConfirmedAlertLeftTick = 0;
   let soundFile = "";
   let pipWindow:any|null = null;
+  let lastTickTime = new Date();
 
   $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
 
@@ -60,18 +63,22 @@
 
   //시스템 업데이트 루프, 1틱=0.1초
   window.setInterval(async () => {
-    await detectOcr();
-    await tickTimer();
-  },100);
+    // 현재 시간과 마지막 틱 시간을 비교하여 스킵된 틱 계산
+    const now = new Date();
+    const elapsedMs = now.getTime() - lastTickTime.getTime();
+    let skipedTick = Math.max(1, Math.round(elapsedMs / tickMs));
+    lastTickTime = now;
+
+    await detectOcr(skipedTick);
+    await tickTimer(skipedTick);
+  },tickMs);
   
-  const detectOcr = async () => {
+  const detectOcr = async (skipedTick: number) => {
     if (!isOcrRunning || alertLeftTick > 0) return;
     if (!cropCtx || !cropCanvas || !videoEl || !selectedArea) return;
-    if (ocrRecognizeLeftTick > 0) {
-      ocrRecognizeLeftTick--;
-      return;
-    }
-    ocrRecognizeLeftTick = 5;
+    ocrRecognizeLeftTick-=skipedTick;
+    if (ocrRecognizeLeftTick > 0) return;
+    ocrRecognizeLeftTick = 6;
     ocrResult = await recognizeNumber(videoEl, cropCanvas, cropCtx, selectedArea) ?? "식별불가";
     let ocrResultNumber = parseInt(ocrResult);
     if (ocrResultNumber >= 48 && ocrResultNumber <= 55) {
@@ -84,23 +91,22 @@
     }
   }
   
-  const tickTimer = async () => {
+  const tickTimer = async (skipedTick: number) => {
     if (!isOcrRunning) return;
     if (alertLeftTick > 0) {
-      alertLeftTick--;
+      alertLeftTick-= skipedTick;
     }else if(!alertActived){
       playSoundAlert();
       alertActived = true;
-      unConfirmedAlertLeftTick = 60;
+      unConfirmedAlertLeftTick = 70;
     }
     //PIP 플로팅 타이머가 켜져있는경우 상태 업데이트
     if (pipWindow) updateLeftSecond(pipWindow, alertStartTick,alertLeftTick);
     //미확인 재알림
     if (alertActived && firstTimerDetected && $timerSettings.unConfirmedAlert && alertLeftTick <= 0) {
-      if (unConfirmedAlertLeftTick > 0) {
-        unConfirmedAlertLeftTick--;
-      }else{
-        unConfirmedAlertLeftTick = 60;
+      unConfirmedAlertLeftTick-= skipedTick;
+      if (unConfirmedAlertLeftTick <= 0) {
+        unConfirmedAlertLeftTick = 70;
         await playSoundAlert();
       }
     }
@@ -173,7 +179,15 @@
           currentStream = null;
         };
       }
+
       startOcr();
+      
+      //PIP 또는 플로팅 타이머 옵션이 활성화되어있다면 즉시 실행
+      if ($timerUISettings.floatingOption === "PIP" && !document.pictureInPictureElement){
+        await openPip();
+      }else if ($timerUISettings.floatingOption === "floatingTimer" && !pipWindow){
+        pipWindow = await openFloatingTimerPip(window)
+      }
     } catch (err) {
       alert("화면 캡처 권한이 거부되었거나 지원되지 않습니다.");
     }
@@ -204,7 +218,16 @@
   }
   
   const onClickPip = async () => {
+    if ($timerUISettings.floatingOption != "PIP"){
+      await openPip()
+    }else{
+      $timerUISettings.floatingOption = "none";
+    }
+  }
+  
+  const openPip = async () => {
     if (!videoEl) return;
+    $timerUISettings.floatingOption = "PIP";
     if (!videoEl.requestPictureInPicture) {
       alert("PIP를 사용할 수 없습니다.");
       return;
@@ -218,7 +241,12 @@
   }
   
   const onClickFloatingBar = async () => {
-    pipWindow = await openFloatingTimerPip(window)
+    if ($timerUISettings.floatingOption != "floatingTimer"){
+      $timerUISettings.floatingOption = "floatingTimer";
+      pipWindow = await openFloatingTimerPip(window)
+    }else{
+      $timerUISettings.floatingOption = "none";
+    }
   }
 
 </script>
@@ -267,10 +295,12 @@
       {/if}
     {/if}
     <Space/>
-    <IconButton tooltip="PIP" onClick={onClickPip}>
+    <IconButton tooltip="PIP" onClick={onClickPip} 
+                activated={$timerUISettings.floatingOption === "PIP"}>
       <div class="pip-icon"></div>
     </IconButton>
-    <IconButton tooltip="플로팅 타이머" onClick={onClickFloatingBar}>
+    <IconButton tooltip="플로팅 타이머" onClick={onClickFloatingBar} 
+                activated={$timerUISettings.floatingOption === "floatingTimer"}>
       <div class="floating-bar-icon"></div>
     </IconButton>
   </div>
@@ -300,7 +330,7 @@
     <DraggableOverlay bind:selectedArea={selectedArea} onSelection={onSelectArea}/>
   </div>
   </div>
-  <Button onClick={onClickStartScreenCapture}>캡처 시작</Button>
+  <Button onClick={onClickStartScreenCapture} style="padding: 10px">캡처 시작</Button>
   
   <audio 
     bind:this={alertAudio} 
@@ -327,6 +357,7 @@
       </ol>
       <li>추가 기능</li>
       <ol>
+        <li>추가기능은 처음 한번만 선택하면 이후 캡처 시작시 자동으로 활성화됩니다.</li>
         <li>PIP : 메이플스토리 창을 조그만 화면으로 축소하여 표시할 수 있습니다.</li>
         <li>플로팅 타이머 : 작은 타이머 표시기를 항상 위에 표시할 수 있습니다. 다른 작업을 하는 중 타이머 남은시간을 확인하고 싶을때 유용합니다. </li>
       </ol>
