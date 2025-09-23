@@ -4,6 +4,7 @@
 
   export let tooltip:string|undefined = undefined;
   export let onClick = () => {};
+  export let href:string|undefined = undefined;
   export let style:string = "";
   export let activated=false;
   export let selected=false;
@@ -12,11 +13,22 @@
 </script>
 <div class="main">
   <SvelteTooltip tip={tooltip} top={direction==="top"} right={direction==="right"} bottom={direction==="bottom"}>
-    <button class={`icon-button ${size} ${selected ? "selected":""}`} on:click={onClick} style={style}>
+    {#if href !== undefined}
+      <a class={`icon-button ${size} ${selected ? "selected":""}`} href={href}
+              style={style}>
       <span class={`${activated ? "activated":""} icon`}>
         <slot></slot>
       </span>
-    </button>
+      </a>
+    {:else}
+      <button class={`icon-button ${size} ${selected ? "selected":""}`} on:click={onClick}
+              style={style}>
+      <span class={`${activated ? "activated":""} icon`}>
+        <slot></slot>
+      </span>
+      </button>
+    {/if}
+
   </SvelteTooltip>
 </div>
 
