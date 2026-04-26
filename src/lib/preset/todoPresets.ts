@@ -37,10 +37,6 @@ export const getTodoPresets = ():{[index:string]:TodoPreset} => {
             type: "perCharacter",
             repeatType: "daily"
         },
-        "아이템팟 확인": {
-            type: "perCharacter",
-            repeatType: "daily"
-        },
         "황금마차 출석": {
             type: "perAccount",
             repeatType: "daily"
@@ -58,10 +54,6 @@ export const getTodoPresets = ():{[index:string]:TodoPreset} => {
             repeatType: "weeklyMonday"
         },
         "길드컨텐츠 - 플래그레이스": {
-            type: "perCharacter",
-            repeatType: "weeklyMonday"
-        },
-        "헤이븐/야영지": {
             type: "perCharacter",
             repeatType: "weeklyMonday"
         },

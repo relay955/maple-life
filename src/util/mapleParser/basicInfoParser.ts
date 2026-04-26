@@ -50,13 +50,3 @@ export const parseMapleCharacterInfo = (rankingPage:ParsedHtmlElement):MapleChar
     }
 }
 
-export const checkCharacterStatAvailable = (basicInfoPage: ParsedHtmlElement):"REQUIRE_REFRESH"|"PRIVATE"|"AVAILABLE" => {
-    if(basicInfoPage.querySelector("body")!.childNodes.length <= 1){
-        return "REQUIRE_REFRESH"
-    }else if(basicInfoPage.querySelector(".private2") !== null){
-        return "PRIVATE"
-    }else{
-        return "AVAILABLE"
-    }
-}
-
