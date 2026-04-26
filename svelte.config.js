@@ -18,10 +18,8 @@ const config = {
 		prerender:{
 			entries: [
 				'/',
-				'/character',
 				'/todo',
                 '/repeat-timer',
-				'/character/[id]/stat',
 			]
 		}
 	}
