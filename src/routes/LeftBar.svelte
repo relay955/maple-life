@@ -23,13 +23,6 @@
     <MdCheckBox/>
   </IconButton>
 
-<!--  삭제 후 기능 변경 예정-->
-<!--  <IconButton tooltip="캐릭터"-->
-<!--              style="margin-bottom: 4px"-->
-<!--              direction="right"-->
-<!--              onClick="{()=>goto('/character')}">-->
-<!--    <MdPerson/>-->
-<!--  </IconButton>-->
   <IconButton tooltip="파운틴 타이머"
               style="margin-bottom: 4px"
               direction="right"
