@@ -165,7 +165,7 @@
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class={`${$lqShowCharacterPreview ? "":"hidden-image"} header`}  style={`height:${effectiveHeight}px`}>
+<div class={`header`} style={`height:${effectiveHeight}px`}>
   <div class="title">
     <Title text="할일"/>
     <IconButton direction="bottom" onClick={()=>isOpenHelpModal=true} style="margin-right: 5px">
@@ -220,7 +220,9 @@
                on:dragstart={(e)=>onDragStartCharacter(e,character)}
                on:dragover={(e)=>e.preventDefault()}
                on:drop={(e)=>onDragEndCharacter(e,character)}>
-            <CharacterImage character={character}/>
+            {#if $lqShowCharacterPreview}
+              <CharacterImage character={character}/>
+            {/if}
             <div class="name">
               {character.name}
             </div>
@@ -252,15 +254,6 @@
     display: flex;
     align-items: center;
     background-color: white;
-
-    &.hidden-image{
-      .img{
-        display: none;
-      }
-      .default-img{
-        display: none;
-      }
-    }
 
     .title {
       min-width: 500px;
