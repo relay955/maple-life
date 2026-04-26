@@ -151,8 +151,6 @@ export const importDatabaseFromJsonFile = async (file: File) => {
       idb.systemInfo,
     ];
 
-    await exportDatabaseToJsonFile();
-
     await idb.transaction("rw", writableTables, async () => {
       await Promise.all([
         idb.character.clear(),

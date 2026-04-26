@@ -42,6 +42,7 @@
     if (!file) return;
 
     try{
+      await exportDatabaseToJsonFile("before-import");
       await importDatabaseFromJsonFile(file);
       toast.push("파일을 불러왔습니다. 기존 데이터는 백업 파일로 저장되었습니다.");
     }catch (error){

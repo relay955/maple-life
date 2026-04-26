@@ -44,7 +44,7 @@ export const readDatabaseAsJson = async (): Promise<JsonDatabaseExport> => {
   };
 };
 
-export const exportDatabaseToJsonFile = async () => {
+export const exportDatabaseToJsonFile = async (additionalFileName?: string) => {
   if (typeof document === "undefined") {
     throw new Error("JSON export is only available in the app runtime.");
   }
@@ -56,12 +56,16 @@ export const exportDatabaseToJsonFile = async () => {
   });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  const timestamp = databaseSnapshot.exportedAt
-    .replace(/:/g, "-")
-    .replace(/\.\d+Z$/, "Z");
+  const exportedDate = new Date(databaseSnapshot.exportedAt);
+  const timestamp = `${exportedDate.getFullYear()}${
+    `${exportedDate.getMonth() + 1}`.padStart(2, "0")
+  }${`${exportedDate.getDate()}`.padStart(2, "0")}-${`${exportedDate.getHours()}`.padStart(2, "0")}${`${exportedDate.getMinutes()}`.padStart(2, "0")}${`${exportedDate.getSeconds()}`.padStart(2, "0")}`;
+  const additionalNameSegment = additionalFileName
+    ? `-${additionalFileName}`
+    : "";
 
   link.href = url;
-  link.download = `maplelife-backup-${timestamp}.json`;
+  link.download = `maplelife-backup${additionalNameSegment}-${timestamp}.json`;
   link.style.display = "none";
 
   document.body.appendChild(link);
