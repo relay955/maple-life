@@ -1,9 +1,3 @@
-import type {
-    CharacterSpec,
-    EquipmentStat,
-    SkillStat,
-    Stats
-} from "../../util/mapleParser/mapleStat";
 
 export interface Character {
     id?:number;
@@ -18,8 +12,5 @@ export interface Character {
     useTodo:boolean;
     detailInfoKey?:string;
     isReboot?:boolean;
-    spec:{
-        default?:CharacterSpec;
-        boss?:CharacterSpec;
-    }
+    spec:{}
 }
