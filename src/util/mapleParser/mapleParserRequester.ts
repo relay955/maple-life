@@ -9,7 +9,6 @@ const MAPLE_HOMEPAGE = "https://maplestory.nexon.com"
 const RANKING_PAGE = `${MAPLE_HOMEPAGE}/N23Ranking/World/Total`
 
 
-//
 export const requestMapleCharacterBasicInfo = async (characterName: string) => {
     try {
         const res = await requestWithProxy(`${RANKING_PAGE}?c=${characterName}&w=0`)
