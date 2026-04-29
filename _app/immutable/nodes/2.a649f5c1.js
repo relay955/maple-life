@@ -1,0 +1,1 @@
+import{S as n,i as e,s,o as a}from"../chunks/index.cd13e5a8.js";import{h as i}from"../chunks/singletons.6914299d.js";const r=i("goto");async function c(o,t){await r(`/${o}`,{replaceState:t})}function u(o){return a(async()=>{await c("todo",!0)}),[]}class f extends n{constructor(t){super(),e(this,t,u,null,s,{})}}export{f as component};
