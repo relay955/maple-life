@@ -10,6 +10,7 @@ export const runOnInitialize = async () => {
     await idb.open()
     await migrateFromLocalstorage(idb)
     await initDefaultData(idb)
+    await checkAndResetRepeatlyTodo()
 
     setInterval(checkAndResetRepeatlyTodo, 1000)
 }

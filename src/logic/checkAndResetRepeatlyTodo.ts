@@ -2,39 +2,61 @@ import moment from "moment";
 import {idb} from "../storage/idb";
 import {updateLastUpdatedTime} from "../storage/queries/systemQuery";
 
+let cachedLastUpdated: string | null = null;
+let isResetting = false;
+
 export const checkAndResetRepeatlyTodo = async () => {
-    const today = moment().startOf('day')
-    let lastUpdatedinDb = await idb.systemInfo.get("lastUpdated");
-    const lastUpdated = moment(lastUpdatedinDb?.value ?? "2020-01-01")
+    if (isResetting) return;
 
-    if (today.isAfter(lastUpdated)) {
-        console.log("date changed. reset repeatly todo")
+    const today = moment().startOf('day');
+    const todayStr = today.format("YYYY-MM-DD");
 
-        const shouldResetDaily = true;
+    if (cachedLastUpdated === todayStr) return; 
+    isResetting = true;
 
-        const mostRecentMonday = moment(today).startOf('isoWeek');
-        const shouldResetWeeklyMonday = lastUpdated.isBefore(mostRecentMonday);
+    try {
+        let lastUpdated: moment.Moment;
+        if (cachedLastUpdated !== null) {
+            lastUpdated = moment(cachedLastUpdated);
+        } else {
+            const lastUpdatedinDb = await idb.systemInfo.get("lastUpdated");
+            const lastUpdatedStr = lastUpdatedinDb?.value ?? "2020-01-01";
+            cachedLastUpdated = lastUpdatedStr;
+            lastUpdated = moment(lastUpdatedStr);
+        }
 
-        const mostRecentThursday = today.isoWeekday() >= 4
-            ? moment(today).isoWeekday(4).startOf('day')
-            : moment(today).isoWeekday(4).subtract(1, 'week').startOf('day');
-        const shouldResetWeeklyThursday = lastUpdated.isBefore(mostRecentThursday);
+        if (today.isAfter(lastUpdated)) {
+            console.log("date changed. reset repeatly todo")
 
-        const mostRecentMonthStart = moment(today).startOf('month');
-        const shouldResetMonthly = lastUpdated.isBefore(mostRecentMonthStart);
+            const shouldResetDaily = true;
 
-        //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
-        idb.todo.toCollection().modify(todo => {
-            if ((todo.repeatType === "daily" && shouldResetDaily) ||
-                (todo.repeatType === "weeklyMonday" && shouldResetWeeklyMonday) ||
-                (todo.repeatType === "weeklyThursday" && shouldResetWeeklyThursday) ||
-                (todo.repeatType === "monthly" && shouldResetMonthly)) {
+            const mostRecentMonday = moment(today).startOf('isoWeek');
+            const shouldResetWeeklyMonday = lastUpdated.isBefore(mostRecentMonday);
 
-                Object.keys(todo.isChecked as object).forEach(key =>
-                    todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
-                )
-            }
-        })
-        await updateLastUpdatedTime()
+            const mostRecentThursday = today.isoWeekday() >= 4
+                ? moment(today).isoWeekday(4).startOf('day')
+                : moment(today).isoWeekday(4).subtract(1, 'week').startOf('day');
+            const shouldResetWeeklyThursday = lastUpdated.isBefore(mostRecentThursday);
+
+            const mostRecentMonthStart = moment(today).startOf('month');
+            const shouldResetMonthly = lastUpdated.isBefore(mostRecentMonthStart);
+
+            //일퀘/월요일주간퀘/목요일주간퀘/월간퀘 초기화
+            await idb.todo.toCollection().modify(todo => {
+                if ((todo.repeatType === "daily" && shouldResetDaily) ||
+                    (todo.repeatType === "weeklyMonday" && shouldResetWeeklyMonday) ||
+                    (todo.repeatType === "weeklyThursday" && shouldResetWeeklyThursday) ||
+                    (todo.repeatType === "monthly" && shouldResetMonthly)) {
+
+                    Object.keys(todo.isChecked).forEach(key =>
+                        todo.isChecked[key] = todo.isChecked[key] === "blocked" ? "blocked" : "unchecked"
+                    )
+                }
+            })
+            await updateLastUpdatedTime()
+        }
+        cachedLastUpdated = todayStr;
+    } finally {
+        isResetting = false;
     }
 }
