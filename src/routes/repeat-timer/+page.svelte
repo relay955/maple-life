@@ -19,6 +19,7 @@
   import IconButton from "../../components/basicComponent/IconButton.svelte";
   import {openFloatingTimerPip, updateLeftSecond, updatePausePlayStatus} from "../../logic/repeat-timer/timerPIP";
   import CaptureController from "./CaptureController.svelte";
+  import {onDestroy} from "svelte";
 
   let videoEl: HTMLVideoElement | null = null;
   let currentStream: MediaStream | null = null;
@@ -41,6 +42,8 @@
   let pipWindow:any|null = null;
   let lastTickTime = new Date();
   let pause=false;
+  let resolutionChangeTimeout: ReturnType<typeof setTimeout> | null = null;
+  let lastVideoResolution = {width: 0, height: 0};
 
   $: if (alertAudio) alertAudio.volume = $timerSettings.volume;
 
@@ -192,14 +195,45 @@
     }
   }
 
+  const reloadSelectedArea = () => {
+    if (!videoEl || videoEl.videoWidth <= 0 || videoEl.videoHeight <= 0) return;
+
+    const savedRect = findSavedRect($timerSettings.rects, videoEl.videoWidth, videoEl.videoHeight);
+    selectedArea = savedRect?.rect ?? null;
+  }
+
+  const onVideoResize = () => {
+    if (!videoEl) return;
+
+    const resolution = {width: videoEl.videoWidth, height: videoEl.videoHeight};
+    if (resolution.width <= 0 || resolution.height <= 0) return;
+    if (resolution.width === lastVideoResolution.width && resolution.height === lastVideoResolution.height) return;
+
+    lastVideoResolution = resolution;
+    if (resolutionChangeTimeout) clearTimeout(resolutionChangeTimeout);
+    resolutionChangeTimeout = setTimeout(() => {
+      reloadSelectedArea();
+      resolutionChangeTimeout = null;
+    }, 1000);
+  }
+
+  onDestroy(() => {
+    if (resolutionChangeTimeout) clearTimeout(resolutionChangeTimeout);
+  });
+
   const onClickStopScreenCapture = async () => {
     if (videoEl === null) return;
+    if (resolutionChangeTimeout) {
+      clearTimeout(resolutionChangeTimeout);
+      resolutionChangeTimeout = null;
+    }
     if (currentStream) {
       currentStream.getTracks().forEach((t) => t.stop());
       currentStream = null;
     }
     videoEl.srcObject = null;
     selectedArea = null;
+    lastVideoResolution = {width: 0, height: 0};
     stopOcr();
     if (document.pictureInPictureElement) await document.exitPictureInPicture();
     if (pipWindow) {
@@ -352,7 +386,7 @@
                      isOcrRunning={isOcrRunning}/>
   <div class="horizontal-center">
   <div class="display-area">
-    <video class="display" bind:this={videoEl} autoplay muted></video>
+    <video class="display" bind:this={videoEl} on:resize={onVideoResize} autoplay muted></video>
     <DraggableOverlay bind:selectedArea={selectedArea} onSelection={onSelectArea}/>
   </div>
   </div>
